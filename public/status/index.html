@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全球主流互联网可用性一站式查询 -  状态实时监控 - Net.Coffee</title>
+<meta name="description" content="免费实时查询 Claude、OpenAI、Cursor、Cloudflare、Vercel、GitHub、Stripe、Notion、Figma、Discord 等 30 个主流 AI 大模型、云服务、开发者工具与社区平台的官方运行状态。出现故障自动置顶提示，每 10 分钟自动更新，无需注册即可查看。">
+<meta name="keywords" content="服务状态实时查询,服务状态监控,服务可用性查询,Claude状态,Anthropic状态,OpenAI状态,ChatGPT状态,Cursor状态,Cloudflare状态,GitHub状态,Vercel状态,Stripe状态,Discord状态,Notion状态,Figma状态,Sentry状态,Supabase状态,网站宕机查询,实时状态聚合,downdetector中文,AI服务监控,云服务状态查询,开发者工具状态">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://ip.net.coffee/status/">
+<meta property="og:title" content="全球主流互联网可用性一站式查询 - Net.Coffee">
+<meta property="og:description" content="免费实时聚合 Claude、OpenAI、Cloudflare、GitHub、Vercel 等 30 个主流互联网服务的官方运行状态，出现故障自动置顶提示。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ip.net.coffee/status/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="Net.Coffee">
+<meta property="og:image" content="https://ip.net.coffee/og-image.png">
+<meta property="og:image:alt" content="Net.Coffee 全球主流互联网可用性一站式查询页面预览">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="全球主流互联网可用性一站式查询 - Net.Coffee">
+<meta name="twitter:description" content="免费实时聚合 Claude、OpenAI、Cloudflare、GitHub、Vercel 等 30 个主流互联网服务的官方运行状态，出现故障自动置顶提示。">
+<meta name="twitter:image" content="https://ip.net.coffee/og-image.png">
+<meta name="twitter:image:alt" content="Net.Coffee 全球主流互联网可用性一站式查询页面预览">
+<style>
+  :root {
+    --bg: #fff; --bg-soft: #f8f9fb; --bg-card: #fff; --bg-hover: #eef1f5;
+    --text: #1a1a1a; --text-soft: #57606a; --text-muted: #8b949e;
+    --border: #e1e4e8; --border-strong: #d8dce0;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  [data-theme="dark"] {
+    --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+    --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+    --border: #30363d; --border-strong: #444c56;
+    --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+      --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+      --border: #30363d; --border-strong: #444c56;
+      --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    }
+  }
+  .ts-wrap { position: relative; margin-left: auto; align-self: center; z-index: 100; margin-top: -6px; }
+  .ts-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg-card); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background 0.15s, transform 0.15s; -webkit-tap-highlight-color: transparent; }
+  .ts-btn:hover { background: var(--bg-hover); }
+  .ts-btn:active { transform: scale(0.96); }
+  .ts-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+  .ts-menu { position: absolute; top: 44px; right: 0; min-width: 148px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); padding: 4px; display: none; }
+  .ts-menu.open { display: block; }
+  .ts-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; background: transparent; border: none; color: var(--text); font: inherit; font-size: 14px; border-radius: 6px; cursor: pointer; text-align: left; -webkit-tap-highlight-color: transparent; }
+  .ts-item:hover { background: var(--bg-hover); }
+  .ts-item svg { width: 16px; height: 16px; stroke: currentColor; flex-shrink: 0; }
+  .ts-item[aria-current="true"] { background: var(--bg-hover); font-weight: 500; }
+  @media (max-width: 480px) {
+    .ts-btn { width: 26px; height: 26px; }
+    .ts-btn svg { width: 13px; height: 13px; }
+  }
+  body { background: var(--bg) !important; color: var(--text) !important; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-y: scroll; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: var(--bg-card); color: var(--text); min-height: 100vh; line-height: 1.6; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+
+  .nav { display: flex; gap: 20px; margin-bottom: 20px; font-size: 0.9em; flex-wrap: wrap; align-items: center; }
+  .nav a { color: var(--text-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; -webkit-tap-highlight-color: transparent; outline: none; display: inline-block; line-height: 1.5; white-space: nowrap; flex-shrink: 0; }
+  .nav a:hover { color: var(--text); }
+  .nav a:focus, .nav a:active { outline: none; }
+  .nav a.active { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--text); }
+  .nav .short { display: none; }
+  .nav .shortest { display: none; }
+  /* nav-ipcard-new-css */
+  .nav .pc-only-new { display: inline-flex; align-items: center; gap: 4px; }
+  .nav .nav-new {
+    font-size: 0.3em; font-weight: 700; padding: 1px 3px; border-radius: 3px;
+    background: linear-gradient(90deg,#ef4444,#f59e0b); color: #fff;
+    letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.4;
+  }
+  @media (max-width: 580px) { .nav .pc-only-new { display: none; } }
+  @media (max-width: 580px) { .nav .full { display: none; } .nav .short { display: inline; } .nav { gap: 14px; } }
+  @media (max-width: 399px) {
+    .nav a[href="/claude/"] .short { display: none; }
+    .nav a[href="/claude/"] .shortest { display: inline; }
+    .nav { gap: 12px; }
+    .ts-btn { width: 24px; height: 24px; }
+    .ts-btn svg { width: 12px; height: 12px; }
+  }
+  @media (max-width: 339px) {
+    .nav { gap: 8px; font-size: 0.88em; }
+    .ts-btn { width: 22px; height: 22px; }
+    .ts-btn svg { width: 11px; height: 11px; }
+  }
+
+  h1 { font-size: 1.75em; font-weight: 700; margin-bottom: 8px; }
+  h1 .h1-full { display: inline; } h1 .h1-short { display: none; }
+  @media (max-width: 480px) { h1 .h1-full { display: none; } h1 .h1-short { display: inline; } }
+  .desc { color: var(--text-soft); font-size: 0.9em; margin-bottom: 24px; }
+  @media (max-width: 480px) { .desc { font-size: 0.82em; } }
+
+  /* Overall card */
+  .overall-card {
+    padding: 20px 24px; border-radius: 12px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .overall-ok      { background: #f0fdf4; border: 1px solid #86efac; }
+  .overall-warn    { background: #fef3c7; border: 1px solid #f0c040; }
+  .overall-bad     { background: #fef2f2; border: 1px solid #fca5a5; }
+  /* 状态卡片暗模式：用半透明色调，保留语义但不刺眼 */
+  [data-theme="dark"] .overall-ok   { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.35); }
+  [data-theme="dark"] .overall-warn { background: rgba(240,192,64,0.10); border-color: rgba(240,192,64,0.40); }
+  [data-theme="dark"] .overall-bad  { background: rgba(248,113,113,0.10); border-color: rgba(248,113,113,0.40); }
+  [data-theme="dark"] .svc-card.warn       { background: rgba(240,192,64,0.08); border-color: rgba(253,230,138,0.30); }
+  [data-theme="dark"] .svc-card.warn:hover { background: rgba(240,192,64,0.15); }
+  [data-theme="dark"] .svc-card.bad        { background: rgba(248,113,113,0.08); border-color: rgba(252,165,165,0.35); }
+  [data-theme="dark"] .svc-card.bad:hover  { background: rgba(248,113,113,0.16); }
+  /* svc-card hover / maint / unknown 暗模式 override */
+  [data-theme="dark"] .svc-card:hover       { background: var(--bg-hover); border-color: var(--border-strong); }
+  [data-theme="dark"] .svc-card.maint       { background: rgba(59,130,246,0.08); border-color: rgba(191,219,254,0.30); }
+  [data-theme="dark"] .svc-card.maint:hover { background: rgba(59,130,246,0.15); }
+  [data-theme="dark"] .svc-card.unknown     { background: var(--bg-soft); border-color: var(--border); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .svc-card:hover       { background: var(--bg-hover); border-color: var(--border-strong); }
+    :root:not([data-theme="light"]) .svc-card.maint       { background: rgba(59,130,246,0.08); border-color: rgba(191,219,254,0.30); }
+    :root:not([data-theme="light"]) .svc-card.maint:hover { background: rgba(59,130,246,0.15); }
+    :root:not([data-theme="light"]) .svc-card.unknown     { background: var(--bg-soft); border-color: var(--border); }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .overall-ok   { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.35); }
+    :root:not([data-theme="light"]) .overall-warn { background: rgba(240,192,64,0.10); border-color: rgba(240,192,64,0.40); }
+    :root:not([data-theme="light"]) .overall-bad  { background: rgba(248,113,113,0.10); border-color: rgba(248,113,113,0.40); }
+    :root:not([data-theme="light"]) .svc-card.warn       { background: rgba(240,192,64,0.08); border-color: rgba(253,230,138,0.30); }
+    :root:not([data-theme="light"]) .svc-card.warn:hover { background: rgba(240,192,64,0.15); }
+    :root:not([data-theme="light"]) .svc-card.bad        { background: rgba(248,113,113,0.08); border-color: rgba(252,165,165,0.35); }
+    :root:not([data-theme="light"]) .svc-card.bad:hover  { background: rgba(248,113,113,0.16); }
+  }
+
+  .overall-loading { background: var(--bg-soft); border: 1px solid var(--border-strong); }
+  .overall-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+  .dot-ok      { background: #22c55e; }
+  .dot-warn    { background: #f59e0b; }
+  .dot-bad     { background: #ef4444; }
+  .dot-loading { background: #9ca3af; }
+  .dot-unknown { background: #c4c4c4; }
+  .dot-maint   { background: #3b82f6; }
+  .overall-text { font-size: 1.1em; font-weight: 600; }
+  .overall-time { font-size: 0.82em; color: var(--text-muted); margin-top: 2px; }
+  .overall-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; font-size: 0.82em; color: var(--text-soft); }
+  .overall-meta b { color: var(--text); font-weight: 600; }
+  @media (max-width: 580px) {
+    .overall-meta { gap: 10px; }
+    .overall-meta .og-frac { display: none; }
+  }
+
+  /* Section title — h2 element, override browser defaults */
+  h2.section-title, .section-title {
+    font-size: 1.05em; font-weight: 700; margin: 22px 0 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: baseline;
+    color: var(--text); line-height: 1.4;
+  }
+  .section-title small { font-size: 0.75em; font-weight: 400; color: var(--text-muted); }
+
+  /* Service grid */
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .svc-grid { grid-template-columns: 1fr; } }
+
+  .svc-card {
+    padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--bg-soft); cursor: pointer; transition: all 0.15s ease;
+    min-width: 0;
+  }
+  .svc-card:hover { background: #f4f6f9; border-color: var(--border-strong); }
+  .svc-card.ok      { /* default */ }
+  .svc-card.warn    { background: #fffaf0; border-color: #fde68a; }
+  .svc-card.warn:hover { background: #fef3c7; }
+  .svc-card.bad     { background: #fef5f5; border-color: #fca5a5; }
+  .svc-card.bad:hover { background: #fee2e2; }
+  .svc-card.maint   { background: #f0f6ff; border-color: #bfdbfe; }
+  .svc-card.maint:hover { background: #dbeafe; }
+  .svc-card.unknown { background: #f8f8f8; border-color: #e0e0e0; }
+
+  .svc-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .svc-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  /* OK dot breathes light→dark green so the page feels alive without being noisy.
+     Failing/maintenance dots stay solid for clear status priority. */
+  @keyframes breathe-ok {
+    0%, 100% { background: #4ade80; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    50%      { background: #15803d; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0); }
+  }
+  .svc-card.ok .svc-dot.dot-ok {
+    animation: breathe-ok 2.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .svc-card.ok .svc-dot.dot-ok { animation: none; }
+  }
+  .svc-favicon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    border-radius: 3px; object-fit: contain;
+  }
+  .svc-name {
+    font-size: 0.94em; font-weight: 600; color: var(--text);
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .svc-status {
+    font-size: 0.82em; color: var(--text-soft); flex-shrink: 0;
+  }
+  /* Service category badge — color identifies the tag, sort groups same tags */
+  .svc-tag {
+    display: inline-block; padding: 1px 8px; border-radius: 9px;
+    font-size: 0.72em; font-weight: 600; letter-spacing: 0.02em;
+    flex-shrink: 0; white-space: nowrap; line-height: 1.6;
+  }
+  .svc-tag-ai    { background: #ede9fe; color: #5b21b6; }
+  .svc-tag-cloud { background: #e0f2fe; color: #075985; }
+  .svc-tag-dev   { background: #e2e8f0; color: #334155; }
+  .svc-tag-comm  { background: #dcfce7; color: #14532d; }
+  .svc-card.warn .svc-status { color: #b45309; }
+  .svc-card.bad  .svc-status { color: #b91c1c; }
+  .svc-card.maint .svc-status { color: #1d4ed8; }
+
+  .svc-meta { font-size: 0.76em; color: var(--text-muted); margin-top: 6px; padding-left: 21px; line-height: 1.5; }
+
+  /* Expanded incidents */
+  .svc-expand {
+    display: none; margin-top: 10px; padding: 10px 12px;
+    background: var(--bg-card); border-radius: 6px; border: 1px solid #eef0f3;
+    font-size: 0.82em; line-height: 1.55;
+  }
+  .svc-card.open .svc-expand { display: block; }
+  .svc-expand .inc { margin-bottom: 8px; }
+  .svc-expand .inc:last-child { margin-bottom: 0; }
+  .svc-expand .inc-name { font-weight: 600; color: var(--text); }
+  .svc-expand .inc-meta { font-size: 0.92em; color: var(--text-muted); margin-top: 1px; }
+  .svc-expand .inc-empty { color: var(--text-muted); }
+  .svc-expand a { color: var(--text-soft); text-decoration: none; }
+  .svc-expand a:hover { text-decoration: underline; }
+
+  /* Tags */
+  .tag {
+    display: inline-block; padding: 1px 7px; border-radius: 8px;
+    font-size: 0.78em; font-weight: 600; margin-right: 4px;
+  }
+  .tag-none  { background: #d1fae5; color: #065f46; }
+  .tag-minor { background: #fef3c7; color: #92400e; }
+  .tag-major { background: #fee2e2; color: #991b1b; }
+  .tag-critical { background: #fecaca; color: #7f1d1d; }
+  .tag-maintenance { background: #dbeafe; color: #1e40af; }
+  .tag-resolved { background: #d1fae5; color: #065f46; }
+
+  .source-note {
+    margin-top: 28px; padding: 14px 16px; background: var(--bg-soft); border-radius: 8px;
+    font-size: 0.82em; color: var(--text-muted); text-align: center; line-height: 1.7;
+  }
+  .source-note a { color: var(--text-muted); }
+
+  footer { text-align: center; padding: 30px 0 20px; color: var(--text-muted); font-size: 0.82em; margin-top: 40px; }
+  footer a { color: var(--text-muted); text-decoration: none; }
+
+  @media (max-width: 480px) {
+    .container { padding: 14px 12px; }
+    h1 { font-size: 1.4em; }
+    .overall-card { padding: 14px 16px; }
+    .overall-text { font-size: 1em; }
+    .svc-card { padding: 12px 14px; }
+    .svc-name { font-size: 0.9em; }
+  }
+
+  /* nav-more 下拉(原内联,移入head防FOUC) */
+  .nav-more{position:relative;display:inline-flex;align-items:center}.nav-more-trigger{cursor:pointer;display:inline-flex;align-items:center;gap:3px;color:var(--text-soft,#666);line-height:1.5;border-bottom:2px solid transparent;padding-bottom:4px;white-space:nowrap}.nav-more:hover .nav-more-trigger{color:var(--text,#1a1a1a)}.nav-more-arrow{transition:transform .15s}.nav-more:hover .nav-more-arrow{transform:rotate(180deg)}.nav-more-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:5px;min-width:120px;opacity:0;visibility:hidden;transition:opacity .15s;z-index:300}.nav-more:hover .nav-more-menu{opacity:1;visibility:visible}.nav-more-menu a{display:block;padding:8px 12px;border-radius:6px;border-bottom:none !important;white-space:nowrap;color:var(--text,#1a1a1a);font-size:0.95em}.nav-more-menu a:hover{background:var(--bg-hover,#eef1f5)}.nav-more-menu::before{content:"";position:absolute;left:-12px;right:-12px;top:-18px;height:18px}.nav-more-menu{transition:opacity .15s ease,visibility 0s linear .35s}.nav-more:hover .nav-more-menu{transition:opacity .15s ease,visibility 0s}
+  </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"全球主流互联网可用性一站式查询","url":"https://ip.net.coffee/status/","description":"免费实时查询 Claude、OpenAI、Cloudflare、GitHub、Vercel、Stripe、Discord 等 30 个主流互联网服务的官方运行状态，出现故障自动置顶。","applicationCategory":"UtilitiesApplication","operatingSystem":"All","browserRequirements":"需要支持 ES6 的现代浏览器","inLanguage":"zh-CN","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"featureList":["30 个主流服务实时状态聚合","故障服务自动置顶","维护中状态独立分组","中文化故障描述","历史故障查看","10 分钟自动刷新"],"publisher":{"@type":"Organization","name":"Net.Coffee","url":"https://ip.net.coffee/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"如何实时查看 Claude、OpenAI、Cloudflare、GitHub 等服务是否宕机？","acceptedAnswer":{"@type":"Answer","text":"本页面实时聚合了 Claude、OpenAI、Cursor、Cloudflare、Vercel、GitHub、Stripe、Discord 等 30 个主流互联网服务的官方状态数据，出现故障的服务会自动置顶显示，方便快速判断是否为服务方问题，无需逐个打开各家官方状态页。"}},{"@type":"Question","name":"数据来源是哪里？是否可信？","acceptedAnswer":{"@type":"Answer","text":"全部数据均直接来自各服务方的官方状态接口（statuspage.io 或自研状态页 API），不依赖任何第三方监控服务，与服务方官网公布的数据完全一致。"}},{"@type":"Question","name":"数据多久更新一次？","acceptedAnswer":{"@type":"Answer","text":"数据每 10 分钟自动同步一次官方状态接口，前端页面每 60 秒自动刷新最新结果，无需手动刷新。"}},{"@type":"Question","name":"故障已经恢复了，为什么还能看到这条记录？","acceptedAnswer":{"@type":"Answer","text":"本站会保留每个服务最近 5 条故障记录，即使服务方将状态置为已解决，最近的历史记录仍会显示，方便回溯问题时间线。"}},{"@type":"Question","name":"支持监控哪些类别的服务？","acceptedAnswer":{"@type":"Answer","text":"目前覆盖四大类共 30 个主流服务：AI 大模型（Claude、OpenAI、Cursor、Perplexity、Groq、ElevenLabs、Replicate）、云服务（Cloudflare、Vercel、Netlify、DigitalOcean、Supabase、Fly.io）、开发者工具（GitHub、npm、Stripe、Notion、Figma、Sentry、Postman、Atlassian、Twilio、Clerk、SendGrid、Python、PyPI）、社区平台（Discord、Reddit、Zoom、Twitch、Pinterest）。"}},{"@type":"Question","name":"为什么要用聚合状态页而不是各家官方状态页？","acceptedAnswer":{"@type":"Answer","text":"开发者通常依赖多个第三方服务，逐个打开 28+ 个状态页非常低效。本聚合页一次显示所有关键服务的当前状态，故障自动置顶，配合中文化故障描述，可在数秒内判断线上问题是否来自第三方服务。"}}]}
+</script>
+<script id="__initial_data__">window.__INITIAL_DATA__={"fetched_at": "2026-09-16T11:14:09Z", "count": 31, "failing": 7, "services": [{"page_url": "https://www.cloudflarestatus.com", "indicator": "minor", "description": "轻微服务中断", "incidents": [{"name": "支持服务台可用性故障", "status": "identified", "impact": "minor", "created_at": "2026-09-16T08:31:12.000Z", "updated_at": "2026-09-16T10:21:02.000Z", "shortlink": "https://www.cloudflarestatus.com/incidents/zlyf7lvpp05s"}, {"name": "邮件通知延迟", "status": "investigating", "impact": "minor", "created_at": "2026-09-16T08:33:30.000Z", "updated_at": "2026-09-16T08:33:30.000Z", "shortlink": "https://www.cloudflarestatus.com/incidents/d4kgs6xmq9tl"}, {"name": "洛杉矶地区网络性能故障", "status": "monitoring", "impact": "minor", "created_at": "2026-09-16T02:03:10.000Z", "updated_at": "2026-09-16T03:44:46.000Z", "shortlink": "https://www.cloudflarestatus.com/incidents/qc2v4gxy3gfw"}, {"name": "Cloudflare Queues 故障", "status": "monitoring", "impact": "minor", "created_at": "2026-09-14T20:22:30.000Z", "updated_at": "2026-09-15T15:14:25.000Z", "shortlink": "https://www.cloudflarestatus.com/incidents/s4x7n3nfqnyy"}, {"name": "网络延迟影响新加坡", "status": "monitoring", "impact": "minor", "created_at": "2026-09-15T07:15:57.000Z", "updated_at": "2026-09-15T07:16:37.000Z", "shortlink": "https://www.cloudflarestatus.com/incidents/pj1qcy7lhm11"}], "scheduled": [{"name": "MAA（金奈）2026-09-16", "status": "scheduled", "scheduled_for": "2026-09-16T20:00:00.000Z", "scheduled_until": "2026-09-17T00:00:00.000Z"}, {"name": "LHR（伦敦）2026-09-17", "status": "scheduled", "scheduled_for": "2026-09-17T00:00:00.000Z", "scheduled_until": "2026-09-17T08:00:00.000Z"}, {"name": "FCO（罗马）2026-09-17", "status": "scheduled", "scheduled_for": "2026-09-17T00:00:00.000Z", "scheduled_until": "2026-09-17T04:00:00.000Z"}], "ok": true, "error": "", "key": "cloudflare", "name": "Cloudflare", "name_cn": "Cloudflare", "group": "云服务", "url": "https://www.cloudflarestatus.com/api/v2/summary.json", "tag": "云服务", "tag_slug": "cloud", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/cloudflare.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "http://status.digitalocean.com", "indicator": "minor", "description": "部分服务降级", "incidents": [{"name": "支持门户服务中断", "status": "investigating", "impact": "minor", "created_at": "2026-09-16T09:48:19.081Z", "updated_at": "2026-09-16T09:48:19.174Z", "shortlink": "https://stspg.io/n6hr8jd64qjl"}, {"name": "性能下降：ATL1 的 GPU 性能受影响", "status": "monitoring", "impact": "minor", "created_at": "2026-09-09T10:47:40.428Z", "updated_at": "2026-09-09T11:32:30.704Z", "shortlink": "https://stspg.io/g4s2358yl9tt"}, {"name": "云控制面板和API", "status": "monitoring", "impact": "critical", "created_at": "2026-08-24T17:14:43.701Z", "updated_at": "2026-08-25T16:30:28.339Z", "shortlink": "https://stspg.io/8l5c24cxh3hr"}, {"name": "托管数据库创建", "status": "monitoring", "impact": "minor", "created_at": "2026-08-23T05:11:37.000Z", "updated_at": "2026-08-23T11:30:34.975Z", "shortlink": "https://stspg.io/8ld5fpw01tg4"}, {"name": "托管数据库创建", "status": "investigating", "impact": "minor", "created_at": "2026-08-23T05:11:37.496Z", "updated_at": "2026-08-23T07:06:56.896Z", "shortlink": "https://stspg.io/8ld5fpw01tg4"}], "scheduled": [], "ok": true, "error": "", "key": "digitalocean", "name": "DigitalOcean", "name_cn": "DigitalOcean", "group": "云服务", "url": "https://status.digitalocean.com/api/v2/summary.json", "tag": "云服务", "tag_slug": "cloud", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/digitalocean.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.supabase.com", "indicator": "minor", "description": "部分服务降级", "incidents": [{"name": "Edge Function 延迟", "status": "monitoring", "impact": "minor", "created_at": "2026-09-16T09:24:30.940Z", "updated_at": "2026-09-16T09:38:20.843Z", "shortlink": "https://stspg.io/8hqltbj2f8dc"}, {"name": "认证服务中断", "status": "monitoring", "impact": "minor", "created_at": "2026-09-16T07:17:12.380Z", "updated_at": "2026-09-16T09:09:29.483Z", "shortlink": "https://stspg.io/m02m3yc0vjqq"}, {"name": "由于 JWT 拒绝而导致 401 错误", "status": "identified", "impact": "minor", "created_at": "2026-08-14T02:23:18.370Z", "updated_at": "2026-09-11T23:41:53.555Z", "shortlink": "https://stspg.io/18v97b9scdh2"}, {"name": "项目无响应", "status": "monitoring", "impact": "major", "created_at": "2026-09-10T15:26:19.844Z", "updated_at": "2026-09-11T06:19:34.106Z", "shortlink": "https://stspg.io/jqy7hh45k7l1"}, {"name": "影响缅甸有限数量用户的网络访问问题", "status": "monitoring", "impact": "none", "created_at": "2026-08-19T15:52:31.150Z", "updated_at": "2026-09-09T18:29:25.428Z", "shortlink": "https://stspg.io/d0dv2tg5rmbn"}], "scheduled": [], "ok": true, "error": "", "key": "supabase", "name": "Supabase", "name_cn": "Supabase", "group": "云服务", "url": "https://status.supabase.com/api/v2/summary.json", "tag": "云服务", "tag_slug": "cloud", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/supabase.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.githubstatus.com", "indicator": "minor", "description": "部分服务降级", "incidents": [{"name": "Gemini 3.8 Flash 性能下降", "status": "investigating", "impact": "major", "created_at": "2026-09-16T07:20:59.980Z", "updated_at": "2026-09-16T10:58:41.044Z", "shortlink": "https://stspg.io/hsjy12f57b24"}, {"name": "部分 GitHub 服务中断", "status": "monitoring", "impact": "minor", "created_at": "2026-09-15T19:11:31.344Z", "updated_at": "2026-09-15T19:48:02.830Z", "shortlink": "https://stspg.io/tbh60vgxfxj6"}, {"name": "部分 GitHub 服务中断", "status": "investigating", "impact": "minor", "created_at": "2026-09-15T09:47:15.093Z", "updated_at": "2026-09-15T10:32:25.738Z", "shortlink": "https://stspg.io/6pn81yd1x4hz"}, {"name": "部分客户的 Actions Larger Runner 作业启动可能缓慢", "status": "monitoring", "impact": "minor", "created_at": "2026-09-14T18:40:25.082Z", "updated_at": "2026-09-14T19:01:52.802Z", "shortlink": "https://stspg.io/f2b6fd4l83wy"}, {"name": "故障：多个 GitHub 服务", "status": "investigating", "impact": "critical", "created_at": "2026-09-13T09:16:11.480Z", "updated_at": "2026-09-13T10:28:45.964Z", "shortlink": "https://stspg.io/8f3xch4y0v2k"}], "scheduled": [], "ok": true, "error": "", "key": "github", "name": "GitHub", "name_cn": "GitHub", "group": "开发", "url": "https://www.githubstatus.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/github.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.twilio.com", "indicator": "minor", "description": "部分服务降级", "incidents": [{"name": "短信发送失败：部分 Twilio 电话号码向秘鲁多个网络发送短信", "status": "monitoring", "impact": "minor", "created_at": "2026-09-16T00:07:29.230-07:00", "updated_at": "2026-09-16T04:14:46.587-07:00", "shortlink": "https://stspg.io/xlnd77kgkb59"}, {"name": "短信发送延迟：Twilio 至 Airtel India", "status": "identified", "impact": "minor", "created_at": "2026-09-16T02:40:25.529-07:00", "updated_at": "2026-09-16T03:52:39.980-07:00", "shortlink": "https://stspg.io/524jrjt6lgk0"}, {"name": "Twilio 向 Etisalat Egypt 的短信发送延迟", "status": "monitoring", "impact": "minor", "created_at": "2026-09-15T23:15:57.953-07:00", "updated_at": "2026-09-16T03:35:33.197-07:00", "shortlink": "https://stspg.io/m5ntzlbs5ky5"}, {"name": "Voice Insights / Console 子账户汇总数据缺失", "status": "monitoring", "impact": "minor", "created_at": "2026-09-14T20:51:19.000-07:00", "updated_at": "2026-09-16T03:19:55.610-07:00", "shortlink": "https://stspg.io/9rhskyfnm81v"}, {"name": "故障：Telstra Australia 向部分 Twilio 电话号码发送 MMS 失败", "status": "investigating", "impact": "minor", "created_at": "2026-09-04T02:43:59.602-07:00", "updated_at": "2026-09-16T03:18:03.800-07:00", "shortlink": "https://stspg.io/8fp59sj5vkgh"}], "scheduled": [{"name": "台湾 SMS 运营商合作伙伴维护", "status": "scheduled", "scheduled_for": "2026-09-16T09:00:00.000-07:00", "scheduled_until": "2026-09-16T17:00:00.000-07:00"}, {"name": "孟加拉国 SMS 运营商维护 - Banglalink", "status": "scheduled", "scheduled_for": "2026-09-16T11:00:00.000-07:00", "scheduled_until": "2026-09-16T15:00:00.000-07:00"}, {"name": "孟加拉国短信运营商维护 - Grameenphone", "status": "scheduled", "scheduled_for": "2026-09-16T11:00:00.000-07:00", "scheduled_until": "2026-09-16T17:00:00.000-07:00"}], "ok": true, "error": "", "key": "sendgrid", "name": "SendGrid", "name_cn": "SendGrid", "group": "开发", "url": "https://status.sendgrid.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/sendgrid.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.stripestatus.com", "indicator": "minor", "description": "轻微服务中断", "incidents": [{"name": "Stripe Support Systems 故障", "status": "investigating", "impact": "none", "created_at": "2026-09-16T10:05:31.151Z", "updated_at": "2026-09-16T10:05:31.256Z", "shortlink": "https://stspg.io/1pqrkshz4vdd"}, {"name": "Interac 错误增多", "status": "monitoring", "impact": "none", "created_at": "2026-09-13T04:45:27.892Z", "updated_at": "2026-09-13T05:17:56.473Z", "shortlink": "https://stspg.io/j5s6qs75yrjz"}, {"name": "Interac 错误增多", "status": "investigating", "impact": "none", "created_at": "2026-09-10T20:53:41.182Z", "updated_at": "2026-09-10T20:53:41.290Z", "shortlink": "https://stspg.io/7wcb364xld9l"}, {"name": "Swish 错误增加", "status": "investigating", "impact": "none", "created_at": "2026-08-30T13:16:40.948Z", "updated_at": "2026-08-30T13:16:41.061Z", "shortlink": "https://stspg.io/jcy642t9yszg"}, {"name": "Swish 错误增加", "status": "investigating", "impact": "none", "created_at": "2026-08-29T19:28:07.888Z", "updated_at": "2026-08-29T19:28:07.996Z", "shortlink": "https://stspg.io/1yfx7lx0ybwq"}], "scheduled": [{"name": "TWINT 的定期维护", "status": "scheduled", "scheduled_for": "2026-09-16T17:30:00.000Z", "scheduled_until": "2026-09-16T20:30:00.000Z"}, {"name": "EPS 定期维护", "status": "scheduled", "scheduled_for": "2026-09-16T18:00:00.000Z", "scheduled_until": "2026-09-16T18:30:00.000Z"}, {"name": "Affirm 的定期维护", "status": "scheduled", "scheduled_for": "2026-09-16T22:00:00.000Z", "scheduled_until": "2026-09-16T23:00:00.000Z"}], "ok": true, "error": "", "key": "stripe", "name": "Stripe", "name_cn": "Stripe", "group": "开发", "url": "https://www.stripestatus.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/stripe.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.twilio.com", "indicator": "minor", "description": "部分服务降级", "incidents": [{"name": "短信发送失败：部分 Twilio 电话号码向秘鲁多个网络发送短信", "status": "monitoring", "impact": "minor", "created_at": "2026-09-16T00:07:29.230-07:00", "updated_at": "2026-09-16T04:14:46.587-07:00", "shortlink": "https://stspg.io/xlnd77kgkb59"}, {"name": "短信发送延迟：Twilio 至 Airtel India", "status": "identified", "impact": "minor", "created_at": "2026-09-16T02:40:25.529-07:00", "updated_at": "2026-09-16T03:52:39.980-07:00", "shortlink": "https://stspg.io/524jrjt6lgk0"}, {"name": "Twilio 向 Etisalat Egypt 的短信发送延迟", "status": "monitoring", "impact": "minor", "created_at": "2026-09-15T23:15:57.953-07:00", "updated_at": "2026-09-16T03:35:33.197-07:00", "shortlink": "https://stspg.io/m5ntzlbs5ky5"}, {"name": "Voice Insights / Console 子账户汇总数据缺失", "status": "monitoring", "impact": "minor", "created_at": "2026-09-14T20:51:19.000-07:00", "updated_at": "2026-09-16T03:19:55.610-07:00", "shortlink": "https://stspg.io/9rhskyfnm81v"}, {"name": "故障：Telstra Australia 向部分 Twilio 电话号码发送 MMS 失败", "status": "investigating", "impact": "minor", "created_at": "2026-09-04T02:43:59.602-07:00", "updated_at": "2026-09-16T03:18:03.800-07:00", "shortlink": "https://stspg.io/8fp59sj5vkgh"}], "scheduled": [{"name": "台湾 SMS 运营商合作伙伴维护", "status": "scheduled", "scheduled_for": "2026-09-16T09:00:00.000-07:00", "scheduled_until": "2026-09-16T17:00:00.000-07:00"}, {"name": "孟加拉国 SMS 运营商维护 - Banglalink", "status": "scheduled", "scheduled_for": "2026-09-16T11:00:00.000-07:00", "scheduled_until": "2026-09-16T15:00:00.000-07:00"}, {"name": "孟加拉国短信运营商维护 - Grameenphone", "status": "scheduled", "scheduled_for": "2026-09-16T11:00:00.000-07:00", "scheduled_until": "2026-09-16T17:00:00.000-07:00"}], "ok": true, "error": "", "key": "twilio", "name": "Twilio", "name_cn": "Twilio", "group": "开发", "url": "https://status.twilio.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 2, "indicator_cn": "轻微故障", "favicon_url": "/status/favicons/twilio.png", "last_failure_at": "2026-09-16T11:14:09Z", "last_failure_ts": 1789557249, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.claude.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "间歇性错误激增：Claude Mythos 5.1 和 Claude Fable 5.1", "status": "resolved", "impact": "major", "created_at": "2026-09-15T09:48:23.076Z", "updated_at": "2026-09-15T11:14:44.396Z", "shortlink": ""}, {"name": "功能降级：Windows 版 Claude Cowork", "status": "resolved", "impact": "major", "created_at": "2026-09-10T15:54:10.000Z", "updated_at": "2026-09-14T19:14:45.986Z", "shortlink": ""}, {"name": "错误增多：Claude Mythos 5.1 和 Claude Fable 5.1", "status": "resolved", "impact": "major", "created_at": "2026-09-11T14:19:51.478Z", "updated_at": "2026-09-11T14:37:11.168Z", "shortlink": ""}, {"name": "功能降级：Windows 版 Claude Cowork", "status": "identified", "impact": "major", "created_at": "2026-09-10T15:54:10.108Z", "updated_at": "2026-09-11T14:19:51.617Z", "shortlink": ""}, {"name": "Claude API 部分用户延迟增加", "status": "resolved", "impact": "minor", "created_at": "2026-09-10T21:43:40.215Z", "updated_at": "2026-09-10T23:24:22.994Z", "shortlink": ""}], "scheduled": [], "ok": true, "error": "", "_source": "cache:/claude/status.json", "key": "claude", "name": "Claude (Anthropic)", "name_cn": "Claude (Anthropic)", "group": "AI", "url": "", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "https://ip.net.coffee/favicons/claude.webp", "detail_url": "https://ip.net.coffee/claude/status.html", "detail_label": "详细状态页", "last_failure_at": "2026-09-15T11:16:08Z", "last_failure_ts": 1789470968, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.cursor.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "调查服务降级", "status": "monitoring", "impact": "minor", "created_at": "2026-09-16T08:03:00.219Z", "updated_at": "2026-09-16T08:09:29.308Z", "shortlink": "https://stspg.io/j2xb74dqwdrx"}, {"name": "调查服务降级", "status": "monitoring", "impact": "minor", "created_at": "2026-09-15T21:26:49.074Z", "updated_at": "2026-09-15T21:44:37.065Z", "shortlink": "https://stspg.io/wph5l6zb4lz7"}, {"name": "正在调查：Grok 服务性能下降", "status": "monitoring", "impact": "minor", "created_at": "2026-09-14T08:14:46.763Z", "updated_at": "2026-09-14T08:15:24.229Z", "shortlink": "https://stspg.io/czrkjs542qtv"}, {"name": "调查服务降级", "status": "investigating", "impact": "minor", "created_at": "2026-09-11T11:08:41.900Z", "updated_at": "2026-09-11T11:08:42.083Z", "shortlink": "https://stspg.io/0xzq5xg26bwg"}, {"name": "调查服务性能下降 — Review Agents 和 Cloud Agents", "status": "investigating", "impact": "minor", "created_at": "2026-09-10T17:07:24.485Z", "updated_at": "2026-09-10T17:07:24.582Z", "shortlink": "https://stspg.io/l9tz2hnfxtvz"}], "scheduled": [], "ok": true, "error": "", "key": "cursor", "name": "Cursor", "name_cn": "Cursor", "group": "AI", "url": "https://status.cursor.com/api/v2/summary.json", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/cursor.png", "last_failure_at": "2026-09-16T08:34:29Z", "last_failure_ts": 1789547669, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.elevenlabs.io/", "indicator": "none", "description": "全部正常", "incidents": [{"name": "EU Residency 近期通话未显示对话历史", "status": "identified", "impact": "minor", "created_at": "2026-09-10T09:44:08Z", "updated_at": "2026-09-10T16:21:20Z", "shortlink": ""}, {"name": "故障：Claude MCP 连接无法工作", "status": "identified", "impact": "minor", "created_at": "2026-09-09T12:41:25Z", "updated_at": "2026-09-10T01:28:11Z", "shortlink": ""}, {"name": "ElevenReader 错误率升高", "status": "identified", "impact": "none", "created_at": "2026-09-07T03:17:11Z", "updated_at": "2026-09-07T05:45:47Z", "shortlink": ""}, {"name": "延迟增加：全球驻留区域的 Speech-to-Text 和 Dubbing 请求", "status": "monitoring", "impact": "minor", "created_at": "2026-09-04T13:55:26Z", "updated_at": "2026-09-04T14:34:50Z", "shortlink": ""}, {"name": "延迟增加：EU 区域 Speech-to-Text 请求的 EU Residency 延迟增加", "status": "investigating", "impact": "minor", "created_at": "2026-09-04T11:41:29Z", "updated_at": "2026-09-04T11:41:29Z", "shortlink": ""}], "scheduled": [], "ok": true, "error": "", "key": "elevenlabs", "name": "ElevenLabs", "name_cn": "ElevenLabs", "group": "AI", "url": "https://status.elevenlabs.io/api/v2/summary.json", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/elevenlabs.png", "last_failure_at": "2026-09-10T20:40:29Z", "last_failure_ts": 1789072829, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.x.ai", "indicator": "none", "description": "", "incidents": [], "scheduled": [], "ok": true, "error": "", "_source": "httpcheck", "key": "grok", "name": "Grok", "name_cn": "Grok / xAI", "group": "AI", "url": "https://api.x.ai/v1/models", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/grok.png", "last_failure_at": "", "last_failure_ts": 0, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://groqstatus.com/", "indicator": "none", "description": "全部正常", "incidents": [{"name": "数据中心故障影响容量", "status": "monitoring", "impact": "minor", "created_at": "2026-07-01T23:01:22Z", "updated_at": "2026-07-01T23:48:05Z", "shortlink": ""}], "scheduled": [{"name": "计划维护：meta-llama/llama-4-maverick-17b-128e-instruct (me-central-1)", "status": "scheduled", "scheduled_for": "", "scheduled_until": ""}], "ok": true, "error": "", "key": "groq", "name": "Groq", "name_cn": "Groq", "group": "AI", "url": "https://groqstatus.com/api/v2/summary.json", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/groq.png", "last_failure_at": "2026-07-01T23:47:19Z", "last_failure_ts": 1782949639, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.openai.com/", "indicator": "none", "description": "全部正常", "incidents": [{"name": "错误增多：gpt-image-2.5-flare", "status": "resolved", "impact": "major", "created_at": "2026-09-15T23:50:32Z", "updated_at": "2026-09-16T00:30:48Z", "shortlink": ""}, {"name": "广告管理工具登录故障", "status": "resolved", "impact": "minor", "created_at": "2026-09-15T16:52:36Z", "updated_at": "2026-09-15T16:54:01Z", "shortlink": ""}, {"name": "错误增多：付费套餐的 GPT-5.6 和 GPT-5.6 Instant", "status": "resolved", "impact": "minor", "created_at": "2026-09-15T07:12:04Z", "updated_at": "2026-09-15T07:53:36Z", "shortlink": ""}, {"name": "错误增多：ChatGPT 中的 Work Mode", "status": "resolved", "impact": "minor", "created_at": "2026-09-14T15:58:48Z", "updated_at": "2026-09-15T03:11:36Z", "shortlink": ""}, {"name": "性能下降：Agents API", "status": "resolved", "impact": "none", "created_at": "2026-09-14T23:20:41Z", "updated_at": "2026-09-14T23:39:21Z", "shortlink": ""}], "scheduled": [], "detail_url": "https://ip.net.coffee/gpt/status.html", "detail_label": "详细状态页", "ok": true, "error": "", "_source": "cache:/gpt/status.json", "key": "openai", "name": "OpenAI", "name_cn": "OpenAI / ChatGPT", "group": "AI", "url": "https://status.openai.com/api/v2/summary.json", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/openai.png", "last_failure_at": "2026-09-16T00:31:40Z", "last_failure_ts": 1789518700, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.perplexity.com/", "indicator": "none", "description": "", "incidents": [], "scheduled": [], "ok": true, "error": "", "key": "perplexity", "name": "Perplexity", "name_cn": "Perplexity", "group": "AI", "url": "https://status.perplexity.com/api/v2/summary.json", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/perplexity.png", "last_failure_at": "", "last_failure_ts": 0, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "", "indicator": "unknown", "description": "", "incidents": [{"name": "A100硬件部分中断", "status": "monitoring", "impact": "major", "created_at": "2026-08-26T21:17:34Z", "updated_at": "2026-08-26T23:07:40Z", "shortlink": ""}, {"name": "由于节点故障导致扩展延迟", "status": "monitoring", "impact": "minor", "created_at": "2026-08-10T21:05:30Z", "updated_at": "2026-08-10T21:05:30Z", "shortlink": ""}, {"name": "显着退化", "status": "investigating", "impact": "none", "created_at": "2026-08-05T09:30:02Z", "updated_at": "2026-08-05T09:30:02Z", "shortlink": ""}, {"name": "由于从 huggingface 拉取失败的设置，导致横向扩展性能下降", "status": "monitoring", "impact": "minor", "created_at": "2026-07-31T21:25:03Z", "updated_at": "2026-07-31T22:27:50Z", "shortlink": ""}, {"name": "H100 GPU 容量达到上限，部分模型排队时间较长", "status": "monitoring", "impact": "minor", "created_at": "2026-07-22T11:51:02Z", "updated_at": "2026-07-23T03:05:49Z", "shortlink": ""}], "scheduled": [], "ok": false, "error": "Expecting value: line 1 column 1 (char 0)", "key": "replicate", "name": "Replicate", "name_cn": "Replicate", "group": "AI", "url": "https://status.replicate.com/api/v2/summary.json", "tag": "AI", "tag_slug": "ai", "level": 0, "indicator_cn": "状态未知", "favicon_url": "/status/favicons/replicate.png", "last_failure_at": "2026-08-27T00:23:31Z", "last_failure_ts": 1787790211, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.flyio.net", "indicator": "none", "description": "全部正常", "incidents": [{"name": "Depot 构建器故障", "status": "monitoring", "impact": "minor", "created_at": "2026-09-15T04:08:58.040Z", "updated_at": "2026-09-15T04:51:45.656Z", "shortlink": "https://stspg.io/j7cn1qp176zh"}, {"name": "美国西海岸网络故障", "status": "monitoring", "impact": "minor", "created_at": "2026-09-12T21:22:52.452Z", "updated_at": "2026-09-12T21:57:05.167Z", "shortlink": "https://stspg.io/yk9n0hyvy7cq"}, {"name": "部分中断：Sprites API", "status": "monitoring", "impact": "minor", "created_at": "2026-09-02T23:03:57.172Z", "updated_at": "2026-09-02T23:33:59.990Z", "shortlink": "https://stspg.io/rl89vfshzjh5"}, {"name": "上游网络问题", "status": "monitoring", "impact": "minor", "created_at": "2026-09-02T14:18:44.824Z", "updated_at": "2026-09-02T15:33:02.111Z", "shortlink": "https://stspg.io/288hd4v44qmx"}, {"name": "API 后台任务队列故障", "status": "monitoring", "impact": "major", "created_at": "2026-09-02T07:21:44.867Z", "updated_at": "2026-09-02T07:31:52.818Z", "shortlink": "https://stspg.io/hkrfzdjh6c2t"}], "scheduled": [], "ok": true, "error": "", "key": "flyio", "name": "Fly.io", "name_cn": "Fly.io", "group": "云服务", "url": "https://status.flyio.net/api/v2/summary.json", "tag": "云服务", "tag_slug": "cloud", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/flyio.png", "last_failure_at": "2026-09-15T04:43:15Z", "last_failure_ts": 1789447395, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.netlifystatus.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "全球网络IAD区域延迟增加", "status": "monitoring", "impact": "minor", "created_at": "2026-08-31T20:40:10.776Z", "updated_at": "2026-08-31T20:56:37.605Z", "shortlink": "https://stspg.io/6p908gpcw05d"}, {"name": "构建错误增加", "status": "monitoring", "impact": "major", "created_at": "2026-08-03T09:31:14.362Z", "updated_at": "2026-08-03T09:44:45.903Z", "shortlink": "https://stspg.io/c86q300yqbcw"}, {"name": "将附件上传到代理运行程序时出错", "status": "monitoring", "impact": "minor", "created_at": "2026-07-22T13:29:02.553Z", "updated_at": "2026-07-22T13:29:02.647Z", "shortlink": "https://stspg.io/5dmcrq93hxxq"}, {"name": "边缘函数错误增多", "status": "monitoring", "impact": "minor", "created_at": "2026-07-01T17:53:23.581Z", "updated_at": "2026-07-01T17:53:23.672Z", "shortlink": "https://stspg.io/hhjz3brh2b88"}, {"name": "影响 Bolt 驱动站点的连接问题", "status": "identified", "impact": "minor", "created_at": "2026-06-14T19:55:48.657Z", "updated_at": "2026-06-14T20:23:30.386Z", "shortlink": "https://stspg.io/ct2g0d3p2sh9"}], "scheduled": [], "ok": true, "error": "", "key": "netlify", "name": "Netlify", "name_cn": "Netlify", "group": "云服务", "url": "https://www.netlifystatus.com/api/v2/summary.json", "tag": "云服务", "tag_slug": "cloud", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/netlify.png", "last_failure_at": "2026-09-13T10:39:32Z", "last_failure_ts": 1789295972, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.vercel-status.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "错误率升高：Connect 和 Passport", "status": "identified", "impact": "major", "created_at": "2026-09-10T17:42:15.875Z", "updated_at": "2026-09-10T18:13:20.245Z", "shortlink": "https://stspg.io/zbs4ktd26fb0"}, {"name": "延迟增加：VCR、Blob 和 Sandbox API", "status": "monitoring", "impact": "minor", "created_at": "2026-09-04T19:11:44.000Z", "updated_at": "2026-09-04T20:05:43.248Z", "shortlink": "https://stspg.io/qjy1j78m6ssc"}, {"name": "延迟增加：VCR、Blob 和 Sandbox API", "status": "identified", "impact": "minor", "created_at": "2026-09-04T19:11:44.850Z", "updated_at": "2026-09-04T19:33:18.207Z", "shortlink": "https://stspg.io/qjy1j78m6ssc"}, {"name": "部署失败增加", "status": "monitoring", "impact": "major", "created_at": "2026-09-01T19:59:37.473Z", "updated_at": "2026-09-01T20:49:34.187Z", "shortlink": "https://stspg.io/01mntryqfgdj"}, {"name": "使用 Vercel CLI 登录失败", "status": "identified", "impact": "major", "created_at": "2026-08-26T03:06:11.564Z", "updated_at": "2026-08-26T04:28:01.417Z", "shortlink": "https://stspg.io/119clbk6991s"}], "scheduled": [], "ok": true, "error": "", "key": "vercel", "name": "Vercel", "name_cn": "Vercel", "group": "云服务", "url": "https://www.vercel-status.com/api/v2/summary.json", "tag": "云服务", "tag_slug": "cloud", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/vercel.png", "last_failure_at": "2026-09-04T20:15:59Z", "last_failure_ts": 1788552959, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.atlassian.com", "indicator": "none", "description": "全部正常", "incidents": [], "scheduled": [], "ok": true, "error": "", "key": "atlassian", "name": "Atlassian", "name_cn": "Atlassian / Jira", "group": "开发", "url": "https://status.atlassian.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/atlassian.png", "last_failure_at": "", "last_failure_ts": 0, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.clerk.com/", "indicator": "none", "description": "全部正常", "incidents": [{"name": "延迟：发送至 Microsoft（Outlook / Microsoft 365）收件人的邮件", "status": "monitoring", "impact": "minor", "created_at": "2026-09-04T10:06:09Z", "updated_at": "2026-09-04T13:33:49Z", "shortlink": ""}, {"name": "GCP 在 us-central1-b 发生的事件", "status": "monitoring", "impact": "minor", "created_at": "2026-09-01T15:48:03Z", "updated_at": "2026-09-01T18:35:34Z", "shortlink": ""}, {"name": "API延迟升高", "status": "monitoring", "impact": "minor", "created_at": "2026-08-31T13:55:24Z", "updated_at": "2026-08-31T15:22:33Z", "shortlink": ""}, {"name": "增加了 API 延迟和错误", "status": "monitoring", "impact": "minor", "created_at": "2026-08-04T23:03:58Z", "updated_at": "2026-08-04T23:29:11Z", "shortlink": ""}, {"name": "域配置中的错误率升高", "status": "identified", "impact": "minor", "created_at": "2026-07-31T12:23:58Z", "updated_at": "2026-07-31T12:28:05Z", "shortlink": ""}], "scheduled": [{"name": "计划内数据库维护——短暂写入中断", "status": "scheduled", "scheduled_for": "", "scheduled_until": ""}], "ok": true, "error": "", "key": "clerk", "name": "Clerk", "name_cn": "Clerk", "group": "开发", "url": "https://status.clerk.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/clerk.png", "last_failure_at": "2026-09-04T13:22:00Z", "last_failure_ts": 1788528120, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.figma.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "Figma MCP 中断", "status": "monitoring", "impact": "major", "created_at": "2026-08-26T12:08:58.645Z", "updated_at": "2026-08-26T15:14:11.473Z", "shortlink": "https://stspg.io/4n0r14n88yxs"}, {"name": "服务中断", "status": "monitoring", "impact": "none", "created_at": "2026-07-27T19:29:19.000Z", "updated_at": "2026-07-27T19:46:23.174Z", "shortlink": "https://stspg.io/0x5lg5y5mbdq"}, {"name": "服务中断", "status": "monitoring", "impact": "none", "created_at": "2026-07-27T19:29:19.831Z", "updated_at": "2026-07-27T19:29:19.874Z", "shortlink": "https://stspg.io/0x5lg5y5mbdq"}, {"name": "Figma Make 服务中断 - Gemini 3.1 Pro", "status": "monitoring", "impact": "none", "created_at": "2026-06-18T23:46:52.175Z", "updated_at": "2026-06-19T01:03:28.020Z", "shortlink": "https://stspg.io/fmvgg7bp5qdw"}, {"name": "Figma Make 与 Agent 服务中断", "status": "monitoring", "impact": "none", "created_at": "2026-06-16T17:58:30.354Z", "updated_at": "2026-06-16T17:58:30.412Z", "shortlink": "https://stspg.io/rd8sjt1hr61l"}], "scheduled": [], "ok": true, "error": "", "key": "figma", "name": "Figma", "name_cn": "Figma", "group": "开发", "url": "https://status.figma.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/figma.png", "last_failure_at": "2026-08-26T16:10:09Z", "last_failure_ts": 1787760609, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.notion-status.com/", "indicator": "none", "description": "全部正常", "incidents": [{"name": "故障：管理电子邮件地址和别名", "status": "identified", "impact": "major", "created_at": "2026-09-11T17:23:29Z", "updated_at": "2026-09-11T17:23:29Z", "shortlink": ""}, {"name": "部分用户意外显示工作区验证横幅", "status": "monitoring", "impact": "none", "created_at": "2026-09-10T01:36:47Z", "updated_at": "2026-09-10T01:47:00Z", "shortlink": ""}, {"name": "自动化按钮体验下降", "status": "investigating", "impact": "none", "created_at": "2026-09-03T16:33:47Z", "updated_at": "2026-09-03T16:33:47Z", "shortlink": ""}, {"name": "促销优惠可能无法正确应用于订阅", "status": "monitoring", "impact": "minor", "created_at": "2026-09-03T11:32:50Z", "updated_at": "2026-09-03T15:03:11Z", "shortlink": ""}, {"name": "自定义代理上重新连接MCP时出现问题", "status": "investigating", "impact": "none", "created_at": "2026-09-02T23:04:56Z", "updated_at": "2026-09-02T23:04:56Z", "shortlink": ""}], "scheduled": [], "ok": true, "error": "", "key": "notion", "name": "Notion", "name_cn": "Notion", "group": "开发", "url": "https://www.notion-status.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/notion.png", "last_failure_at": "2026-09-11T19:53:19Z", "last_failure_ts": 1789156399, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.postman.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "美国客户的 Api Builder flows 受到影响", "status": "investigating", "impact": "major", "created_at": "2026-09-10T11:01:18.724-07:00", "updated_at": "2026-09-10T11:02:21.777-07:00", "shortlink": "https://stspg.io/6yv2yxrqvnc6"}, {"name": "postman 网站有问题", "status": "investigating", "impact": "minor", "created_at": "2026-08-13T14:04:33.817-07:00", "updated_at": "2026-08-13T14:08:23.394-07:00", "shortlink": "https://stspg.io/7gl6v808wkcy"}, {"name": "营销网站", "status": "identified", "impact": "none", "created_at": "2026-07-22T09:42:22.960-07:00", "updated_at": "2026-07-22T09:51:31.215-07:00", "shortlink": "https://stspg.io/d54bpmyzd90x"}, {"name": "集合与环境视图场景性能下降", "status": "monitoring", "impact": "minor", "created_at": "2026-07-17T05:33:54.926-07:00", "updated_at": "2026-07-17T06:35:24.841-07:00", "shortlink": "https://stspg.io/rzt0rvrp858g"}, {"name": "在云中运行的 Flows 的基础设施问题", "status": "monitoring", "impact": "none", "created_at": "2026-07-06T12:41:16.834-07:00", "updated_at": "2026-07-06T13:09:00.110-07:00", "shortlink": "https://stspg.io/hgjk7pfnht49"}], "scheduled": [], "ok": true, "error": "", "key": "postman", "name": "Postman", "name_cn": "Postman", "group": "开发", "url": "https://status.postman.com/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/postman.png", "last_failure_at": "2026-09-10T18:11:56Z", "last_failure_ts": 1789063916, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.python.org", "indicator": "none", "description": "全部正常", "incidents": [], "scheduled": [], "ok": true, "error": "", "key": "pythoninfra", "name": "Python Infrastructure", "name_cn": "Python / PyPI", "group": "开发", "url": "https://status.python.org/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/pythoninfra.png", "last_failure_at": "", "last_failure_ts": 0, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.sentry.io", "indicator": "none", "description": "全部正常", "incidents": [{"name": "美国地区数据接入延迟", "status": "investigating", "impact": "minor", "created_at": "2026-09-10T16:13:34.288Z", "updated_at": "2026-09-10T16:52:29.551Z", "shortlink": "https://stspg.io/gdjjp911yksz"}, {"name": "Sentry.io 500 错误数量增多", "status": "monitoring", "impact": "minor", "created_at": "2026-09-10T15:25:10.574Z", "updated_at": "2026-09-10T16:07:59.517Z", "shortlink": "https://stspg.io/10yb4b5w2szj"}, {"name": "性能下降：US 地区的 Span 摄取", "status": "monitoring", "impact": "minor", "created_at": "2026-09-01T14:16:13.000Z", "updated_at": "2026-09-01T19:31:54.486Z", "shortlink": "https://stspg.io/nc8v40xh55zt"}, {"name": "性能下降：US 地区的 Span 摄取", "status": "investigating", "impact": "minor", "created_at": "2026-09-01T14:16:13.073Z", "updated_at": "2026-09-01T18:10:49.820Z", "shortlink": "https://stspg.io/nc8v40xh55zt"}, {"name": "Sentry 请求超时/504错误", "status": "monitoring", "impact": "major", "created_at": "2026-09-01T08:01:21.728Z", "updated_at": "2026-09-01T09:03:51.516Z", "shortlink": "https://stspg.io/hks9pdczmhhv"}], "scheduled": [{"name": "欧盟：Span 数据接入暂时延迟，告警因数据库维护离线", "status": "scheduled", "scheduled_for": "2026-09-16T20:30:00.000Z", "scheduled_until": "2026-09-16T22:30:00.000Z"}], "ok": true, "error": "", "key": "sentry", "name": "Sentry", "name_cn": "Sentry", "group": "开发", "url": "https://status.sentry.io/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/sentry.png", "last_failure_at": "2026-09-10T16:56:41Z", "last_failure_ts": 1789059401, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.npmjs.org", "indicator": "none", "description": "全部正常", "incidents": [{"name": "包发布性能下降", "status": "identified", "impact": "minor", "created_at": "2026-09-15T17:20:05.454Z", "updated_at": "2026-09-15T17:20:13.025Z", "shortlink": "https://stspg.io/vqff57fc76z8"}, {"name": "发布包性能下降", "status": "investigating", "impact": "minor", "created_at": "2026-09-15T16:13:46.004Z", "updated_at": "2026-09-15T16:13:46.073Z", "shortlink": "https://stspg.io/6qm87tplptny"}, {"name": "故障：npm audits endpoint", "status": "monitoring", "impact": "minor", "created_at": "2026-09-04T11:29:00.252Z", "updated_at": "2026-09-04T13:27:00.479Z", "shortlink": "https://stspg.io/hv9b8g0tycq7"}, {"name": "间歇性故障影响 npm Publish", "status": "monitoring", "impact": "minor", "created_at": "2026-09-03T21:42:03.511Z", "updated_at": "2026-09-03T22:41:21.980Z", "shortlink": "https://stspg.io/n9gnn5fgb3x0"}, {"name": "间歇性发布失败", "status": "monitoring", "impact": "minor", "created_at": "2026-07-30T12:06:38.990Z", "updated_at": "2026-07-30T15:21:51.991Z", "shortlink": "https://stspg.io/dd7tgr1zktrd"}], "scheduled": [], "ok": true, "error": "", "key": "npm", "name": "npm", "name_cn": "npm", "group": "开发", "url": "https://status.npmjs.org/api/v2/summary.json", "tag": "开发", "tag_slug": "dev", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/npm.png", "last_failure_at": "2026-09-15T18:09:56Z", "last_failure_ts": 1789495796, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://discordstatus.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "会话不可用", "status": "monitoring", "impact": "none", "created_at": "2026-09-15T07:26:02.212-07:00", "updated_at": "2026-09-15T07:58:33.056-07:00", "shortlink": "https://stspg.io/d5h0d8347s4l"}, {"name": "媒体代理延迟过高", "status": "identified", "impact": "minor", "created_at": "2026-09-11T09:24:46.890-07:00", "updated_at": "2026-09-11T09:27:41.081-07:00", "shortlink": "https://stspg.io/mpwbwtx3wm5q"}, {"name": "建立语音通话故障", "status": "monitoring", "impact": "major", "created_at": "2026-09-10T21:21:35.751-07:00", "updated_at": "2026-09-10T23:20:46.980-07:00", "shortlink": "https://stspg.io/6kw0tkg5sg53"}, {"name": "部分服务器不可用", "status": "monitoring", "impact": "none", "created_at": "2026-09-03T14:31:27.760-07:00", "updated_at": "2026-09-03T15:06:28.373-07:00", "shortlink": "https://stspg.io/3628f7vbg5p8"}, {"name": "部分服务器不可用", "status": "monitoring", "impact": "major", "created_at": "2026-09-03T07:35:27.281-07:00", "updated_at": "2026-09-03T08:01:44.901-07:00", "shortlink": "https://stspg.io/c16w1zbh6v2x"}], "scheduled": [], "ok": true, "error": "", "key": "discord", "name": "Discord", "name_cn": "Discord", "group": "社区", "url": "https://discordstatus.com/api/v2/summary.json", "tag": "社区", "tag_slug": "comm", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/discord.png", "last_failure_at": "2026-09-11T17:33:59Z", "last_failure_ts": 1789148039, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.pintereststatus.com", "indicator": "none", "description": "全部正常", "incidents": [], "scheduled": [], "ok": true, "error": "", "key": "pinterest", "name": "Pinterest", "name_cn": "Pinterest", "group": "社区", "url": "https://www.pintereststatus.com/api/v2/summary.json", "tag": "社区", "tag_slug": "comm", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/pinterest.png", "last_failure_at": "", "last_failure_ts": 0, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.redditstatus.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "站点错误增多", "status": "monitoring", "impact": "major", "created_at": "2026-09-01T12:51:37.979-07:00", "updated_at": "2026-09-01T14:07:32.957-07:00", "shortlink": "https://stspg.io/96ds8tjds38r"}, {"name": "整个网站的性能下降", "status": "monitoring", "impact": "major", "created_at": "2026-07-25T08:05:02.655-07:00", "updated_at": "2026-07-25T09:14:32.832-07:00", "shortlink": "https://stspg.io/8llkkwrwfhgw"}, {"name": "调查加载评论时出现的错误和问题", "status": "monitoring", "impact": "none", "created_at": "2026-05-20T13:58:02.553-07:00", "updated_at": "2026-05-20T14:52:34.153-07:00", "shortlink": "https://stspg.io/tz3x22ht1rl0"}, {"name": "调查增加的站点错误和访问媒体的问题", "status": "monitoring", "impact": "minor", "created_at": "2026-05-18T10:39:06.058-07:00", "updated_at": "2026-05-18T12:44:09.106-07:00", "shortlink": "https://stspg.io/knd65sxh4xxx"}, {"name": "AWS 可用性导致各种服务的用户体验下降", "status": "monitoring", "impact": "minor", "created_at": "2026-05-07T17:47:39.533-07:00", "updated_at": "2026-05-09T09:32:46.123-07:00", "shortlink": "https://stspg.io/ybtylr9g2ttj"}], "scheduled": [], "ok": true, "error": "", "key": "reddit", "name": "Reddit", "name_cn": "Reddit", "group": "社区", "url": "https://www.redditstatus.com/api/v2/summary.json", "tag": "社区", "tag_slug": "comm", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/reddit.png", "last_failure_at": "2026-09-01T21:13:53Z", "last_failure_ts": 1788297233, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://status.twitch.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "服务受到负面影响", "status": "monitoring", "impact": "critical", "created_at": "2026-08-27T20:09:34.655Z", "updated_at": "2026-08-27T22:03:25.731Z", "shortlink": "https://stspg.io/svd6vg4nczcb"}], "scheduled": [], "ok": true, "error": "", "key": "twitch", "name": "Twitch", "name_cn": "Twitch", "group": "社区", "url": "https://status.twitch.tv/api/v2/summary.json", "tag": "社区", "tag_slug": "comm", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/twitch.png", "last_failure_at": "2026-08-27T21:50:19Z", "last_failure_ts": 1787867419, "last_check_at": "2026-09-16T11:14:09Z"}, {"page_url": "https://www.zoomstatus.com", "indicator": "none", "description": "全部正常", "incidents": [{"name": "性能下降：中国地区 Zoom Phone 外呼通话", "status": "identified", "impact": "minor", "created_at": "2026-09-15T21:00:15.700-07:00", "updated_at": "2026-09-15T21:15:30.316-07:00", "shortlink": "https://stspg.io/wcdfkn8d887l"}, {"name": "服务降级：影响 Zoom Whiteboard", "status": "monitoring", "impact": "none", "created_at": "2026-09-15T11:22:00.936-07:00", "updated_at": "2026-09-15T11:22:01.013-07:00", "shortlink": "https://stspg.io/ltwzdzwtjqcg"}, {"name": "服务降级：影响美国区域的 Zoom Meeting summary 和 Phone call summary", "status": "monitoring", "impact": "none", "created_at": "2026-09-10T11:22:50.369-07:00", "updated_at": "2026-09-10T11:22:50.429-07:00", "shortlink": "https://stspg.io/j6b9zqzcrk5m"}, {"name": "加拿大地区部分实时在线会议翻译服务性能下降", "status": "monitoring", "impact": "none", "created_at": "2026-09-10T09:57:37.653-07:00", "updated_at": "2026-09-10T09:57:37.719-07:00", "shortlink": "https://stspg.io/pnp88p830fqj"}, {"name": "服务降级：影响欧洲地区的 Zoom Phone、Zoom Contact Center 和 Zoom Meetings", "status": "monitoring", "impact": "none", "created_at": "2026-09-10T08:53:26.258-07:00", "updated_at": "2026-09-10T09:29:01.724-07:00", "shortlink": "https://stspg.io/78m0y9r8fdmb"}], "scheduled": [{"name": "Zoom Workforce Management 更新：2026-09-17（无运营影响）", "status": "scheduled", "scheduled_for": "2026-09-16T17:00:00.000-07:00", "scheduled_until": "2026-09-17T02:00:00.000-07:00"}, {"name": "Zoom 支持维护 - 搜索功能：2026-09-17", "status": "scheduled", "scheduled_for": "2026-09-17T13:00:00.000-07:00", "scheduled_until": "2026-09-17T16:00:00.000-07:00"}, {"name": "Zoom Phone 维护 - CA01-YYZ1 数据中心：2026-09-17", "status": "scheduled", "scheduled_for": "2026-09-17T17:00:00.000-07:00", "scheduled_until": "2026-09-18T21:30:00.000-07:00"}], "ok": true, "error": "", "key": "zoom", "name": "Zoom", "name_cn": "Zoom", "group": "社区", "url": "https://status.zoom.us/api/v2/summary.json", "tag": "社区", "tag_slug": "comm", "level": 0, "indicator_cn": "正常运行", "favicon_url": "/status/favicons/zoom.png", "last_failure_at": "2026-09-16T04:25:07Z", "last_failure_ts": 1789532707, "last_check_at": "2026-09-16T11:14:09Z"}]};</script>
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="/gpt/"] .short{display:inline}
+}
+</style>
+</head>
+<body>
+
+
+<main class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="/"><span class="full">IP查询</span><span class="short">查询</span></a>
+    <a href="/claude/"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="/ip/"><span class="full">IP评分</span><span class="short">评分</span></a>
+    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
+    <a href="/dns/"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
+    <a href="/webrtc/"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="/cloudflare/" title="Cloudflare 全面检测" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new"><span class="full">全球Ping</span><span class="short">Ping</span></a>
+    <a href="/status/" class="active" aria-current="page"><span class="full">服务状态</span><span class="short">状态</span></a>
+    <div class="nav-more pc-only-new" data-tag="nav-more-dd"><span class="nav-more-trigger">更多 <svg class="nav-more-arrow" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span><div class="nav-more-menu"><a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener" title="精美的网站IP卡片代码">IP卡片</a></div></div>
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">更多 <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="切换主题模式" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>亮色模式</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>暗黑模式</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>跟随系统</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="/">IP查询</a>
+  <a href="/claude/">Claude</a>
+  <a href="/ip/">IP评分</a>
+  <a href="/gpt/">GPT 检测</a>
+  <a href="/link/">网络连通</a>
+  <a href="/dns/">DNS泄露</a>
+  <a href="/webrtc/">WebRTC</a>
+  <a href="/cloudflare/">Cloudflare</a>
+  <a href="/ping/">全球Ping</a>
+  <a href="/status/" class="on">服务状态</a>
+  <a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener">IP卡片</a>
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )nc_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; domain=.net.coffee; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="nc_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="nc_theme=; path=/; domain=.net.coffee; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <header>
+    <h1><span class="h1-full">全球主流互联网可用性一站式查询</span><span class="h1-short">主流服务可用性查询</span></h1>
+    <p class="desc">轻松掌握主流云服务、AI 平台、工具及社区的运行状况，<strong>如服务出现故障则自动置顶提示，告别逐个查询</strong>。</p>
+  </header>
+
+  <div id="overall" class="overall-card overall-loading">
+    <div class="overall-dot dot-loading"></div>
+    <div style="flex:1">
+      <div class="overall-text">加载中...</div>
+      <div class="overall-time" id="fetch-time"></div>
+      <div class="overall-meta" id="overall-meta"></div>
+    </div>
+  </div>
+
+  <section id="services-root" aria-label="监控的服务列表"><h2 class="section-title">⚠ 当前故障 <small>7 个服务</small></h2><div class="svc-grid"><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/cloudflare.png" alt="Cloudflare 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Cloudflare</div><span class="svc-tag svc-tag-cloud">云服务</span><div class="svc-status">轻微故障</div></div></div><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/digitalocean.png" alt="DigitalOcean 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">DigitalOcean</div><span class="svc-tag svc-tag-cloud">云服务</span><div class="svc-status">轻微故障</div></div></div><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/supabase.png" alt="Supabase 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Supabase</div><span class="svc-tag svc-tag-cloud">云服务</span><div class="svc-status">轻微故障</div></div></div><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/github.png" alt="GitHub 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">GitHub</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">轻微故障</div></div></div><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/sendgrid.png" alt="SendGrid 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">SendGrid</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">轻微故障</div></div></div><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/stripe.png" alt="Stripe 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Stripe</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">轻微故障</div></div></div><div class="svc-card warn"><div class="svc-row"><div class="svc-dot dot-warn"></div><img class="svc-favicon" src="/status/favicons/twilio.png" alt="Twilio 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Twilio</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">轻微故障</div></div></div></div><h2 class="section-title">运行中 <small>24 个服务</small></h2><div class="svc-grid"><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="https://ip.net.coffee/favicons/claude.webp" alt="Claude (Anthropic) 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Claude (Anthropic)</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/cursor.png" alt="Cursor 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Cursor</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/elevenlabs.png" alt="ElevenLabs 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">ElevenLabs</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/grok.png" alt="Grok / xAI 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Grok / xAI</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/groq.png" alt="Groq 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Groq</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/openai.png" alt="OpenAI / ChatGPT 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">OpenAI / ChatGPT</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/perplexity.png" alt="Perplexity 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Perplexity</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">正常运行</div></div></div><div class="svc-card unknown"><div class="svc-row"><div class="svc-dot dot-unknown"></div><img class="svc-favicon" src="/status/favicons/replicate.png" alt="Replicate 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Replicate</div><span class="svc-tag svc-tag-ai">AI</span><div class="svc-status">状态未知</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/flyio.png" alt="Fly.io 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Fly.io</div><span class="svc-tag svc-tag-cloud">云服务</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/netlify.png" alt="Netlify 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Netlify</div><span class="svc-tag svc-tag-cloud">云服务</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/vercel.png" alt="Vercel 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Vercel</div><span class="svc-tag svc-tag-cloud">云服务</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/atlassian.png" alt="Atlassian / Jira 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Atlassian / Jira</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/clerk.png" alt="Clerk 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Clerk</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/figma.png" alt="Figma 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Figma</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/notion.png" alt="Notion 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Notion</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/postman.png" alt="Postman 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Postman</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/pythoninfra.png" alt="Python / PyPI 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Python / PyPI</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/sentry.png" alt="Sentry 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Sentry</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/npm.png" alt="npm 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">npm</div><span class="svc-tag svc-tag-dev">开发</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/discord.png" alt="Discord 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Discord</div><span class="svc-tag svc-tag-comm">社区</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/pinterest.png" alt="Pinterest 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Pinterest</div><span class="svc-tag svc-tag-comm">社区</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/reddit.png" alt="Reddit 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Reddit</div><span class="svc-tag svc-tag-comm">社区</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/twitch.png" alt="Twitch 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Twitch</div><span class="svc-tag svc-tag-comm">社区</span><div class="svc-status">正常运行</div></div></div><div class="svc-card ok"><div class="svc-row"><div class="svc-dot dot-ok"></div><img class="svc-favicon" src="/status/favicons/zoom.png" alt="Zoom 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'"><div class="svc-name">Zoom</div><span class="svc-tag svc-tag-comm">社区</span><div class="svc-status">正常运行</div></div></div></div></section>
+
+  <p class="source-note">
+    数据来源：各服务的官方接口，点击卡片可展开查看最近事件
+  </p>
+</main>
+
+<footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/claude/" style="color: var(--text-muted);text-decoration:none">Claude AI 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+
+<script>
+(function() {
+  const DATA_URL = '/status/data.json';
+
+  // indicator → color class
+  const indClass = {
+    'none': 'ok',
+    'maintenance': 'maint',
+    'minor': 'warn',
+    'major': 'bad',
+    'critical': 'bad',
+    'unknown': 'unknown',
+  };
+  const indDotClass = {
+    'none': 'dot-ok',
+    'maintenance': 'dot-maint',
+    'minor': 'dot-warn',
+    'major': 'dot-bad',
+    'critical': 'dot-bad',
+    'unknown': 'dot-unknown',
+  };
+  const indCn = {
+    'none': '正常',
+    'maintenance': '维护中',
+    'minor': '轻微故障',
+    'major': '重大故障',
+    'critical': '严重故障',
+    'unknown': '状态未知',
+  };
+
+  const impactTag = {
+    'none': 'tag-none', 'minor': 'tag-minor',
+    'major': 'tag-major', 'critical': 'tag-critical',
+    'maintenance': 'tag-maintenance',
+  };
+  const impactCn = {
+    'none': '无影响', 'minor': '轻微',
+    'major': '重大', 'critical': '严重',
+    'maintenance': '维护',
+  };
+  const incStatusCn = {
+    'investigating': '调查中', 'identified': '已定位',
+    'monitoring': '监控中', 'resolved': '已解决',
+    'postmortem': '复盘中', 'scheduled': '计划中',
+    'in_progress': '进行中', 'completed': '已完成', 'verifying': '验证中',
+  };
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function formatTime(iso) {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    } catch { return iso; }
+  }
+  function relTime(iso) {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso).getTime();
+      const diff = Date.now() - d;
+      if (diff < 0) return formatTime(iso);
+      const sec = Math.floor(diff / 1000);
+      if (sec < 60)        return sec + ' 秒前';
+      if (sec < 3600)      return Math.floor(sec/60) + ' 分钟前';
+      if (sec < 86400)     return Math.floor(sec/3600) + ' 小时前';
+      if (sec < 86400*30)  return Math.floor(sec/86400) + ' 天前';
+      if (sec < 86400*365) return Math.floor(sec/86400/30) + ' 个月前';
+      return Math.floor(sec/86400/365) + ' 年前';
+    } catch { return iso; }
+  }
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  }
+
+  function renderOverall(data) {
+    const el = document.getElementById('overall');
+    const total = data.count || 0;
+    const failing = data.failing || 0;
+    let color, text;
+    if (failing === 0) {
+      color = 'ok'; text = `全部 ${total} 个服务正常运行`;
+    } else if (failing <= 2) {
+      color = 'warn'; text = `${failing} 个服务出现故障`;
+    } else {
+      color = 'bad'; text = `${failing} 个服务出现故障`;
+    }
+    el.className = `overall-card overall-${color}`;
+    const dotClass = color === 'ok' ? 'dot-ok' : (color === 'warn' ? 'dot-warn' : 'dot-bad');
+
+    // Build group counts
+    const groups = {};
+    (data.services || []).forEach(s => {
+      groups[s.group] = groups[s.group] || { total: 0, fail: 0 };
+      groups[s.group].total++;
+      if (s.level >= 2) groups[s.group].fail++;
+    });
+    const metaHtml = Object.entries(groups).map(([g, c]) => {
+      const failPart = c.fail > 0 ? ` <span style="color:#b91c1c">⚠ ${c.fail}</span>` : '';
+      return `<span><b>${escapeHtml(g)}</b> <span class="og-frac">${c.total - c.fail}/${c.total}</span>${failPart}</span>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div class="overall-dot ${dotClass}"></div>
+      <div style="flex:1">
+        <div class="overall-text">${text}</div>
+        <time class="overall-time" datetime="${escapeHtml(data.fetched_at || '')}">数据更新于 ${formatTime(data.fetched_at)} · 自动检测中</time>
+        <div class="overall-meta">${metaHtml}</div>
+      </div>
+    `;
+  }
+
+  function renderIncidents(svc) {
+    // Hard cap: 5 cards total per service. Incidents take priority,
+    // scheduled maintenance fills any remaining slots. This matches the
+    // user's "最近 5 条" mental model — without it, a service with 5
+    // incidents AND 3 scheduled would show 8 cards.
+    const MAX = 5;
+    const incs = (svc.incidents || []).slice(0, MAX);
+    const scheds = (svc.scheduled || []).slice(0, Math.max(0, MAX - incs.length));
+    if (!incs.length && !scheds.length) {
+      if (!svc.ok) {
+        return `<div class="inc-empty">无法获取数据：${escapeHtml(svc.error || '')}</div>`;
+      }
+      return `<div class="inc-empty">最近事件 — 无</div>`;
+    }
+    const parts = incs.map(inc => {
+      const tagCls = impactTag[inc.impact] || 'tag-minor';
+      const tagText = impactCn[inc.impact] || inc.impact || '';
+      const stText = incStatusCn[inc.status] || inc.status || '';
+      const when = relTime(inc.updated_at || inc.created_at);
+      const link = inc.shortlink ? `<a href="${escapeHtml(inc.shortlink)}" target="_blank" rel="nofollow noopener">↗</a>` : '';
+      return `<div class="inc">
+        <div class="inc-name"><span class="tag ${tagCls}">${escapeHtml(tagText)}</span>${escapeHtml(inc.name)} ${link}</div>
+        <div class="inc-meta">${escapeHtml(stText)} · ${escapeHtml(when)}</div>
+      </div>`;
+    });
+    scheds.forEach(sm => {
+      parts.push(`<div class="inc">
+        <div class="inc-name"><span class="tag tag-maintenance">计划维护</span>${escapeHtml(sm.name)}</div>
+        <div class="inc-meta">${escapeHtml(formatTime(sm.scheduled_for))} → ${escapeHtml(formatTime(sm.scheduled_until))}</div>
+      </div>`);
+    });
+    return parts.join('');
+  }
+
+  function renderCard(svc) {
+    const cls = indClass[svc.indicator] || 'unknown';
+    const dot = indDotClass[svc.indicator] || 'dot-unknown';
+    const stCn = svc.indicator_cn || indCn[svc.indicator] || svc.indicator;
+    let metaLine = '';
+    if (svc.level >= 2) {
+      metaLine = `<div class="svc-meta">⚠ ${escapeHtml(svc.description || '当前出现故障')}</div>`;
+    } else if (svc.last_failure_at) {
+      metaLine = `<div class="svc-meta">上次故障：${escapeHtml(relTime(svc.last_failure_at))}</div>`;
+    } else if (svc.indicator === 'maintenance') {
+      metaLine = `<div class="svc-meta">${escapeHtml(svc.description || '维护中')}</div>`;
+    } else if (!svc.ok) {
+      metaLine = `<div class="svc-meta" style="color:#b91c1c">数据获取失败</div>`;
+    }
+    // Detail link: per-service override (e.g. Claude → our own /claude/status.html)
+    // wins over the vendor's auto-derived status host. Internal links drop nofollow
+    // to keep SEO juice flowing within net.coffee, external still get nofollow.
+    const pageHost = (() => { try { return new URL(svc.page_url || svc.url).host; } catch { return ''; } })();
+    const detailUrl   = svc.detail_url || (pageHost ? `https://${pageHost}` : '');
+    const detailLabel = svc.detail_label || '官方状态页';
+    const isInternal  = /(^|\.)net\.coffee$/i.test((() => { try { return new URL(detailUrl).host; } catch { return ''; } })());
+    const detailRel   = isInternal ? 'noopener' : 'nofollow noopener';
+    const tagHtml = svc.tag
+      ? `<span class="svc-tag svc-tag-${escapeHtml(svc.tag_slug || '')}">${escapeHtml(svc.tag)}</span>`
+      : '';
+    const favUrl = svc.favicon_url || (svc.key ? `/status/favicons/${svc.key}.png` : '');
+    const svcDisplayName = svc.name_cn || svc.name || '';
+    const favHtml = favUrl
+      ? `<img class="svc-favicon" src="${escapeHtml(favUrl)}" alt="${escapeHtml(svcDisplayName)} 服务状态图标" width="16" height="16" loading="lazy" onerror="this.style.display='none'">`
+      : '';
+    return `<div class="svc-card ${cls}" data-key="${escapeHtml(svc.key)}">
+      <div class="svc-row">
+        <div class="svc-dot ${dot}"></div>
+        ${favHtml}
+        <div class="svc-name">${escapeHtml(svc.name_cn || svc.name)}</div>
+        ${tagHtml}
+        <div class="svc-status">${escapeHtml(stCn)}</div>
+      </div>
+      ${metaLine}
+      <div class="svc-expand">
+        ${renderIncidents(svc)}
+        ${detailUrl ? `<div style="margin-top:8px;font-size:0.85em"><a href="${escapeHtml(detailUrl)}" target="_blank" rel="${detailRel}">${escapeHtml(detailLabel)} →</a></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  function render(data) {
+    renderOverall(data);
+
+    const svcs = data.services || [];
+    // Split into 3 sections: failing → maintenance → ok
+    const failing = svcs.filter(s => s.level >= 2);
+    const maint   = svcs.filter(s => s.level === 1);
+    const ok      = svcs.filter(s => s.level === 0);
+
+    // Already sorted server-side; keep that order.
+    const root = document.getElementById('services-root');
+
+    let html = '';
+    if (failing.length) {
+      html += `<h2 class="section-title">⚠ 当前故障 <small>${failing.length} 个服务</small></h2>`;
+      html += `<div class="svc-grid">${failing.map(renderCard).join('')}</div>`;
+    }
+    if (ok.length) {
+      html += `<h2 class="section-title">运行中 <small>${ok.length} 个服务</small></h2>`;
+      html += `<div class="svc-grid">${ok.map(renderCard).join('')}</div>`;
+    }
+    if (maint.length) {
+      html += `<h2 class="section-title">维护/计划 <small>${maint.length} 个服务</small></h2>`;
+      html += `<div class="svc-grid">${maint.map(renderCard).join('')}</div>`;
+    }
+    root.innerHTML = html;
+
+    // Expand on click
+    root.querySelectorAll('.svc-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Don't toggle if clicking a link inside the card
+        if (e.target.closest('a')) return;
+        card.classList.toggle('open');
+      });
+    });
+  }
+
+  function load() {
+    fetch(DATA_URL + '?_=' + Date.now(), { cache: 'no-store' })
+      .then(r => r.json())
+      .then(render)
+      .catch(err => {
+        document.getElementById('overall').innerHTML =
+          `<div class="overall-dot dot-bad"></div><div><div class="overall-text">加载失败</div><div class="overall-time">${escapeHtml(String(err))}</div></div>`;
+        document.getElementById('overall').className = 'overall-card overall-bad';
+      });
+  }
+
+  // First paint uses inlined data (zero extra HTTP requests). The 60s poll
+  // fetches fresh data afterwards. Falls back to fetch if inline data missing.
+  if (window.__INITIAL_DATA__) {
+    render(window.__INITIAL_DATA__);
+  } else {
+    load();
+  }
+  setInterval(load, 60 * 1000);
+})();
+</script>
+
+</body>
+</html>

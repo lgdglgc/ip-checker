@@ -1,0 +1,440 @@
+
+  :root {
+    --bg: #fff; --bg-soft: #f8f9fb; --bg-card: #fff; --bg-hover: #eef1f5;
+    --text: #1a1a1a; --text-soft: #57606a; --text-muted: #8b949e;
+    --border: #e1e4e8; --border-strong: #d8dce0;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  [data-theme="dark"] {
+    --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+    --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+    --border: #30363d; --border-strong: #444c56;
+    --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+      --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+      --border: #30363d; --border-strong: #444c56;
+      --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    }
+  }
+
+  /* === 主题切换器（圆形触发 + 下拉菜单）=== */
+  .ts-wrap { position: relative; margin-left: auto; align-self: center; z-index: 100; margin-top: -6px; }
+  .ts-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-card); color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0;
+    transition: background 0.15s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ts-btn:hover { background: var(--bg-hover); }
+  .ts-btn:active { transform: scale(0.96); }
+  .ts-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+  .ts-menu {
+    position: absolute; top: 44px; right: 0;
+    min-width: 148px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 4px;
+    display: none;
+  }
+  .ts-menu.open { display: block; }
+  .ts-item {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent; border: none;
+    color: var(--text);
+    font: inherit; font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer; text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ts-item:hover { background: var(--bg-hover); }
+  .ts-item svg { width: 16px; height: 16px; stroke: currentColor; flex-shrink: 0; }
+  .ts-item[aria-current="true"] { background: var(--bg-hover); font-weight: 500; }
+  @media (max-width: 480px) {
+    .ts-btn { width: 26px; height: 26px; }
+    .ts-btn svg { width: 13px; height: 13px; }
+  }
+
+  /* 表头：明亮渐变保留，暗夜单独覆盖 */
+  [data-theme="dark"] .main-table th { background: var(--bg-soft) !important; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .main-table th { background: var(--bg-soft) !important; }
+  }
+  body { background: var(--bg) !important; color: var(--text) !important; }
+  .container { color: var(--text); }
+  .ip-card, .ping-item, .split-ip-cell, .ai-card, .verdict-card {
+    background: var(--bg-card); border-color: var(--border) !important; color: var(--text);
+  }
+  .main-table { color: var(--text); }
+  .main-table th, .main-table td { border-color: var(--border) !important; }
+  .split-ip-cell:hover, .ping-item:hover { background: var(--bg-hover) !important; }
+  .nav a { color: var(--text-soft); white-space: nowrap; flex-shrink: 0; }
+  .nav a:hover, .nav a.active { color: var(--text); }
+  footer, footer a { color: var(--text-muted) !important; }
+  .desc, .ip-card .label { color: var(--text-soft); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow-x: clip; }
+  body {
+    font-family: system-ui, sans-serif;
+    background: var(--bg-card); color: var(--text); min-height: 100vh; line-height: 1.6;
+    max-width: 100vw;
+  }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+  .nav { display: flex; flex-wrap: wrap; row-gap: 8px; gap: 20px; margin-bottom: 20px; font-size: 0.9em; align-items: center; }
+  .nav a { color: var(--text-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; -webkit-tap-highlight-color: transparent; outline: none; display: inline-block; line-height: 1.5; }
+  .nav a:hover { color: var(--text); }
+  .nav a:focus, .nav a:active { outline: none; }
+  .nav a.active { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--text); }
+  .nav .short { display: none; }
+  .nav .shortest { display: none; }
+  /* nav-ipcard-new-css */
+  .nav .pc-only-new { display: inline-flex; align-items: center; gap: 4px; }
+  .nav .nav-new {
+    font-size: 0.3em; font-weight: 700; padding: 1px 3px; border-radius: 3px;
+    background: linear-gradient(90deg,#ef4444,#f59e0b); color: #fff;
+    letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.4;
+  }
+  @media (max-width: 580px) { .nav .pc-only-new { display: none; } }
+  @media (max-width: 580px) { .nav .full { display: none; } .nav .short { display: inline; } .nav { gap: 14px; } }
+  .bd-short { display: none; }
+  @media (max-width: 399px) {
+    .nav a[href="/claude/"] .short { display: none; }
+    .nav a[href="/claude/"] .shortest { display: inline; }
+    .nav { gap: 12px; }
+    .ts-btn { width: 24px; height: 24px; }
+    .ts-btn svg { width: 12px; height: 12px; }
+    .bd-full { display: none; }
+    .bd-short { display: inline; }
+  }
+  @media (max-width: 339px) {
+    .nav { gap: 8px; font-size: 0.88em; }
+    .ts-btn { width: 22px; height: 22px; }
+    .ts-btn svg { width: 11px; height: 11px; }
+  }
+  header { margin-bottom: 24px; }
+  header h1 { font-size: 1.75em; font-weight: 700; margin-bottom: 8px; }
+  h1 { font-size: 1.75em; font-weight: 700; margin-bottom: 8px; }
+  @media (max-width: 480px) { h1 { font-size: 1.4em; } }
+  header p { color: var(--text-soft); font-size: 0.9em; line-height: 1.5; }
+
+  .main-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid var(--border-strong); border-radius: 10px; overflow: hidden;
+    font-size: 0.9em;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    table-layout: fixed;
+  }
+  .main-table th {
+    text-align: left; padding: 10px 16px;
+    background: linear-gradient(180deg, #f8f9fb 0%, #eef0f3 100%);
+    border-bottom: 1px solid var(--border-strong); font-weight: 600; font-size: 0.85em;
+    color: var(--text-soft);
+  }
+  .main-table td {
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .main-table tbody tr:nth-child(even) { background: var(--bg-soft); }
+  .main-table tbody tr:hover { background: var(--bg-hover); }
+  .main-table tr:last-child td { border-bottom: none; }
+
+  .site-cell {
+    display: flex; align-items: center; gap: 8px; font-weight: 600;
+  }
+  .site-cell img.favicon {
+    width: 20px; height: 20px; border-radius: 3px; flex-shrink: 0;
+  }
+  .site-name { white-space: nowrap; }
+
+  .badge {
+    display: inline-block; padding: 1px 8px; border-radius: 10px;
+    font-size: 0.75em; font-weight: 600; margin-left: 6px;
+    vertical-align: middle;
+  }
+  .badge-domestic { background: #dbeafe; color: #1d4ed8; }
+  .badge-international { background: #d1fae5; color: #065f46; }
+  .badge-ai { background: #fce4ec; color: #c62828; }
+
+  .badge-crypto { background: #fef3c7; color: #92400e; }
+  .badge-social { background: #f3e5f5; color: #7b1fa2; }
+  .badge-tools { background: #e0f2f1; color: #00695c; }
+  .badge-speed { background: #fff3e0; color: #e65100; }
+  .badge-dev { background: #f3e5f5; color: #7b1fa2; }
+  .badge-media { background: #e8eaf6; color: #283593; }
+  .badge-static { background: #e5e7eb; color: var(--text-soft); }
+
+  .flag-icon {
+    width: 24px; height: auto; border-radius: 2px; vertical-align: middle;
+  }
+  .ip-cell { font-family: ui-monospace, SFMono-Regular, Consolas, "Cascadia Mono", "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", "Liberation Mono", "Noto Sans Mono", Menlo, monospace; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* --- main-table IP column alignment --- */
+  .main-table th.flag-col,
+  .main-table td:nth-child(2) {
+    text-align: right;
+    padding-right: 0;
+    padding-left: 4px;
+    width: 36px;
+  }
+  .main-table th.ip-col,
+  .main-table td.ip-cell {
+    width: 160px;
+  }
+  .main-table td.ip-cell {
+    padding-left: 6px;
+  }
+  .geo-cell { font-size: 0.88em; color: var(--text-soft); }
+
+  .loading-bar {
+    display: inline-block; height: 14px; border-radius: 4px;
+    background-color: #e5e7eb; overflow: hidden; position: relative;
+  }
+  .loading-bar::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, #d1d5db, transparent);
+    animation: shimmer 1.5s linear infinite; will-change: transform;
+  }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+  .error-text { color: #cf222e; font-size: 0.88em; }
+  .pending-text { color: var(--text-muted); font-size: 0.88em; }
+
+  /* ---- My IP section ---- */
+  .ip-section { margin-bottom: 32px; }
+  .ip-section h2 { font-size: 1.75em; font-weight: 700; margin-bottom: 4px; }
+  .ip-section .desc { color: var(--text-soft); font-size: 0.9em; margin-bottom: 20px; }
+
+  .ip-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .ip-card .label { font-size: 0.78em; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ip-card .ip-value {
+    font-size: 1.5em; font-weight: 700; font-family: inherit;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+    color: var(--text); word-break: break-all; overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  .ip-card .ip-value img { width: 28px; height: auto; border-radius: 3px; }
+  .ip-card .ip-value .ip-link,
+  .ip-card .ip-value a.ip-link {
+    color: inherit; text-decoration: none; cursor: pointer;
+    font: inherit; background: none; border: 0; padding: 0;
+  }
+  .ip-card .ip-value .ip-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .ip-card .ip-geo {
+    font-size: 1em; color: var(--text); font-weight: 500;
+    /* Clamp to 1 line with ellipsis. Hover (or focus on mobile)
+       shows the full text via the title attribute. */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ip-card .ip-source { font-size: 0.72em; color: var(--text-muted); margin-top: 10px; }
+
+  .ip-card-top {
+    display: flex; gap: 32px; align-items: flex-start;
+  }
+  .ip-info-col { flex-shrink: 0; min-width: 240px; }
+  .ping-col { flex: 1; min-width: 0; }
+  .ping-col .label { font-size: 0.8em; color: var(--text-muted); margin-bottom: 8px; }
+
+  .ping-grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .ping-item {
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+    display: flex; align-items: center; gap: 6px; font-size: 0.82em;
+    min-width: 0;
+  }
+  .ping-item img.ping-icon { width: 16px; height: 16px; border-radius: 3px; }
+  .ping-item .ping-name { flex: 1; font-weight: 500; }
+  .ping-item .ping-ms { font-family: inherit; font-size: 1em; font-weight: 600; min-width: 4.2em; text-align: right; white-space: nowrap; flex-shrink: 0; }
+  .ping-dots {
+    display: flex; gap: 2px; margin-top: 4px;
+  }
+  .ping-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .dot-good { background: #1b8a2d; }
+  .dot-warn { background: #6fcf7c; }
+  .dot-bad { background: #f0c040; }
+  .dot-fail { background: #b2bec3; }
+  .dot-pending { background: #dfe6e9; }
+
+  .section-divider {
+    border: none; border-top: 1px solid var(--border); margin: 32px 0;
+  }
+
+  /* Tablet */
+  @media (max-width: 768px) {
+    .main-table { font-size: 0.82em; }
+    .main-table th, .main-table td { padding: 8px 10px; }
+    .main-table th.ip-col,
+    .main-table td.ip-cell { width: 135px; }
+    .main-table th.flag-col,
+    .main-table td:nth-child(2) { width: 32px; }
+    .main-table td.ip-cell { padding-left: 6px; }
+    .main-table td:nth-child(2) { padding-right: 0; padding-left: 4px; }
+    .geo-col { display: none; }
+    .ip-card-top { flex-direction: column; gap: 14px; }
+    .ip-info-col { min-width: 0; }
+    .ping-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .ip-card .ip-value { font-size: 1.5em; }
+    .ip-card { padding: 18px 20px; }
+  }
+
+  /* Phone (iPhone etc) */
+  @media (max-width: 480px) {
+    .container { padding: 14px 12px; }
+    .ip-section h2 { font-size: 1.4em; }
+    .ip-section .desc { font-size: 0.82em; }
+    .ip-card { padding: 14px 16px; }
+    .ip-card .ip-value { font-size: 1.15em; gap: 6px; }
+    .ip-card .ip-geo { font-size: 0.85em; }
+    .ping-item { padding: 6px 8px; font-size: 0.78em; }
+    .ping-item img.ping-icon { width: 14px; height: 14px; }
+    .ping-dots { gap: 1px; }
+    .ping-dot { width: 4px; height: 4px; }
+    header h1 { font-size: 1.3em; }
+    header p { font-size: 0.8em; }
+    .main-table { font-size: 0.78em; }
+    .main-table th, .main-table td { padding: 7px 8px; }
+    .main-table th.ip-col,
+    .main-table td.ip-cell { width: 118px; padding-right: 4px; }
+    .main-table th.flag-col,
+    .main-table td:nth-child(2) { width: 26px; padding-left: 2px; }
+    .main-table td.ip-cell { padding-left: 4px; }
+    .site-cell { gap: 5px; }
+    .site-cell img.favicon { width: 16px; height: 16px; }
+    .badge { padding: 1px 5px; font-size: 0.65em; margin-left: 3px; }
+    .badge-speed, .badge-static, .badge-media, .badge-tools, .badge-crypto, .badge-social, .badge-ai { display: none; }
+    .flag-icon { width: 18px; }
+    .section-divider { margin: 20px 0; }
+  }
+
+  /* --- 分流 IP 汇总 --- */
+  .split-summary { margin: 12px 0 16px; }
+  .split-summary-title {
+    font-size: 0.85em; color: var(--text-soft); margin: 0 0 6px;
+  }
+  .split-ip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  /* 汇总框始终显示——即便 grid 空（正在测试中）。空 grid 用 ::before 显示
+     loading 提示，避免用户误以为整个分流功能要等滚动才触发。 */
+  .split-ip-grid:empty::before {
+    content: "正在检测分流出口 IP…";
+    grid-column: 1 / -1;
+    color: var(--text-muted); font-size: 0.88em;
+    padding: 8px 0;
+    display: block;
+  }
+  .split-ip-cell {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Cascadia Mono", "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", "Liberation Mono", "Noto Sans Mono", Menlo, monospace;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .split-ip-cell:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-muted);
+    text-decoration: none;
+  }
+  .split-ip-cell .split-flag {
+    width: 20px; height: auto;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .split-ip-cell .split-ip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 15ch;     /* width of 255.255.255.255 in monospace */
+    text-align: left;
+    flex-shrink: 0;
+  }
+  @media (max-width: 720px) {
+    .ping-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .split-ip-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .split-ip-cell {
+      padding: 6px 8px;
+      font-size: 0.82em;
+      justify-content: flex-start;
+    }
+    .split-ip-cell .split-flag { width: 16px; }
+  }
+
+
+  /* ─── 隐藏真实IP 开关（iOS 风格）─── */
+  /* ─── "我的 IP 查询" 标题行：左侧描述文案 + 右侧 隐藏IP 开关 ─── */
+  .ip-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .ip-section-header .desc { margin: 0; flex: 1 1 auto; min-width: 0; }
+  /* iOS 风格小尺寸 toggle：先 label 后 switch，从左到右 */
+  .ip-mask-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer; user-select: none;
+    font-size: 0.80em; color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .ip-mask-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+  .ip-mask-toggle-slider {
+    position: relative; display: inline-block;
+    width: 26px; height: 14px;
+    background: #d8dce0; border-radius: 7px;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+  }
+  .ip-mask-toggle-slider::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 10px; height: 10px;
+    background: var(--bg-card); border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .ip-mask-toggle input:checked + .ip-mask-toggle-slider { background: #34c759; }
+  .ip-mask-toggle input:checked + .ip-mask-toggle-slider::after { transform: translateX(12px); }
+  .ip-mask-toggle input:focus-visible + .ip-mask-toggle-slider { outline: 2px solid #34c759; outline-offset: 2px; }
+  /* 移动端 (H5) 隐藏开关——给主内容腾出宽度 */
+  @media (max-width: 720px) {
+    .ip-mask-toggle { display: none !important; }
+  }
+
+
+  /* nav-more 下拉(原内联,移入head防FOUC) */
+  .nav-more{position:relative;display:inline-flex;align-items:center}.nav-more-trigger{cursor:pointer;display:inline-flex;align-items:center;gap:3px;color:var(--text-soft,#666);line-height:1.5;border-bottom:2px solid transparent;padding-bottom:4px;white-space:nowrap}.nav-more:hover .nav-more-trigger{color:var(--text,#1a1a1a)}.nav-more-arrow{transition:transform .15s}.nav-more:hover .nav-more-arrow{transform:rotate(180deg)}.nav-more-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:5px;min-width:120px;opacity:0;visibility:hidden;transition:opacity .15s;z-index:300}.nav-more:hover .nav-more-menu{opacity:1;visibility:visible}.nav-more-menu a{display:block;padding:8px 12px;border-radius:6px;border-bottom:none !important;white-space:nowrap;color:var(--text,#1a1a1a);font-size:0.95em}.nav-more-menu a:hover{background:var(--bg-hover,#eef1f5)}.nav-more-menu::before{content:"";position:absolute;left:-12px;right:-12px;top:-18px;height:18px}.nav-more-menu{transition:opacity .15s ease,visibility 0s linear .35s}.nav-more:hover .nav-more-menu{transition:opacity .15s ease,visibility 0s}
+  

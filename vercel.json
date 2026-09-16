@@ -1,19 +1,29 @@
 {
   "version": 2,
-  "builds": [
+  "routes": [
     {
-      "src": "api/*.js",
-      "use": "@vercel/node"
+      "src": "/api/myip",
+      "dest": "/api/myip.js"
     },
     {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
+      "src": "/api/geoip/(.*)",
+      "dest": "/api/geoip.js?ip=$1"
+    },
+    {
+      "src": "/api/geoip-batch",
+      "dest": "/api/geoip-batch.js"
+    },
+    {
+      "src": "/api/ipscore/(.*)",
+      "dest": "/api/ipscore.js?ip=$1"
+    },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1.js"
+    },
+    {
+      "src": "/ip/(.*)",
+      "dest": "/public/ip.html"
     },
     {
       "src": "/(.*)",

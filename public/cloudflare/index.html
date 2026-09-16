@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#cc785c">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#cc785c">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f1e1d">
+<meta name="application-name" content="Cloudflare 节点检测">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cloudflare 节点检测">
+<meta name="format-detection" content="telephone=no">
+<title>Cloudflare 节点检测 - Cloudflare 环境风险与人机验证测试 - CF 边缘延迟对比 - Net.Coffee</title>
+<meta name="description" content="Cloudflare 节点检测与环境风险评估：查看命中的 Cloudflare 边缘节点、出口 IP、WARP 与 HTTP/3、TLS 版本，评估当前 IP 在 Cloudflare 风控下的风险指数，实测 Turnstile 人机验证能否无感通过，横向对比免费版、企业版、WARP 网络的节点延迟，附 Cloudflare 边缘测速。">
+<meta name="keywords" content="Cloudflare 节点检测,Cloudflare 节点查询,Cloudflare colo,Cloudflare 数据中心,Cloudflare 边缘节点,Cloudflare 延迟测试,Cloudflare 测速,Cloudflare 出口IP,Cloudflare IP 查询,Cloudflare WARP 检测,WARP 出口IP,Cloudflare 免费版节点,Cloudflare 企业版节点,Cloudflare 节点对比,cdn-cgi/trace,Cloudflare 优选IP,Cloudflare 香港节点,Cloudflare 东京节点,Cloudflare 新加坡节点,Cloudflare 洛杉矶节点,Cloudflare 人机验证,Turnstile 测试,Cloudflare 风险指数,Cloudflare 环境检测,Cloudflare 5秒盾,Bot Management,reCAPTCHA v3 测试">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ip.net.coffee/cloudflare/">
+<meta property="og:title" content="Cloudflare 节点检测 - Cloudflare 环境风险与人机验证测试 - CF 边缘延迟对比 - Net.Coffee">
+<meta property="og:description" content="Cloudflare 节点检测：命中节点、出口 IP、WARP、HTTP/3 与 TLS，免费版 / 企业版 / WARP 节点延迟横向对比，Cloudflare 边缘测速。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ip.net.coffee/cloudflare/">
+<meta property="og:locale" content="zh_CN">
+<meta name="author" content="Net.Coffee">
+<meta name="generator" content="Net.Coffee Tools">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://speed.cloudflare.com" crossorigin>
+<meta property="og:site_name" content="Net.Coffee">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cloudflare 节点检测 - Cloudflare 环境风险与人机验证测试 - CF 边缘延迟对比 - Net.Coffee">
+<meta name="twitter:description" content="Cloudflare 节点检测：命中节点、出口 IP、WARP、HTTP/3 与 TLS，免费版 / 企业版 / WARP 节点延迟横向对比。">
+<meta property="og:image" content="https://ip.net.coffee/og-image-chatgpt.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cloudflare 节点检测 · 边缘延迟对比 · Net.Coffee">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:image" content="https://ip.net.coffee/og-image-chatgpt.png">
+<meta name="twitter:image:alt" content="Cloudflare 节点检测 · 边缘延迟对比 · Net.Coffee">
+<link rel="stylesheet" href="/cloudflare/cloudflare-page.css?v20260916c">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Cloudflare 节点检测与环境风险评估", "url": "https://ip.net.coffee/cloudflare/", "description": "Cloudflare 节点检测与环境风险评估：查看命中的 Cloudflare 边缘节点、出口 IP、WARP 与 HTTP/3、TLS 版本，评估当前 IP 在 Cloudflare 风控下的风险指数，实测 Turnstile 人机验证能否无感通过，横向对比免费版、企业版、WARP 网络的节点延迟，附 Cloudflare 边缘测速。", "applicationCategory": "SecurityApplication", "operatingSystem": "All", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CNY"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://net.coffee/"}, {"@type": "ListItem", "position": 2, "name": "IP 查询", "item": "https://ip.net.coffee/"}, {"@type": "ListItem", "position": 3, "name": "Cloudflare 节点检测", "item": "https://ip.net.coffee/cloudflare/"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "什么是 Cloudflare 边缘节点（colo）？", "acceptedAnswer": {"@type": "Answer", "text": "Cloudflare 在全球 135 个国家和地区部署了 342 个数据中心，每个数据中心用三字母机场代码标识（如 HKG 香港、NRT 东京、SIN 新加坡、LAX 洛杉矶）。你访问任何接入 Cloudflare 的网站时，请求先到达离你网络最近的边缘节点，再回源到网站服务器。本页读取 Cloudflare 的 cdn-cgi/trace 接口，把你命中的节点代码翻译成城市并标出国家。"}}, {"@type": "Question", "name": "为什么免费版和企业版网站命中的 Cloudflare 节点不一样？", "acceptedAnswer": {"@type": "Answer", "text": "Cloudflare 对不同套餐使用不同的网络策略。免费版和 Pro 版的流量在部分地区（尤其是从中国大陆、部分东南亚线路出发时）会被调度到成本更低的远端节点，例如美国西海岸的 LAX、SJC；企业版和 Cloudflare 自家服务（1.1.1.1、cloudflare.com、speed.cloudflare.com）则更容易命中 HKG、NRT、SIN 这类就近节点。本页把同一条线路下不同等级站点命中的节点和延迟并排展示，差异一目了然。"}}, {"@type": "Question", "name": "Cloudflare 出口 IP 和普通出口 IP 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "普通出口 IP 是你直连网站时对方看到的地址；Cloudflare 出口 IP 是你访问接入 Cloudflare 的网站时，Cloudflare 边缘节点记录到的地址。如果你的代理或分流规则把 Cloudflare 流量单独处理，两者会不同。本站首页的分流测试和本页的出口 IP 都能帮你确认规则是否生效。"}}, {"@type": "Question", "name": "WARP 是什么？检测结果里 warp=on 和 warp=plus 是什么意思？", "acceptedAnswer": {"@type": "Answer", "text": "WARP 是 Cloudflare 提供的加密隧道服务，开启后你的流量先进入 Cloudflare 网络再出去。warp=off 表示未使用 WARP；warp=on 表示使用免费版 WARP；warp=plus 表示 WARP+ 付费版。开启 WARP 时，出口 IP 会变成 Cloudflare 的地址（AS13335），很多网站对这类 IP 的风控更严格。"}}, {"@type": "Question", "name": "延迟多少算正常？", "acceptedAnswer": {"@type": "Answer", "text": "命中同城或同区域节点时，浏览器到 Cloudflare 边缘的往返延迟通常在 5 到 60 毫秒；跨海到美国西海岸约 120 到 200 毫秒；超过 300 毫秒多半是线路绕行或节点被调度到了远端。本页延迟为浏览器实际发起请求的耗时，会略高于纯网络 RTT，用于横向对比不同网络等级最合适。"}}, {"@type": "Question", "name": "HTTP/3 和 TLS 1.3 显示未启用怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "HTTP/3 基于 QUIC（UDP 443），浏览器通常在第二次访问同一站点时才会切换到 HTTP/3；如果一直显示 HTTP/2，可能是代理或防火墙不放行 UDP 443。TLS 1.3 是当前标准，现代浏览器默认支持，显示 TLS 1.2 一般意味着中间有代理在做 TLS 降级或流量审计。"}}, {"@type": "Question", "name": "Turnstile 无感通过和需要点击有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "Turnstile 是 Cloudflare 的人机验证。非交互模式完全在后台校验；托管模式由 Cloudflare 根据浏览器指纹、网络信誉和行为特征决定是否弹出勾选框。无感通过说明 Cloudflare 高度信任当前环境；需要点击说明存在少量可疑特征；点击后仍失败说明环境风险较高，访问接入 Cloudflare 的网站会频繁遇到验证甚至被拦。本页的 token 会送到本站服务器做二次校验，显示 PASS 才算真正通过。"}}, {"@type": "Question", "name": "风险指数是 Cloudflare 官方给的吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。Cloudflare 企业版 Bot Management 的机器人分数只对企业客户开放，本页的风险指数是本站基于多个商业 IP 情报源的信誉评分、七类代理特征和 WARP 等 Cloudflare 连接特征计算的等效评估，与 Turnstile 的实测结果互相印证。"}}, {"@type": "Question", "name": "这个页面会记录我的 IP 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会。所有检测都由你的浏览器直接向 Cloudflare 接口发起，节点历史只保存在浏览器本地存储，本站服务器不记录查询记录。"}}]}
+</script>
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="/gpt/"] .short{display:inline}
+}
+</style>
+</head>
+<body>
+
+
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
+    <a href="/claude/" title="Claude AI IP 检测 - IP 纯净度"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
+    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
+    <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
+    <a href="/webrtc/" title="WebRTC IP 泄露检测"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="/cloudflare/" title="Cloudflare 全面检测" class="pc-only-new active" aria-current="page"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new"><span class="full">全球Ping</span><span class="short">Ping</span></a>
+    <a href="/status/" title="服务可用性查询"><span class="full">服务状态</span><span class="short">状态</span></a><div class="nav-more pc-only-new" data-tag="nav-more-dd"><span class="nav-more-trigger">更多 <svg class="nav-more-arrow" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span><div class="nav-more-menu"><a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener" title="精美的网站IP卡片代码">IP卡片</a></div></div>
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">更多 <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="切换主题模式" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>亮色模式</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>暗黑模式</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>跟随系统</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="/">IP查询</a>
+  <a href="/claude/">Claude</a>
+  <a href="/ip/">IP评分</a>
+  <a href="/gpt/">GPT 检测</a>
+  <a href="/link/">网络连通</a>
+  <a href="/dns/">DNS泄露</a>
+  <a href="/webrtc/">WebRTC</a>
+  <a href="/cloudflare/" class="on">Cloudflare</a>
+  <a href="/ping/">全球Ping</a>
+  <a href="/status/">服务状态</a>
+  <a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener">IP卡片</a>
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )nc_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; domain=.net.coffee; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="nc_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="nc_theme=; path=/; domain=.net.coffee; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <div class="cfp">
+  <h1>Cloudflare 节点检测 · 环境风险与边缘延迟对比</h1>
+  <div class="ip-section-header">
+    <p class="desc">检测你访问 Cloudflare 时命中的边缘节点、出口 IP、WARP 与协议，评估当前网络环境在 Cloudflare 风控下的风险指数，实测 Turnstile 人机验证能否无感通过，并横向对比免费版、企业版、WARP 等不同 Cloudflare 网络的节点与延迟</p>
+    <label class="ip-mask-toggle">
+      <span class="ip-mask-toggle-label">隐藏IP</span>
+      <input type="checkbox" id="ipMaskToggle">
+      <span class="ip-mask-toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="ipv6-warn" id="ipv6Warn">⚠️ 当前经 IPv6 访问 Cloudflare。IPv6 与 IPv4 可能命中不同的边缘节点，下方结果以 IPv6 线路为准。</div>
+
+  <!-- 三联主卡 -->
+  <div class="ip-dual">
+    <div class="ip-hero" id="heroIP">
+      <div class="label"><img src="/favicons/cloudflare.webp" alt="Cloudflare" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px">Cloudflare 出口IP</div>
+      <div class="ip-addr" id="ipAddr"><div class="loading-bar" style="width:180px;height:24px"></div></div>
+      <div class="ip-geo" id="ipGeo"><div class="loading-bar" style="width:220px"></div></div>
+    </div>
+    <div class="ip-hero" id="heroColo">
+      <div class="label">命中的 Cloudflare 边缘节点</div>
+      <div class="big" id="coloBig"><div class="loading-bar" style="width:160px;height:24px"></div></div>
+      <div class="sub" id="coloSub"><div class="loading-bar" style="width:200px"></div></div>
+    </div>
+    <div class="ip-hero" id="heroWarp">
+      <div class="label">WARP 与连接协议</div>
+      <div class="big" id="warpBig"><div class="loading-bar" style="width:140px;height:24px"></div></div>
+      <div class="sub" id="protoSub"><div class="loading-bar" style="width:200px"></div></div>
+    </div>
+  </div>
+
+  <!-- Turnstile -->
+  <div class="cfx-grid2" id="tsGrid">
+    <div class="cfx">
+      <div class="cfx-head">
+        <div><div class="t">Turnstile 非交互模式<span class="mode-chip">Non-interactive</span></div><div class="s">后台静默校验，不需要任何点击</div></div>
+        <button class="cf-btn" type="button" onclick="tsReset('ni')">重置</button>
+      </div>
+      <div class="cfx-body">
+        <div class="ts-box" id="tsBoxNi"><span style="font-size:0.85em;color:var(--text-muted)">正在加载 Turnstile...</span></div>
+        <div class="kv">
+          <div class="risk-row"><span class="risk-label">当前状态</span><span class="risk-value" id="tsNiState"><span class="tag tag-neutral">等待校验</span></span></div>
+          <div class="risk-row"><span class="risk-label">服务端验证</span><span class="risk-value" id="tsNiServer">—</span></div>
+          <div class="risk-row"><span class="risk-label">响应耗时</span><span class="risk-value num" id="tsNiTime">—</span></div>
+        </div>
+        <div class="verdict wait" id="tsNiVerdict"><b>等待结果</b>校验完成后这里会给出环境判定。</div>
+        <details class="tok"><summary>响应元数据</summary><div class="tokv" id="tsNiToken">—</div></details>
+      </div>
+    </div>
+    <div class="cfx">
+      <div class="cfx-head">
+        <div><div class="t">Turnstile 托管模式<span class="mode-chip">Managed</span></div><div class="s">由 Cloudflare 决定是否要求你点击确认</div></div>
+        <button class="cf-btn" type="button" onclick="tsReset('mg')">重置</button>
+      </div>
+      <div class="cfx-body">
+        <div class="ts-box" id="tsBoxMg"><span style="font-size:0.85em;color:var(--text-muted)">正在加载 Turnstile...</span></div>
+        <div class="kv">
+          <div class="risk-row"><span class="risk-label">当前状态</span><span class="risk-value" id="tsMgState"><span class="tag tag-neutral">等待校验</span></span></div>
+          <div class="risk-row"><span class="risk-label">服务端验证</span><span class="risk-value" id="tsMgServer">—</span></div>
+          <div class="risk-row"><span class="risk-label">响应耗时</span><span class="risk-value num" id="tsMgTime">—</span></div>
+        </div>
+        <div class="verdict wait" id="tsMgVerdict"><b>等待结果</b>校验完成后这里会给出环境判定。</div>
+        <details class="tok"><summary>响应元数据</summary><div class="tokv" id="tsMgToken">—</div></details>
+      </div>
+    </div>
+  </div>
+
+  <!-- 节点等级对比 -->
+  <div class="cfx" style="margin-bottom:24px">
+    <div class="cfx-head">
+      <div><div class="t">Cloudflare 不同网络等级的节点与延迟对比</div><div class="s">同一条线路访问免费版、企业版、WARP、测速网络等不同 Cloudflare 网络，看各自命中的节点与延迟</div></div>
+      <button class="cf-btn" type="button" id="btnCompare" onclick="runCompare()">重新测试</button>
+    </div>
+    <div class="cfx-body">
+      <div class="cf-table-wrap">
+        <table class="cf-table" id="compareTable">
+          <thead><tr><th>站点 / 网络</th><th>等级</th><th>命中节点</th><th>延迟</th><th>协议</th></tr></thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+      <div class="cf-note" id="compareNote">正在测试...</div>
+    </div>
+  </div>
+
+  <!-- 边缘测速 -->
+  <div class="cfx" style="margin-bottom:24px">
+    <div class="cfx-head">
+      <div><div class="t">Cloudflare 边缘节点测速</div><div class="s">浏览器直连 speed.cloudflare.com 分级实测：下载最多 300 MB、上传最多 50 MB，跑够时长自动停止；同时读取边缘侧 TCP 往返时延</div></div>
+      <button class="cf-btn primary" type="button" id="btnSpeed" onclick="runSpeed()">开始测速</button>
+    </div>
+    <div class="cfx-body">
+      <div class="speed-grid">
+        <div><div class="k">下载</div><div class="v" id="spDown">—</div><div class="u">Mbps</div></div>
+        <div><div class="k">上传</div><div class="v" id="spUp">—</div><div class="u">Mbps</div></div>
+        <div><div class="k">边缘 RTT</div><div class="v" id="spRtt">—</div><div class="u">ms · TCP 往返</div></div>
+      </div>
+      <div class="cf-note" id="speedNote">点击「开始测速」，最多消耗约 350 MB 流量（速度越快用得越多，百兆线路通常 150 到 300 MB）。结果反映你到最近 Cloudflare 节点的链路质量，不代表回源速度；手机流量用户请注意。</div>
+    </div>
+  </div>
+
+  <!-- 环境风险评估 -->
+  <div class="cfx" style="margin-bottom:24px">
+    <div class="cfx-head orange">
+      <div><div class="t">Cloudflare 环境风险评估</div><div class="s">综合 Cloudflare 连接特征与多源 IP 情报，评估当前出口在 Cloudflare 风控下的风险</div></div>
+      <button class="cf-btn" type="button" id="btnRisk" onclick="loadRisk(true)" title="重新评估">刷新</button>
+    </div>
+    <div class="cfx-body">
+      <div class="risk-top">
+        <div><div class="k">检测对象 · 出口 IP</div><div class="ipbig" id="riskIp"><div class="loading-bar" style="width:180px;height:24px"></div></div></div>
+        <div id="riskPill"><span class="risk-pill lv-mid"><span class="dot"></span>风险指数：计算中</span></div>
+      </div>
+      <div class="risk-cols">
+        <div>
+          <h4>地理位置定位</h4>
+          <div class="geo-box" id="riskGeo"><div class="loading-bar" style="width:120px;height:22px"></div><div class="loading-bar" style="width:180px"></div></div>
+        </div>
+        <div>
+          <h4>风险用途检测</h4>
+          <div class="risk-list" id="riskList">
+            <div class="risk-row"><span class="risk-label">公开代理（Open Proxy）</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+            <div class="risk-row"><span class="risk-label">住宅代理（Residential Proxy）</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+            <div class="risk-row"><span class="risk-label">企业代理（Corporate Proxy）</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+            <div class="risk-row"><span class="risk-label">VPN 出口</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+            <div class="risk-row"><span class="risk-label">Tor 出口</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+            <div class="risk-row"><span class="risk-label">机房 / 云服务器 IP</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+            <div class="risk-row"><span class="risk-label">滥用记录（垃圾邮件 / 攻击）</span><span class="risk-value"><span class="sig sig-na">检测中</span></span></div>
+          </div>
+          <div class="risk-foot">仅开放高置信度信号，检测到基本不会误判；未检测到不代表绝对安全</div>
+        </div>
+      </div>
+      <div class="cf-note" id="riskNote"></div>
+    </div>
+  </div>
+
+  <!-- reCAPTCHA v3(有 sitekey 才显示) -->
+  <div class="cfx" id="rcCard" style="display:none;margin-bottom:24px">
+    <div class="cfx-head">
+      <div><div class="t">Google reCAPTCHA v3 验证测试<span class="mode-chip">补充测试</span></div><div class="s">无感行为评分，返回 0.0 到 1.0 的可信分数，越高越像真人</div></div>
+      <div style="display:flex;gap:8px"><button class="cf-btn" type="button" onclick="rcReset()">重置</button><button class="cf-btn primary" type="button" id="btnRc" onclick="rcRun()">开始校验</button></div>
+    </div>
+    <div class="cfx-body">
+      <div class="kv">
+        <div class="risk-row"><span class="risk-label">引擎状态</span><span class="risk-value" id="rcEngine"><span class="tag tag-neutral">加载中</span></span></div>
+        <div class="risk-row"><span class="risk-label">当前状态</span><span class="risk-value" id="rcState"><span class="tag tag-neutral">等待触发</span></span></div>
+        <div class="risk-row"><span class="risk-label">可信分数（Score）</span><span class="risk-value num" id="rcScore">—</span></div>
+        <div class="risk-row"><span class="risk-label">响应耗时</span><span class="risk-value num" id="rcTime">—</span></div>
+      </div>
+      <div class="verdict wait" id="rcVerdict"><b>等待触发</b>点击「开始校验」后由 Google 静默评分。</div>
+      <table class="score-scale" id="rcScale">
+        <tr data-min="0.9"><td>0.9 ~ 1.0</td><td>⭐⭐⭐⭐⭐</td><td>极佳，浏览器环境非常干净</td></tr>
+        <tr data-min="0.7"><td>0.7 ~ 0.9</td><td>⭐⭐⭐⭐</td><td>良好，大多数场景正常使用</td></tr>
+        <tr data-min="0.5"><td>0.5 ~ 0.7</td><td>⭐⭐⭐</td><td>一般，存在一定风险特征</td></tr>
+        <tr data-min="0.3"><td>0.3 ~ 0.5</td><td>⭐⭐</td><td>较差，容易触发风控或验证码</td></tr>
+        <tr data-min="0"><td>0.0 ~ 0.3</td><td>⭐</td><td>很差，容易被识别为异常流量</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">Cloudflare 连接详情</div>
+      <div id="connContent"><div class="loading-bar" style="width:100%;height:120px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cloudflare 网络画像</div>
+      <div id="profileContent"><div class="loading-bar" style="width:100%;height:120px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
+        <span>节点历史记录<br><span style="font-size:0.7em;color: var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">仅保存在浏览器本地，本站不记录</span></span>
+        <button class="cf-btn" type="button" onclick="clearColoHistory()">清除</button>
+      </div>
+      <div id="historyContent" style="font-size:0.9em;color: var(--text-muted)">加载中...</div>
+    </div>
+  </div>
+
+  <!-- 说明区 -->
+  <div class="cf-section">
+    <h2>Cloudflare 节点检测能看出什么</h2>
+    <p>全球超过五分之一的网站前面都挂着 Cloudflare。你打开这些网站时，请求并不是直接到达网站服务器，而是先到 Cloudflare 离你最近的<b>边缘节点</b>（数据中心，Cloudflare 内部称 colo），再由边缘节点回源。命中哪个节点，直接决定了打开速度、视频是否卡顿、以及某些服务把你识别成哪个地区的用户。本页向 Cloudflare 的 cdn-cgi/trace 接口发一次请求，把返回的节点代码、出口 IP、WARP 状态、协议版本翻译成人能看懂的结论。</p>
+    <h3>风险指数怎么算</h3>
+    <p>Cloudflare 企业版 Bot Management 的机器人分数不对外公开，本页的风险指数是本站的等效评估：以出口 IP 在多个商业情报源的信誉评分为基础，叠加公开代理、住宅代理、企业代理、VPN、Tor、机房 IP、滥用记录七类高置信信号，再结合 WARP 等 Cloudflare 连接特征。数值越小越好；60 以上通常意味着访问 Cloudflare 站点时容易遇到人机验证或拦截。想看更细的评分依据，可以打开 <a href="/ip/" title="IP 评分查询">IP 评分页</a>。</p>
+    <h3>人机验证结果怎么看</h3>
+    <ul>
+      <li><b>无感自动通过</b>：Turnstile 不需要任何操作就完成校验，说明 Cloudflare 对当前浏览器与网络的信任度高，是最理想的结果。</li>
+      <li><b>需要点击验证</b>：托管模式弹出了「确认你是人类」的勾选框，点一下即可通过。环境整体正常，但存在少量可疑特征。</li>
+      <li><b>无法通过</b>：即使点击也校验失败，通常是浏览器指纹异常、自动化特征明显或 IP 信誉较差，访问很多站点会反复遇到验证码。</li>
+    </ul>
+    <h3>三种常见的异常场景</h3>
+    <ul>
+      <li><b>人在亚洲，节点在美国</b>：免费版 Cloudflare 站点从中国大陆、部分东南亚线路出发时，经常被调度到 LAX、SJC 这类远端节点，延迟从几十毫秒变成两百毫秒以上。对比表里「本站（免费版）」与「企业版」两行如果命中不同节点，就是这种情况。</li>
+      <li><b>出口 IP 与首页不一致</b>：说明你的代理或分流规则把 Cloudflare 流量单独处理了。配合<a href="/" title="IP 查询与分流测试">首页的分流测试</a>可以核对规则是否按预期生效。</li>
+      <li><b>WARP 显示已开启</b>：出口 IP 变成 Cloudflare 自己的地址（AS13335）。这类 IP 在 <a href="/gpt/" title="ChatGPT · Codex IP 风险检测">ChatGPT</a>、<a href="/claude/" title="Claude AI IP 检测">Claude</a> 等服务的风控里评分偏低，注册和登录更容易被拦。</li>
+    </ul>
+    <h3>Cloudflare 主要边缘节点代码速查</h3>
+    <p>节点代码沿用当地机场的三字母代码。亚太地区常见：<span id="coloChipsAsia"></span></p>
+    <p>北美与欧洲常见：<span id="coloChipsWest"></span></p>
+    <p style="margin-top:8px">Cloudflare 目前在全球 135 个国家和地区共有 342 个数据中心，本页内置完整对照表，任何代码都能翻译成城市。</p>
+  </div>
+
+  <div class="cf-section">
+    <h2>常见问题</h2>
+      <details class="cf-faq"><summary>什么是 Cloudflare 边缘节点（colo）？</summary><p>Cloudflare 在全球 135 个国家和地区部署了 342 个数据中心，每个数据中心用三字母机场代码标识（如 HKG 香港、NRT 东京、SIN 新加坡、LAX 洛杉矶）。你访问任何接入 Cloudflare 的网站时，请求先到达离你网络最近的边缘节点，再回源到网站服务器。本页读取 Cloudflare 的 cdn-cgi/trace 接口，把你命中的节点代码翻译成城市并标出国家。</p></details>
+      <details class="cf-faq"><summary>为什么免费版和企业版网站命中的 Cloudflare 节点不一样？</summary><p>Cloudflare 对不同套餐使用不同的网络策略。免费版和 Pro 版的流量在部分地区（尤其是从中国大陆、部分东南亚线路出发时）会被调度到成本更低的远端节点，例如美国西海岸的 LAX、SJC；企业版和 Cloudflare 自家服务（1.1.1.1、cloudflare.com、speed.cloudflare.com）则更容易命中 HKG、NRT、SIN 这类就近节点。本页把同一条线路下不同等级站点命中的节点和延迟并排展示，差异一目了然。</p></details>
+      <details class="cf-faq"><summary>Cloudflare 出口 IP 和普通出口 IP 有什么区别？</summary><p>普通出口 IP 是你直连网站时对方看到的地址；Cloudflare 出口 IP 是你访问接入 Cloudflare 的网站时，Cloudflare 边缘节点记录到的地址。如果你的代理或分流规则把 Cloudflare 流量单独处理，两者会不同。本站首页的分流测试和本页的出口 IP 都能帮你确认规则是否生效。</p></details>
+      <details class="cf-faq"><summary>WARP 是什么？检测结果里 warp=on 和 warp=plus 是什么意思？</summary><p>WARP 是 Cloudflare 提供的加密隧道服务，开启后你的流量先进入 Cloudflare 网络再出去。warp=off 表示未使用 WARP；warp=on 表示使用免费版 WARP；warp=plus 表示 WARP+ 付费版。开启 WARP 时，出口 IP 会变成 Cloudflare 的地址（AS13335），很多网站对这类 IP 的风控更严格。</p></details>
+      <details class="cf-faq"><summary>延迟多少算正常？</summary><p>命中同城或同区域节点时，浏览器到 Cloudflare 边缘的往返延迟通常在 5 到 60 毫秒；跨海到美国西海岸约 120 到 200 毫秒；超过 300 毫秒多半是线路绕行或节点被调度到了远端。本页延迟为浏览器实际发起请求的耗时，会略高于纯网络 RTT，用于横向对比不同网络等级最合适。</p></details>
+      <details class="cf-faq"><summary>HTTP/3 和 TLS 1.3 显示未启用怎么办？</summary><p>HTTP/3 基于 QUIC（UDP 443），浏览器通常在第二次访问同一站点时才会切换到 HTTP/3；如果一直显示 HTTP/2，可能是代理或防火墙不放行 UDP 443。TLS 1.3 是当前标准，现代浏览器默认支持，显示 TLS 1.2 一般意味着中间有代理在做 TLS 降级或流量审计。</p></details>
+      <details class="cf-faq"><summary>Turnstile 无感通过和需要点击有什么区别？</summary><p>Turnstile 是 Cloudflare 的人机验证。非交互模式完全在后台校验；托管模式由 Cloudflare 根据浏览器指纹、网络信誉和行为特征决定是否弹出勾选框。无感通过说明 Cloudflare 高度信任当前环境；需要点击说明存在少量可疑特征；点击后仍失败说明环境风险较高，访问接入 Cloudflare 的网站会频繁遇到验证甚至被拦。本页的 token 会送到本站服务器做二次校验，显示 PASS 才算真正通过。</p></details>
+      <details class="cf-faq"><summary>风险指数是 Cloudflare 官方给的吗？</summary><p>不是。Cloudflare 企业版 Bot Management 的机器人分数只对企业客户开放，本页的风险指数是本站基于多个商业 IP 情报源的信誉评分、七类代理特征和 WARP 等 Cloudflare 连接特征计算的等效评估，与 Turnstile 的实测结果互相印证。</p></details>
+      <details class="cf-faq"><summary>这个页面会记录我的 IP 吗？</summary><p>不会。所有检测都由你的浏览器直接向 Cloudflare 接口发起，节点历史只保存在浏览器本地存储，本站服务器不记录查询记录。</p></details>
+  </div>
+
+  <!-- 相关工具 -->
+  <div style="margin-top:24px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+    <div style="font-size:0.82em;color: var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">相关工具</div>
+    <div class="reading-grid">
+      <a href="/" title="IP 查询与分流测试">IP 查询 · 网站分流测试：核对 Cloudflare 流量是否走了预期出口</a>
+      <a href="/ip/" title="IP 评分查询">IP 评分查询：出口 IP 的纯净度、ASN 与风险明细</a>
+      <a href="/ping/" title="全球 Ping 延迟测试">全球 Ping 延迟测试：从 20 个节点实测任意 IP 的延迟</a>
+      <a href="/link/" title="全球网络连通性测试">全球网络连通性测试：48 个常用站点一键连通检测</a>
+      <a href="/gpt/" title="ChatGPT · Codex IP 风险检测">ChatGPT 风险检测：Cloudflare 出口 IP 的纯净度与信任评分</a>
+      <a href="/claude/" title="Claude AI IP 检测">Claude AI IP 检测：当前出口 IP 能否稳定使用 Claude</a>
+    </div>
+  </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/cloudflare/" style="color: var(--text-muted);text-decoration:none">Cloudflare 节点检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+
+<script src="/cloudflare/cloudflare-page.js?v20260916c"></script>
+
+</body>
+</html>

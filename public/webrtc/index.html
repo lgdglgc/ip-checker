@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebRTC 泄露检测 - STUN UDP自查 - Net.Coffee</title>
+<meta name="description" content="检测你的浏览器是否存在 WebRTC IP 泄露。WebRTC 可能绕过网络加密通道，暴露你的真实 IP 地址。">
+<meta name="keywords" content="WebRTC泄露,WebRTC Leak,IP泄露,WebRTC检测,STUN,UDP泄露">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ip.net.coffee/webrtc/">
+<meta property="og:title" content="WebRTC 泄露检测 - STUN UDP自查 - Net.Coffee">
+<meta property="og:description" content="检测浏览器是否存在 WebRTC IP 泄露，WebRTC 可能绕过网络加密通道暴露真实 IP。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ip.net.coffee/webrtc/">
+<meta property="og:locale" content="zh_CN">
+<meta name="author" content="Net.Coffee">
+<meta name="generator" content="Net.Coffee Tools">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<meta property="og:site_name" content="Net.Coffee">
+<meta property="og:image" content="https://ip.net.coffee/og-image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebRTC 泄露检测 - STUN UDP自查 - Net.Coffee">
+<meta name="twitter:description" content="检测浏览器是否存在 WebRTC IP 泄露，WebRTC 可能绕过网络加密通道暴露真实 IP。">
+<meta name="twitter:image" content="https://ip.net.coffee/og-image.png">
+<style>
+  :root {
+    --bg: #fff; --bg-soft: #f8f9fb; --bg-card: #fff; --bg-hover: #eef1f5;
+    --text: #1a1a1a; --text-soft: #57606a; --text-muted: #8b949e;
+    --border: #e1e4e8; --border-strong: #d8dce0;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  [data-theme="dark"] {
+    --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+    --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+    --border: #30363d; --border-strong: #444c56;
+    --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+      --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+      --border: #30363d; --border-strong: #444c56;
+      --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    }
+  }
+  .ts-wrap { position: relative; margin-left: auto; align-self: center; z-index: 100; margin-top: -6px; }
+  .ts-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg-card); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background 0.15s, transform 0.15s; -webkit-tap-highlight-color: transparent; }
+  .ts-btn:hover { background: var(--bg-hover); }
+  .ts-btn:active { transform: scale(0.96); }
+  .ts-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+  .ts-menu { position: absolute; top: 44px; right: 0; min-width: 148px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); padding: 4px; display: none; }
+  .ts-menu.open { display: block; }
+  .ts-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; background: transparent; border: none; color: var(--text); font: inherit; font-size: 14px; border-radius: 6px; cursor: pointer; text-align: left; -webkit-tap-highlight-color: transparent; }
+  .ts-item:hover { background: var(--bg-hover); }
+  .ts-item svg { width: 16px; height: 16px; stroke: currentColor; flex-shrink: 0; }
+  .ts-item[aria-current="true"] { background: var(--bg-hover); font-weight: 500; }
+  @media (max-width: 480px) {
+    .ts-btn { width: 26px; height: 26px; }
+    .ts-btn svg { width: 13px; height: 13px; }
+  }
+  
+  /* 表头渐变：明亮保留，暗夜 override */
+  [data-theme="dark"] .main-table th { background: var(--bg-soft) !important; }
+  [data-theme="dark"] .result-table th { background: var(--bg-soft) !important; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .main-table th { background: var(--bg-soft) !important; }
+    :root:not([data-theme="light"]) .result-table th { background: var(--bg-soft) !important; }
+  }
+  body { background: var(--bg) !important; color: var(--text) !important; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-y: scroll; }
+  body { font-family: system-ui, sans-serif; background: var(--bg-card); color: var(--text); min-height: 100vh; line-height: 1.6; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+
+  .nav { display: flex; gap: 20px; margin-bottom: 20px; font-size: 0.9em; flex-wrap: wrap; align-items: center; }
+  .nav a { color: var(--text-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; -webkit-tap-highlight-color: transparent; outline: none; display: inline-block; line-height: 1.5; white-space: nowrap; flex-shrink: 0; }
+  .nav a:hover { color: var(--text); }
+  .nav a:focus, .nav a:active { outline: none; }
+  .nav a.active { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--text); }
+  .nav .short { display: none; }
+  .nav .shortest { display: none; }
+  /* nav-ipcard-new-css */
+  .nav .pc-only-new { display: inline-flex; align-items: center; gap: 4px; }
+  .nav .nav-new {
+    font-size: 0.3em; font-weight: 700; padding: 1px 3px; border-radius: 3px;
+    background: linear-gradient(90deg,#ef4444,#f59e0b); color: #fff;
+    letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.4;
+  }
+  @media (max-width: 580px) { .nav .pc-only-new { display: none; } }
+  @media (max-width: 580px) { .nav .full { display: none; } .nav .short { display: inline; } .nav { gap: 14px; } }
+  @media (max-width: 399px) {
+    .nav a[href="/claude/"] .short { display: none; }
+    .nav a[href="/claude/"] .shortest { display: inline; }
+    .nav { gap: 12px; }
+    .ts-btn { width: 24px; height: 24px; }
+    .ts-btn svg { width: 12px; height: 12px; }
+  }
+  @media (max-width: 339px) {
+    .nav { gap: 8px; font-size: 0.88em; }
+    .ts-btn { width: 22px; height: 22px; }
+    .ts-btn svg { width: 11px; height: 11px; }
+  }
+
+  h1 { font-size: 1.75em; font-weight: 700; margin-bottom: 8px; }
+  .desc { color: var(--text-soft); font-size: 0.9em; margin-bottom: 24px; line-height: 1.6; }
+  @media (max-width: 480px) { .desc { font-size: 0.82em; } }
+
+  .verdict {
+    text-align: center; padding: 20px; margin-bottom: 24px;
+    border-radius: 12px; font-size: 1.1em; font-weight: 600;
+  }
+  .verdict-safe { background: #d1fae5; color: #065f46; }
+  .verdict-warn { background: #fef3c7; color: #92400e; }
+  .verdict-danger { background: #fce4ec; color: #c62828; }
+
+  .result-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid var(--border-strong); border-radius: 10px; overflow: hidden;
+    font-size: 0.9em;
+    box-shadow: var(--shadow);
+  }
+  .result-table th {
+    text-align: left; padding: 10px 16px;
+    background: linear-gradient(180deg, #f8f9fb 0%, #eef0f3 100%);
+    border-bottom: 1px solid var(--border-strong); font-weight: 600; font-size: 0.85em; color: var(--text-soft);
+  }
+  .result-table td {
+    padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: middle;
+  }
+  .result-table tbody tr:nth-child(even) { background: var(--bg-soft); }
+  .result-table tr:last-child td { border-bottom: none; }
+
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.82em; font-weight: 600; }
+  .tag-safe { background: #d1fae5; color: #065f46; }
+  .tag-warn { background: #fef3c7; color: #92400e; }
+  .tag-danger { background: #fce4ec; color: #c62828; }
+  .tag-neutral { background: #e5e7eb; color: var(--text-soft); }
+  .tag-info { background: #dbeafe; color: #1d4ed8; }
+
+  .status-bar { text-align: center; margin-bottom: 24px; font-size: 0.95em; min-height: 28px; }
+
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #ddd; border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .test-btn {
+    display: block; margin: 0 auto 24px; padding: 12px 36px; border: none; border-radius: 8px;
+    background: var(--text); color: var(--bg); font-size: 1em; font-weight: 600; cursor: pointer;
+  }
+  .test-btn:hover { background: var(--text-soft); }
+  .test-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+  .info-cards {
+    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .info-card {
+    flex: 1; min-width: 200px; padding: 14px 18px;
+    border: 1px solid var(--border-strong); border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .info-card .label { font-size: 0.78em; color: var(--text-muted); margin-bottom: 4px; }
+  .info-card .value { font-weight: 600; font-size: 0.95em; }
+
+  .article-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  @media (max-width: 700px) { .article-grid { grid-template-columns: 1fr; } }
+  .article-fold {
+    border: 1px solid var(--border-strong); border-radius: 10px; margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .article-fold summary {
+    padding: 14px 18px; cursor: pointer; font-weight: 600; font-size: 0.95em;
+    list-style: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .article-fold summary::-webkit-details-marker { display: none; }
+  .article-fold summary::after { content: '▸'; color: var(--text-muted); transition: transform 0.2s; }
+  .article-fold[open] summary::after { transform: rotate(90deg); }
+  .article-fold[open] summary { border-bottom: 1px solid var(--border); }
+  .article-body { padding: 16px 18px; font-size: 0.9em; line-height: 1.8; color: var(--text); }
+  .article-body p { margin-bottom: 12px; }
+  .article-body strong { color: var(--text); }
+  .article-body code { background: #f1f3f5; padding: 2px 6px; border-radius: 4px; font-size: 0.88em; }
+  .article-body ul { padding-left: 20px; margin-bottom: 12px; }
+  .article-body li { margin-bottom: 6px; }
+
+  footer { text-align: center; padding: 30px 0 20px; color: var(--text-muted); font-size: 0.82em; }
+  footer a { color: var(--text-muted); text-decoration: none; }
+
+  .copy-short { display: none; }
+  .feat-title-short { display: none; }
+  @media (max-width: 480px) {
+    .container { padding: 14px 12px; }
+    h1 { font-size: 1.4em; }
+    .result-table { font-size: 0.78em; }
+    .result-table th, .result-table td { padding: 7px 8px; }
+    .info-cards { flex-direction: column; }
+    .copy-full { display: none; }
+    .copy-short { display: inline; }
+    /* H5 移动端：STUN/UDP feature 卡片紧凑显示（一行 2 列）*/
+    .feature-cards { gap: 8px !important; flex-wrap: nowrap !important; }
+    .feature-card { min-width: 0 !important; padding: 10px 6px !important; flex: 1 1 0 !important; }
+    .feature-card .feature-icon { font-size: 1em !important; }
+    .feature-card .feature-desc { display: none; }
+    .feat-title-full { display: none; }
+    .feat-title-short { display: inline; }
+  }
+
+  /* nav-more 下拉(原内联,移入head防FOUC) */
+  .nav-more{position:relative;display:inline-flex;align-items:center}.nav-more-trigger{cursor:pointer;display:inline-flex;align-items:center;gap:3px;color:var(--text-soft,#666);line-height:1.5;border-bottom:2px solid transparent;padding-bottom:4px;white-space:nowrap}.nav-more:hover .nav-more-trigger{color:var(--text,#1a1a1a)}.nav-more-arrow{transition:transform .15s}.nav-more:hover .nav-more-arrow{transform:rotate(180deg)}.nav-more-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:5px;min-width:120px;opacity:0;visibility:hidden;transition:opacity .15s;z-index:300}.nav-more:hover .nav-more-menu{opacity:1;visibility:visible}.nav-more-menu a{display:block;padding:8px 12px;border-radius:6px;border-bottom:none !important;white-space:nowrap;color:var(--text,#1a1a1a);font-size:0.95em}.nav-more-menu a:hover{background:var(--bg-hover,#eef1f5)}.nav-more-menu::before{content:"";position:absolute;left:-12px;right:-12px;top:-18px;height:18px}.nav-more-menu{transition:opacity .15s ease,visibility 0s linear .35s}.nav-more:hover .nav-more-menu{transition:opacity .15s ease,visibility 0s}
+  </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"WebRTC 泄露检测","url":"https://ip.net.coffee/webrtc/","description":"检测浏览器是否存在 WebRTC IP 泄露，WebRTC 可能绕过代理暴露真实 IP 地址。","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="/gpt/"] .short{display:inline}
+}
+</style>
+</head>
+<body>
+
+
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
+    <a href="/claude/" title="Claude AI IP 检测 - IP 纯净度"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
+    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
+    <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
+    <a href="/webrtc/" class="active" aria-current="page"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="/cloudflare/" title="Cloudflare 全面检测" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new"><span class="full">全球Ping</span><span class="short">Ping</span></a>
+    <a href="/status/" title="服务可用性查询"><span class="full">服务状态</span><span class="short">状态</span></a>
+    <div class="nav-more pc-only-new" data-tag="nav-more-dd"><span class="nav-more-trigger">更多 <svg class="nav-more-arrow" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span><div class="nav-more-menu"><a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener" title="精美的网站IP卡片代码">IP卡片</a></div></div>
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">更多 <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="切换主题模式" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>亮色模式</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>暗黑模式</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>跟随系统</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="/">IP查询</a>
+  <a href="/claude/">Claude</a>
+  <a href="/ip/">IP评分</a>
+  <a href="/gpt/">GPT 检测</a>
+  <a href="/link/">网络连通</a>
+  <a href="/dns/">DNS泄露</a>
+  <a href="/webrtc/" class="on">WebRTC</a>
+  <a href="/cloudflare/">Cloudflare</a>
+  <a href="/ping/">全球Ping</a>
+  <a href="/status/">服务状态</a>
+  <a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener">IP卡片</a>
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )nc_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; domain=.net.coffee; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="nc_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="nc_theme=; path=/; domain=.net.coffee; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <h1>WebRTC 泄露检测</h1>
+  <p class="desc">WebRTC 是浏览器内置的实时通信技术，它可能绕过代理直接暴露你的真实 IP。点击下方按钮，检测你的浏览器是否存在 WebRTC 泄露。</p>
+
+  <div class="feature-cards" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px">
+    <div class="feature-card" style="flex:1;min-width:200px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);text-align:center">
+      <div class="feature-icon" style="font-size:1.2em">🔍</div>
+      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">STUN 多节点探测</span><span class="feat-title-short">STUN探测</span></div>
+      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">同时向全球多个 STUN 服务器发送 UDP 请求，快速交叉验证</span><span class="copy-short">全球多STUN服务器快速交叉验证</span></div>
+    </div>
+    <div class="feature-card" style="flex:1;min-width:200px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);text-align:center">
+      <div class="feature-icon" style="font-size:1.2em">🛡️</div>
+      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">UDP 分流校验</span><span class="feat-title-short">UDP校验</span></div>
+      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">检测是否正确接管了 UDP 流量，验证分流规则是否如预期</span><span class="copy-short">检测是否接管UDP流量，验证分流规则</span></div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:center;justify-content:center;margin-bottom:24px">
+    <button class="test-btn" id="testBtn" onclick="runTest()" style="margin:0">开始检测</button>
+    <span id="rtcStatus" style="font-size:0.9em;color: var(--text-muted)">等待检测</span>
+  </div>
+  <div style="text-align:center;margin-bottom:24px;color: var(--text-muted);font-size:0.88em">点击上方按钮，立即检测WebRTC是否泄露
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+  <div id="verdictArea"></div>
+
+  <table class="result-table" id="resultTable" style="display:none">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>IP 地址</th>
+        <th>类型</th>
+        <th>归属地</th>
+        <th>状态</th>
+      </tr>
+    </thead>
+    <tbody id="resultBody"></tbody>
+  </table>
+
+  <!-- Extended reading -->
+  <div style="margin-top:36px">
+    <h2 style="font-size:1.2em;font-weight:700;margin-bottom:16px;color: var(--text)">📖 拓展阅读</h2>
+    <div class="article-grid">
+    <details class="article-fold">
+      <summary>WebRTC 泄露是怎么回事？</summary>
+      <div class="article-body">
+        <p>WebRTC（Web Real-Time Communication）是浏览器自带的一项技术，让你不装任何插件就能进行视频通话、语音聊天和文件传输。听起来挺好的对吧？</p>
+        <p>但问题是：<strong>WebRTC 在建立连接时，会通过 STUN 服务器主动获取你的真实外网 IP。</strong>这个过程走的是 UDP 协议，而很多代理只处理 TCP 流量。结果就是——你以为自己在代理保护下，WebRTC 却在背后偷偷把你的真实 IP 发出去了。</p>
+        <p>更关键的是，网页上的 JavaScript 可以在你毫不知情的情况下调用 WebRTC，无需弹出任何权限确认框。</p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>这个工具能帮你做什么？</summary>
+      <div class="article-body">
+        <p>本工具同时向多个不同的 STUN 服务器（Google、Cloudflare 等）发送 UDP 请求，收集所有返回的 IP 地址，帮你看清楚：</p>
+        <ul>
+          <li><strong>你的代理是否接管了 UDP 流量</strong> — 如果 STUN 返回的是代理出口 IP，说明 UDP 被正确代理了</li>
+          <li><strong>是否存在 IP 泄露</strong> — 如果 STUN 返回了你的真实运营商 IP，说明 UDP 绕过了代理</li>
+          <li><strong>分流规则是否生效</strong> — 不同 STUN 服务器可能走了不同的出口，可以验证你的分流策略是否符合预期</li>
+          <li><strong>IPv6 是否泄露</strong> — 有些代理只处理 IPv4，IPv6 流量可能直接暴露。检测结果会显示所有发现的 IPv6 地址</li>
+        </ul>
+        <p>简单来说：<strong>一键按下去，你就知道你的 UDP 流量到底走了哪里。</strong></p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>STUN 和 UDP 是什么？</summary>
+      <div class="article-body">
+        <p><strong>UDP</strong>（User Datagram Protocol）是互联网上最基础的传输协议之一。和 TCP 不同，UDP 不需要建立连接就能直接发送数据包，速度快但不保证送达。视频通话、在线游戏、语音聊天这些对实时性要求高的场景，基本都用 UDP。</p>
+        <p><strong>STUN</strong>（Session Traversal Utilities for NAT）是一个帮你"发现自己外网 IP"的协议。你的设备通常在路由器后面（NAT），不知道自己的真实公网 IP 是多少。STUN 服务器的作用就是：你发一个 UDP 包过去，它告诉你"我看到你的 IP 是 X.X.X.X"。</p>
+        <p>WebRTC 依赖 STUN 来建立点对点连接。问题在于：<strong>这个 UDP 包不一定走你的代理通道。</strong>很多代理工具只处理 TCP 流量，UDP 直接走了本地网络，于是你的真实 IP 就被 STUN 服务器看到了。</p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>如何判断是否泄露了？</summary>
+      <div class="article-body">
+        <p>很简单：对比你的代理出口 IP 和 WebRTC 检测到的 IP。</p>
+        <ul>
+          <li>如果两者<strong>一致</strong>（或者 WebRTC 被禁用没返回 IP） → 安全，没有泄露</li>
+          <li>如果 WebRTC 返回了一个<strong>不同的 IP</strong>，而且这个 IP 是你真实的运营商 IP → 泄露了</li>
+        </ul>
+        <p>本页面会自动帮你做这个对比，不需要手动操作。</p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>发现泄露了，怎么修？</summary>
+      <div class="article-body">
+        <p><strong>Firefox：</strong>地址栏输入 <code>about:config</code>，搜索 <code>media.peerconnection.enabled</code>，双击设为 <code>false</code>。这会完全禁用 WebRTC。</p>
+        <p><strong>Chrome / Edge：</strong>浏览器本身不提供关闭 WebRTC 的选项。建议安装 uBlock Origin 扩展，在"设置 → 隐私"里勾选"阻止 WebRTC 泄露本地 IP 地址"。</p>
+        <p><strong>Brave：</strong>进入设置 → 隐私和安全 → WebRTC IP 处理策略，选择"禁用非代理 UDP"。</p>
+        <p><strong>Safari：</strong>默认对 WebRTC 有一定限制，泄露风险较低。但可以在"开发"菜单中进一步限制 WebRTC 功能。</p>
+        <p><strong>进阶方案：UDP 分流</strong></p>
+        <p>上面的方法本质上都是"一刀切"——要么禁用 WebRTC，要么限制它。但如果你日常需要用到 WebRTC（比如 Google Meet、Discord 语音），完全禁用会影响使用体验。</p>
+        <p>更优雅的做法是：<strong>在代理客户端里对 UDP 流量做单独分流。</strong>大多数代理工具都支持针对 UDP 协议设置独立的路由规则，你可以把 STUN 服务器的流量（比如 Google 和 Cloudflare 的 STUN 地址）指定走代理出口，而不影响其他 UDP 流量（比如游戏、本地局域网）。这样既保证了 WebRTC 不泄露真实 IP，又不会因为全局禁用而影响正常功能。</p>
+        <p>改完之后，回到本页重新测一次，确认泄露已修复。</p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>多个出口 IP？不一定是 WebRTC 泄露</summary>
+      <div class="article-body">
+        <p>先别慌。如果你的检测结果显示了多个不同的公网 IP，这<strong>不一定</strong>是 WebRTC 泄露。</p>
+        <p>很多用户使用了代理分流规则（比如国内直连、国际走代理），不同的 STUN 服务器可能分别命中了不同的分流策略。举个例子：</p>
+        <ul>
+          <li>Google 的 STUN 服务器 → 走代理 → 显示代理出口 IP（比如日本）</li>
+          <li>Cloudflare 的 STUN 服务器 → 走另一条代理线路 → 显示另一个出口 IP（比如香港）</li>
+        </ul>
+        <p>这种情况下出现多个不同 IP 是<strong>正常的</strong>，因为你的分流规则本来就把它们路由到了不同的出口。你需要做的是：对照你自己的代理规则，看看这些 IP 对应的地区是否符合预期。</p>
+        <p><strong>但有一种情况需要特别警惕：</strong></p>
+        <p>如果你明明开了代理，但 WebRTC 检测到的公网 IP 全部是你<strong>本地运营商的 IP</strong>（比如你在中国大陆境内，检测到的全是中国电信的 IP），那就说明 WebRTC 完全绕过了你的代理，直接走了本地网络。这才是真正的泄露。</p>
+        <p>简单判断方法：看检测结果里的归属地。如果归属地和你的物理位置一致，而且你认为这些流量应该走代理，那就要处理了——参考上面"发现泄露了，怎么修？"的方法。</p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>除了 WebRTC，DNS 泄露同样危险</summary>
+      <div class="article-body">
+        <p>很多人只关注 WebRTC 泄露，却忽略了另一个同样严重的隐私威胁：<strong>DNS 泄露</strong>。</p>
+        <p>你每次访问一个网站，浏览器都要先查 DNS 把域名翻译成 IP 地址。如果这个 DNS 查询没有走代理，而是直接发给了你本地运营商的 DNS 服务器，那运营商就能清楚地看到你访问了哪些网站。</p>
+        <p>更隐蔽的是：DNS 泄露不像 WebRTC 那样可以在浏览器里直接检测到。你需要专门的工具来验证 DNS 查询到底走了哪条路。</p>
+        <p>两种泄露的区别：</p>
+        <ul>
+          <li><strong>WebRTC 泄露</strong> → 暴露你的真实 IP 地址（对方知道你是谁）</li>
+          <li><strong>DNS 泄露</strong> → 暴露你的访问记录（运营商知道你去了哪）</li>
+        </ul>
+        <p>建议两个都测一下。WebRTC 你已经在这里测过了，DNS 泄露可以去本站的 <a href="/dns/" style="color:#1d4ed8">DNS 泄露检测</a> 页面，5 秒出结果，看看你的 DNS 有没有在背后出卖你。</p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>为什么代理模式和 TUN 模式检测结果不同</summary>
+      <div class="article-body">
+        <p>很多用户发现一个奇怪的现象：<strong>用代理模式检测显示"无泄露"，切换到 TUN 模式反而显示泄露了</strong>。这不是检测出错，而是两种模式的工作原理完全不同。</p>
+
+        <p><strong>代理模式（HTTP/SOCKS5）</strong>：浏览器通过系统代理发送请求，但代理协议只能转发 TCP 流量。WebRTC 的 STUN 协议使用的是 UDP，根本走不了 HTTP/SOCKS 代理。结果就是 STUN 请求直接发不出去，页面自然显示"无泄露"。</p>
+
+        <p><strong>TUN 模式（全局/虚拟网卡）</strong>：TUN 会创建一个虚拟网卡劫持所有网络流量，包括 TCP 和 UDP。这意味着 STUN 的 UDP 请求能够成功发出。如果你的代理节点不支持 UDP 转发、或者 UDP 走了不同的出口线路、或者分流规则没覆盖 STUN 服务器地址，就会导致 UDP 出口 IP 和 TCP 出口 IP 不一致，从而被判定为泄露。</p>
+
+        <table style="width:100%;border-collapse:collapse;margin:14px 0;font-size:0.9em">
+          <tr style="background: var(--bg-soft)"><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">模式</th><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">STUN UDP</th><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">检测结果</th></tr>
+          <tr><td style="padding:8px 12px;border: 1px solid var(--border)">代理模式</td><td style="padding:8px 12px;border: 1px solid var(--border)">发不出去</td><td style="padding:8px 12px;border: 1px solid var(--border)">"无泄露"（可能是假象）</td></tr>
+          <tr><td style="padding:8px 12px;border: 1px solid var(--border)">TUN 模式</td><td style="padding:8px 12px;border: 1px solid var(--border)">能发出去</td><td style="padding:8px 12px;border: 1px solid var(--border)">真实反映 UDP 出口情况</td></tr>
+        </table>
+
+        <p><strong>结论：</strong>代理模式下的"无泄露"不代表真的安全，只是 UDP 被挡住了而已。想要准确检测 WebRTC 泄露情况，应该在 TUN 模式下进行测试。如果 TUN 模式下显示泄露，说明你的 UDP 出口确实和 TCP 不一致，需要排查代理节点的 UDP 转发配置或分流规则。</p>
+      </div>
+    </details>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const grid = document.querySelector('.article-grid');
+  if (!grid) return;
+  const items = Array.from(grid.querySelectorAll('details.article-fold'));
+  items.forEach(function(el, i){
+    el.addEventListener('toggle', function(){
+      if (window.innerWidth <= 700) return;
+      const partner = (i % 2 === 0) ? items[i+1] : items[i-1];
+      if (partner && partner.open !== el.open) partner.open = el.open;
+    });
+  });
+})();
+</script>
+
+<footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/claude/" style="color: var(--text-muted);text-decoration:none">Claude AI 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+
+<script>
+function flagImg(cc) {
+  if (!cc) return '';
+  const src = cc === 'cn' ? '/favicons/cn.png' : cc.toLowerCase() === 'tw' ? '/favicons/flags/tw.png' : `/favicons/flags/${cc.toLowerCase()}.png`;
+  const altTxt = cc.toLowerCase() === 'tw' ? '中国台湾省' : cc;
+  return `<img src="${src}" width="40" height="27" style="width:18px;height:auto;border-radius:2px;vertical-align:-2px" alt="${altTxt}" onerror="this.onerror=null;this.style.display='none'">`;
+}
+
+let cfIP = '';
+
+// Get Cloudflare exit IP on load
+(async () => {
+  try {
+    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
+    const txt = await r.text();
+    const m = txt.match(/ip=([^\n]+)/);
+    if (m) {
+      cfIP = m[1].trim();
+      // Get geo
+      try {
+        const g = await fetch(`/api/geoip/${cfIP}`, { signal: AbortSignal.timeout(5000) });
+        if (g.ok) {
+          const geo = await g.json();
+          document.getElementById('cfIP').innerHTML = `${flagImg(geo.country_code)} ${cfIP}`;
+        } else {
+          document.getElementById('cfIP').textContent = cfIP;
+        }
+      } catch { document.getElementById('cfIP').textContent = cfIP; }
+    }
+  } catch {
+    document.getElementById('cfIP').textContent = '获取失败';
+  }
+})();
+
+let testing = false;
+
+async function runTest() {
+  if (testing) return;
+  testing = true;
+  const btn = document.getElementById('testBtn');
+  btn.disabled = true;
+  btn.textContent = '检测中...';
+
+  const statusBar = document.getElementById('statusBar');
+  const verdictArea = document.getElementById('verdictArea');
+  const table = document.getElementById('resultTable');
+  const tbody = document.getElementById('resultBody');
+
+  verdictArea.innerHTML = '';
+  tbody.innerHTML = '';
+  table.style.display = 'none';
+  statusBar.innerHTML = '<span class="spinner"></span>正在探测 WebRTC IP...';
+
+  const ips = new Map(); // ip → type
+
+  try {
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun.cloudflare.com:3478' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+      ]
+    });
+    pc.createDataChannel('');
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+
+    await new Promise((resolve) => {
+      const timeout = setTimeout(() => { pc.close(); resolve(); }, 6000);
+      pc.onicecandidate = (e) => {
+        if (!e.candidate) { clearTimeout(timeout); pc.close(); resolve(); return; }
+        const c = e.candidate.candidate;
+        // Extract IPv4
+        const m4 = c.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/);
+        if (m4) {
+          const ip = m4[0];
+          if (!ip.startsWith('0.') && !ip.startsWith('127.') && !ip.startsWith('10.') && !ip.startsWith('172.') && !ip.startsWith('192.168.') && !ip.startsWith('198.18.') && !ip.startsWith('198.19.') && !ip.startsWith('100.64.') && ip !== '0.0.0.0') {
+            const type = c.includes('srflx') ? '公网 (STUN)' : c.includes('relay') ? '中继 (TURN)' : '本地';
+            if (!ips.has(ip)) ips.set(ip, type);
+          }
+        }
+        // Extract IPv6
+        const m6 = c.match(/([a-f0-9]{1,4}:){2,7}[a-f0-9]{1,4}/i);
+        if (m6) {
+          const ip = m6[0];
+          if (!ip.startsWith('::1') && !ip.startsWith('fe80')) {
+            const type = c.includes('srflx') ? '公网 (STUN)' : '本地 IPv6';
+            if (!ips.has(ip)) ips.set(ip, type);
+          }
+        }
+      };
+    });
+  } catch {}
+
+  const ipArr = [...ips.entries()].slice(0, 5);
+
+  if (ipArr.length === 0) {
+    document.getElementById('rtcStatus').innerHTML = '<span class="tag tag-safe">已禁用</span>';
+    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ WebRTC 已禁用或未暴露，没有泄露</div><div style="color: var(--text-muted);font-size:0.82em;margin-top:8px;line-height:1.5">如果您目前是"代理模式"，UDP 可能无法发出，建议在"TUN 模式"下测试以获得真实结果。如果不是"代理模式"请忽略。</div>';
+    statusBar.textContent = '';
+    testing = false;
+    btn.disabled = false;
+    btn.textContent = '重新检测';
+    return;
+  }
+
+  document.getElementById('rtcStatus').innerHTML = `<span class="tag tag-info">已启用</span> 发现 ${ipArr.length} 个 IP`;
+  statusBar.innerHTML = '<span class="spinner"></span>正在查询归属地...';
+
+  // Get geo for each IP and determine leak
+  const results = [];
+  for (const [ip, type] of ipArr) {
+    let geo = null;
+    try {
+      const r = await fetch(`/api/geoip/${ip}`, { signal: AbortSignal.timeout(5000) });
+      if (r.ok) geo = await r.json();
+    } catch {}
+    const leaked = cfIP && ip !== cfIP && type.includes('公网');
+    results.push({ ip, type, geo, leaked });
+  }
+
+  // Leak detection: compare STUN public IPs with each other
+  // If multiple different public STUN IPs exist → possible leak (one might be real IP)
+  const stunPublicIPs = results.filter(r => r.type.includes('公网')).map(r => r.ip);
+  const uniqueStunIPs = [...new Set(stunPublicIPs)];
+  const hasMultiplePublic = uniqueStunIPs.length > 1;
+
+  if (hasMultiplePublic) {
+    verdictArea.innerHTML = '<div class="verdict verdict-warn">⚠️ 检测到 WebRTC 可能泄露！<br>发现了多个不同的公网出口 IP，如果是你自行设置了分流规则，请校对出口IP信息</div>';
+  } else {
+    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ 很棒！未检测到 WebRTC 泄露</div>';
+  }
+
+  tbody.innerHTML = results.map((r, i) => {
+    const cc = r.geo?.country_code || '';
+    const geoStr = r.geo ? [r.geo.country, r.geo.city].filter(Boolean).join(' ') : '';
+    let matchTag;
+    if (r.type.includes('公网')) {
+      matchTag = hasMultiplePublic
+        ? '<span class="tag tag-warn">需关注</span>'
+        : '<span class="tag tag-safe">正确</span>';
+    } else {
+      matchTag = '<span class="tag tag-neutral">本地</span>';
+    }
+    return `<tr>
+      <td>${i + 1}</td>
+      <td style="font-weight:600">${r.ip}</td>
+      <td><span class="tag tag-info">${r.type}</span></td>
+      <td>${flagImg(cc)} ${geoStr}</td>
+      <td>${matchTag}</td>
+    </tr>`;
+  }).join('');
+
+  table.style.display = '';
+  statusBar.textContent = '';
+  testing = false;
+  btn.disabled = false;
+  btn.textContent = '重新检测';
+}
+</script>
+
+
+</body>
+</html>

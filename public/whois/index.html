@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHOIS 查询 - 域名/IP/ASN 注册信息一键查询 - Net.Coffee</title>
+<meta name="description" content="免费 WHOIS 查询工具：输入域名、IPv4/IPv6 或 AS 号，秒查注册商、注册/到期日期、DNS 服务器、域名状态与归属信息。RDAP + 传统 WHOIS 双通道，数据权威。">
+<meta name="keywords" content="WHOIS查询,域名查询,域名到期查询,注册商查询,RDAP,IP WHOIS,ASN查询,域名状态,域名注册信息">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link id="canonical" rel="canonical" href="https://ip.net.coffee/whois/">
+<meta property="og:title" content="WHOIS 查询 - 域名/IP/ASN 注册信息一键查询 - Net.Coffee">
+<meta property="og:description" content="域名、IP、ASN 注册信息一键查询：注册商、日期、DNS、状态。RDAP + WHOIS 双通道。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ip.net.coffee/whois/">
+<meta property="og:locale" content="zh_CN">
+<meta name="author" content="Net.Coffee">
+<meta name="generator" content="Net.Coffee Tools">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<meta property="og:site_name" content="Net.Coffee">
+<meta property="og:image" content="https://ip.net.coffee/og-image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WHOIS 查询 - Net.Coffee">
+<meta name="twitter:description" content="域名/IP/ASN 注册信息一键查询：注册商、日期、DNS、状态。">
+<meta name="twitter:image" content="https://ip.net.coffee/og-image.png">
+<link rel="stylesheet" href="/whois/whois-page.css?v=20260910a">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"WHOIS / RDAP 域名查询","url":"https://ip.net.coffee/whois/","description":"免费在线 WHOIS 与 RDAP 查询：域名注册信息、注册商、到期时间、DNS 与状态码，覆盖 IANA 全部顶级域，支持 IPv4/IPv6 与 AS 号。","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="/gpt/"] .short{display:inline}
+}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"WHOIS 和 RDAP 有什么区别？","acceptedAnswer":{"@type":"Answer","text":"WHOIS 是沿用至今的明文查询协议；RDAP 是 ICANN 主推的新一代注册数据协议，返回结构化数据更规范。本工具优先走 RDAP 直连注册局官方接口，注册局未提供 RDAP 时自动切换传统 WHOIS，两条通道互为备份。"}},{"@type":"Question","name":"为什么有些域名看不到注册人信息？","acceptedAnswer":{"@type":"Answer","text":"受 GDPR 等隐私法规影响，多数注册局与注册商已对个人注册信息做隐私保护，仅保留注册商、日期、DNS、状态等技术信息，这是正常现象。"}},{"@type":"Question","name":"域名状态代码是什么意思？","acceptedAnswer":{"@type":"Answer","text":"常见如 clientTransferProhibited（注册商转移锁）、serverDeleteProhibited（注册局删除锁）、clientHold（暂停解析，异常状态）、pendingDelete（等待删除）。查询结果中的状态徽章附有中文说明。"}},{"@type":"Question","name":"支持查询哪些域名后缀？","acceptedAnswer":{"@type":"Answer","text":"覆盖 IANA 根区全部 1400 余个顶级域，包括 .com/.net/.org 等通用域、.cn/.de/.io 等国家和地区域以及各类新通用顶级域；同时支持 IPv4、IPv6 与 AS 号查询。"}}]}</script>
+</head>
+<body>
+
+
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
+    <a href="/claude/" title="Claude AI IP 检测 - IP 纯净度"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
+    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
+    <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
+    <a href="/webrtc/" title="WebRTC IP 泄露检测"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="/cloudflare/" title="Cloudflare 全面检测" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new"><span class="full">全球Ping</span><span class="short">Ping</span></a>
+    <a href="/status/" title="服务可用性查询"><span class="full">服务状态</span><span class="short">状态</span></a>
+    <div class="nav-more pc-only-new" data-tag="nav-more-dd"><span class="nav-more-trigger">更多 <svg class="nav-more-arrow" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span><div class="nav-more-menu"><a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener" title="精美的网站IP卡片代码">IP卡片</a></div></div>
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">更多 <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="切换主题模式" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>亮色模式</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>暗黑模式</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>跟随系统</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="/">IP查询</a>
+  <a href="/claude/">Claude</a>
+  <a href="/ip/">IP评分</a>
+  <a href="/gpt/">GPT 检测</a>
+  <a href="/link/">网络连通</a>
+  <a href="/dns/">DNS泄露</a>
+  <a href="/webrtc/">WebRTC</a>
+  <a href="/cloudflare/">Cloudflare</a>
+  <a href="/ping/">全球Ping</a>
+  <a href="/status/">服务状态</a>
+  <a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener">IP卡片</a>
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )nc_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; domain=.net.coffee; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="nc_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="nc_theme=; path=/; domain=.net.coffee; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <h1>WHOIS 查询</h1>
+  <p class="desc">域名Whois、IP Whois 或 AS 号，一键查询注册商、日期、DNS 服务器、域名状态与归属信息。含RDAP 现代协议双通道数据</p>
+
+
+
+  <div class="w-search">
+    <input type="text" id="wInput" placeholder="如 google.com、8.8.8.8、2606:4700::1111 或 AS15169" autocomplete="off" spellcheck="false">
+    <button id="wBtn">查询</button>
+  </div>
+  <div class="w-examples"><span class="w-ex-label">示例：</span>
+    <span class="w-chip" data-q="qq.com">qq.com</span>
+    <span class="w-chip" data-q="x.ai">x.ai</span>
+    <span class="w-chip" data-q="1.1.1.1">1.1.1.1</span>
+    <span class="w-chip" data-q="AS15169">AS15169</span>
+  </div>
+
+  <div id="wResult"></div>
+
+  <div class="w-tldsec" id="wTldSec" style="margin-top:34px">
+    <h2 style="font-size:1.15em;margin-bottom:12px">支持的域名后缀</h2>
+    <div class="w-grid" id="wTldStats"></div>
+    <div class="w-card" style="margin-top:4px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <div id="wTldCats" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
+        <input id="wTldSearch" type="text" placeholder="搜索后缀，如 co" autocomplete="off" spellcheck="false" style="margin-left:auto;padding:6px 12px;font-size:0.82em;border:1px solid var(--border-strong);border-radius:20px;background:var(--bg-card);color:var(--text);outline:none;width:150px;min-width:110px">
+      </div>
+      <div id="wTldChips" style="display:flex;gap:6px;flex-wrap:wrap;line-height:1.4"></div>
+      <div style="text-align:center;margin-top:12px">
+        <span class="w-chip" id="wTldMore" style="display:none">显示全部后缀</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-faq">
+    <h2>关于 WHOIS 查询</h2>
+    <h3>WHOIS 和 RDAP 有什么区别？</h3>
+    <p>WHOIS 是 1980 年代沿用至今的明文查询协议；RDAP 是 ICANN 主推的新一代注册数据协议，返回结构化 JSON、数据更规范。本工具优先走 RDAP 直连各注册局官方接口，注册局未提供 RDAP 时自动切换传统 WHOIS（43 端口），两条通道互为备份。</p>
+    <h3>为什么有些域名看不到注册人信息？</h3>
+    <p>受 GDPR 等隐私法规影响，多数注册局与注册商已对个人注册信息做隐私保护（Redacted for privacy），仅保留注册商、日期、DNS、状态等技术信息，这是正常现象。</p>
+    <h3>域名状态代码是什么意思？</h3>
+    <p>常见如 clientTransferProhibited（注册商转移锁，正常保护）、serverDeleteProhibited（注册局删除锁）、clientHold（暂停解析，异常状态）、pendingDelete（等待删除，即将掉出）。查询结果中的状态徽章会给出中文说明，红色代表需要注意。</p>
+    <h3>数据来自哪里？多久更新？</h3>
+    <p>域名数据直连各注册局（Verisign、CNNIC、DENIC 等）官方 RDAP / WHOIS 接口；IP 与 ASN 数据来自五大区域互联网注册机构（ARIN / RIPE / APNIC / LACNIC / AFRINIC）。</p>
+  </div>
+
+  <footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/claude/" style="color: var(--text-muted);text-decoration:none">Claude AI 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+</div>
+
+<script src="/whois/whois-page.js?v=20260910a"></script>
+
+
+</body>
+</html>

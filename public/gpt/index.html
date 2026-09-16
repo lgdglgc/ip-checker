@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#cc785c">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#cc785c">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f1e1d">
+<meta name="application-name" content="ChatGPT IP 检测">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ChatGPT IP 检测">
+<meta name="format-detection" content="telephone=no">
+<title>ChatGPT · Codex IP 检测 - IP纯净度 - ChatGPT IP 风险查询 - Net.Coffee</title>
+<meta name="description" content="ChatGPT IP 检测，ChatGPT IP的纯净度和信任评分，判断该 IP 是否为住宅IP或机房IP，识别ChatGPT IP是否是 Tor 与高风险 IP。同时展示默认出口 IP 和 Cloudflare 出口 IP，做分流查询。">
+<meta name="keywords" content="ChatGPT IP检测,ChatGPT IP查询,ChatGPT IP风险检测,ChatGPT IP纯净度,ChatGPT 住宅IP,ChatGPT 机房IP,ChatGPT Trust Score,ChatGPT出口IP,ChatGPT IP安全检测,ChatGPT可用性检测,ChatGPT登录,ChatGPT 封号检测,ASN查询,IP归属地,IP地理位置">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ip.net.coffee/gpt/">
+<meta property="og:title" content="ChatGPT · Codex IP 检测 - IP纯净度 - ChatGPT IP 风险查询 - Net.Coffee">
+<meta property="og:description" content="ChatGPT IP 检测：ChatGPT IP 纯净度、信任评分、住宅/机房属性、Tor 与高风险识别，一站式 ChatGPT IP 风险查询。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ip.net.coffee/gpt/">
+<meta property="og:locale" content="zh_CN">
+<meta name="author" content="Net.Coffee">
+<meta name="generator" content="Net.Coffee Tools">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<meta property="og:site_name" content="Net.Coffee">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ChatGPT · Codex IP 检测 - IP纯净度 - ChatGPT IP 风险查询 - Net.Coffee">
+<meta name="twitter:description" content="ChatGPT IP 检测：ChatGPT IP 纯净度、信任评分、住宅/机房、Tor 与高风险识别，ChatGPT IP 风险查询。">
+<meta property="og:image" content="https://ip.net.coffee/og-image-chatgpt.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ChatGPT · Codex IP 检测 - 纯净度评分 · 风险检测 · Net.Coffee">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:image" content="https://ip.net.coffee/og-image-chatgpt.png">
+<meta name="twitter:image:alt" content="ChatGPT · Codex IP 检测 - 纯净度评分 · 风险检测 · Net.Coffee">
+<link rel="stylesheet" href="/gpt/gpt-page.css?v=20260916a">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"ChatGPT · Codex IP 检测","url":"https://ip.net.coffee/gpt/","description":"ChatGPT IP 检测：ChatGPT IP 的纯净度和信任评分，判断该 IP 是否为住宅IP或机房IP，识别 ChatGPT IP 是否是 Tor 与高风险 IP，提供 ChatGPT IP 风险查询与分流检测。","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://net.coffee/"},{"@type":"ListItem","position":2,"name":"ChatGPT · Codex IP 检测","item":"https://ip.net.coffee/gpt/"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ChatGPT 检测的 IP 是哪个？","acceptedAnswer":{"@type":"Answer","text":"ChatGPT 检测的是浏览器与 ChatGPT.ai 服务器握手时使用的出口 IP。如果你走代理或 VPN，这个 IP 就是代理出口；如果直连，就是本机宽带的公网 IP。"}},{"@type":"Question","name":"ChatGPT 封号常和 IP 有关吗？","acceptedAnswer":{"@type":"Answer","text":"ChatGPT 对机房 IP、Tor 出口、共享代理、滥用历史 IP 风控严格。住宅 IP 通过率最高。本工具可一键看出 IP 类型与风险分数，帮助判断当前出口是否安全。"}},{"@type":"Question","name":"什么是 IP 纯净度？","acceptedAnswer":{"@type":"Answer","text":"IP 纯净度是综合 IP 历史行为（垃圾邮件、刷量、Tor、暴破）和归属类型（住宅/机房/移动）的信用评分。分数越高代表 IP 越像普通家庭用户，访问 AI 服务越不易被风控。"}},{"@type":"Question","name":"住宅 IP 和机房 IP 有什么区别？","acceptedAnswer":{"@type":"Answer","text":"住宅 IP 由 ISP 分配给家庭宽带用户，行为像普通人；机房 IP 由云服务商（AWS/Azure/DO 等）分配给服务器，常被用于自动化和爬虫，ChatGPT 等 AI 服务对其管控更严。"}},{"@type":"Question","name":"为什么显示了三个 IP？","acceptedAnswer":{"@type":"Answer","text":"页面同时展示三个出口：中国出口 IP（直连普通网站）、Cloudflare 出口 IP（经 CF 边缘）、以及 ChatGPT 出口 IP（访问 chatgpt.com 时的真实出口）。三者可能不同，因为很多代理对不同流量做了分流。判断 ChatGPT 是否安全，看的就是 ChatGPT 出口 IP 这一个。"}},{"@type":"Question","name":"Trust Score 多少算安全？","acceptedAnswer":{"@type":"Answer","text":"Trust Score 70 以上一般可放心访问 ChatGPT；50-70 偶有风控；50 以下高概率触发人机验证或封禁。具体分数依不同评分源略有差异，建议综合多个指标判断。"}},{"@type":"Question","name":"本工具检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"数据来自 IPinfo、ipapi.is、Cloudflare 等多个商业级 IP 情报源，配合 ASN 与历史行为分析，准确率与 ChatGPT 实际风控判断高度一致。仅供参考，最终结果以 ChatGPT 服务为准。"}},{"@type":"Question","name":"工具收费吗？需要注册吗？","acceptedAnswer":{"@type":"Answer","text":"完全免费，无需注册或登录。打开页面即可检测当前出口 IP，所有数据来源公开，本站不记录用户查询历史。"}}]}
+</script>
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="/gpt/"] .short{display:inline}
+}
+</style>
+</head>
+<body>
+
+
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
+    <a href="/claude/" title="Claude AI IP 检测 - IP 纯净度"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
+    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new active" aria-current="page"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
+    <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
+    <a href="/webrtc/" title="WebRTC IP 泄露检测"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="/cloudflare/" title="Cloudflare 全面检测" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new"><span class="full">全球Ping</span><span class="short">Ping</span></a>
+    <a href="/status/" title="服务可用性查询"><span class="full">服务状态</span><span class="short">状态</span></a><div class="nav-more pc-only-new" data-tag="nav-more-dd"><span class="nav-more-trigger">更多 <svg class="nav-more-arrow" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span><div class="nav-more-menu"><a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener" title="精美的网站IP卡片代码">IP卡片</a></div></div>
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">更多 <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="切换主题模式" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>亮色模式</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>暗黑模式</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>跟随系统</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="/">IP查询</a>
+  <a href="/claude/">Claude</a>
+  <a href="/ip/">IP评分</a>
+  <a href="/gpt/" class="on">GPT 检测</a>
+  <a href="/link/">网络连通</a>
+  <a href="/dns/">DNS泄露</a>
+  <a href="/webrtc/">WebRTC</a>
+  <a href="/cloudflare/">Cloudflare</a>
+  <a href="/ping/">全球Ping</a>
+  <a href="/status/">服务状态</a>
+  <a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener">IP卡片</a>
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )nc_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; domain=.net.coffee; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="nc_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="nc_theme=; path=/; domain=.net.coffee; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <h1>ChatGPT · Codex IP 风险检测</h1>
+  <div class="ip-section-header">
+    <p class="desc">检测当前ChatGPT出口 IP 的纯净度、风险、IP 属性（住宅/机房/原生）、DNS、UDP、指纹、历史和安全性</p>
+    <!-- 隐藏IP 开关（iOS 风格）— 默认关；开启后所有 IPv4 C/D 段、IPv6 后段被 * 替换 -->
+    <label class="ip-mask-toggle">
+      <span class="ip-mask-toggle-label">隐藏IP</span>
+      <input type="checkbox" id="ipMaskToggle">
+      <span class="ip-mask-toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="ipv6-warn" id="ipv6Warn">⚠️ 当前为 IPv6 环境，不建议采用 IPv6 访问Codex。部分检测结果可能不完整。<br><a href="/gpt/ipv6.html" target="_blank" style="color:#92400e;font-weight:600">了解为什么不建议用 IPv6</a></div>
+
+  <!-- Dual IP display -->
+  <div class="ip-dual">
+    <div class="ip-hero" id="ipHeroCN">
+      <div class="label">中国出口IPv4</div>
+      <div class="ip-addr" id="ipAddrCN"><div class="loading-bar" style="width:180px;height:24px"></div></div>
+      <div class="ip-geo" id="ipGeoCN"><div class="loading-bar" style="width:220px"></div></div>
+    </div>
+    <div class="ip-hero" id="ipHero">
+      <div class="label"><img src="/favicons/cloudflare.webp" alt="Cloudflare" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px">Cloudflare 出口IP</div>
+      <div class="ip-addr" id="ipAddr"><div class="loading-bar" style="width:180px;height:24px"></div></div>
+      <div class="ip-geo" id="ipGeo"><div class="loading-bar" style="width:220px"></div></div>
+    </div>
+    <div class="ip-hero" id="ipHeroChatGPT">
+      <div class="label"><img src="/favicons/chatgpticon.png?v=1" alt="ChatGPT" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px">ChatGPT出口IP</div>
+      <div class="ip-addr" id="ipAddrChatGPT"><div class="loading-bar" style="width:180px;height:24px"></div></div>
+      <div class="ip-geo" id="ipGeoChatGPT"><div class="loading-bar" style="width:220px"></div></div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <!-- Risk Score -->
+    <div class="card trust-score-card">
+      <div class="card-title">ChatGPT信任评分(Trust Score)</div>
+      <div class="gauge-wrap" id="gaugeWrap">
+        <div class="gauge-score" id="gaugeScore"><div class="loading-bar" style="width:60px;height:28px"></div></div>
+        <div class="gauge-text" id="gaugeText"></div>
+        <div class="gauge-bar"><div class="gauge-pointer" id="gaugePointer" style="left:0%"></div></div>
+        <div class="gauge-labels"><span>0 高危</span><span>25</span><span>50</span><span>75</span><span>100 可信</span></div>
+        <div class="region-warn" id="regionWarn" style="display:none"></div>
+      </div>
+      <!-- Filler + bottom spacer only kick in on multi-column desktop layout
+           where cross-card alignment matters. Below 720px (single-column H5
+           stack), they collapse via media query — no wasted blank space. -->
+      <div class="trust-score-filler"></div>
+      <div class="risk-row" id="chatgptRegionSupportRow" style="display:none"><span class="risk-label">ChatGPT支持地区</span><span class="risk-value" id="chatgptRegionSupport"></span></div>
+      <div class="trust-score-spacer" id="chatgptRegionSupportSpacer"></div>
+    </div>
+
+    <!-- IP Properties -->
+    <div class="card">
+      <div class="card-title">ChatGPT出口IP 属性</div>
+      <div id="propsContent">
+        <div class="risk-row"><span class="risk-label">地区</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">城市</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">IP 属性</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">ASN</span><div class="loading-bar" style="width:160px"></div></div>
+        <div class="risk-row"><span class="risk-label">运营商</span><div class="loading-bar" style="width:140px"></div></div>
+      </div>
+    </div>
+
+    <!-- Security Detection -->
+    <div class="card">
+      <div class="card-title">ChatGPT出口IP安全检测</div>
+      <div id="securityContent">
+        <div class="risk-row"><span class="risk-label">VPN</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">代理 (Proxy)</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">Tor</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">机器人 (Crawler)</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">滥用记录</span><div class="loading-bar" style="width:60px"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ChatGPT Availability + Leak Detection -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>GPT · Codex 可用检测<span class="tip-wrap" style="margin-left:4px">ⓘ<span class="tip-text">因为 ChatGPT / OpenAI 服务器通常部署在美国，从亚洲访问出现 100ms 以上延迟是正常的。api.openai.com 是 Codex 与 API 走的接口，和 chatgpt.com 网页/认证链路不同，可能一个通另一个不通——Codex 用户尤其要看这一行。</span></span></span><span onclick="detectChatGPTAvail()" style="font-size:0.75em;color: var(--text-soft);cursor:pointer;font-weight:400;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">刷新</span></div>
+      <div id="chatgptAvailContent">
+        <div class="risk-row"><span class="risk-label">chatgpt.com</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">api.openai.com</span><div class="loading-bar" style="width:80px"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">DNS 泄露检测<a href="/dns/" target="_blank" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">查询DNS安全</a></div>
+      <div id="dnsLeakContent">
+        <div class="risk-row"><span class="risk-label">状态</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">DNS 出口 IP</span><div class="loading-bar" style="width:140px"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">WebRTC UDP 泄露检测<a href="/webrtc/" target="_blank" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">深度查询</a></div>
+      <div id="udpLeakContent">
+        <div class="risk-row"><span class="risk-label">状态</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">UDP 出口 IP</span><div class="loading-bar" style="width:140px"></div></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Device Info -->
+  <div class="cards" style="grid-template-columns:1fr">
+    <div class="card">
+      <div class="card-title">ChatGPT出口IP用户设备信息</div>
+      <div id="deviceContent">
+        <div class="risk-row"><span class="risk-label">时区</span><div class="loading-bar" style="width:120px"></div></div>
+        <div class="risk-row"><span class="risk-label">语言</span><div class="loading-bar" style="width:160px"></div></div>
+        <div class="risk-row"><span class="risk-label">操作系统 / 浏览器</span><div class="loading-bar" style="width:200px"></div></div>
+        <div class="risk-row"><span class="risk-label">触屏</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">网络类型</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">Do Not Track</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">WebGL 渲染器</span><div class="loading-bar" style="width:200px"></div></div>
+        <div class="risk-row"><span class="risk-label">Canvas 指纹</span><div class="loading-bar" style="width:160px"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IP History -->
+  <div class="cards" style="grid-template-columns:1fr">
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
+        <span>ChatGPT 出口 IP 历史记录<br><span style="font-size:0.7em;color: var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">0记录，100%隐私友好，历史数据仅做浏览器本地存储，方便查阅</span></span>
+        <span onclick="clearIPHistory()" style="font-size:0.75em;color: var(--text-soft);cursor:pointer;font-weight:400;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px;flex-shrink:0">清除</span>
+      </div>
+      <div id="ipHistoryContent" class="history-grid" style="font-size:0.9em;color: var(--text-muted)">加载中...</div>
+    </div>
+  </div>
+
+  <!-- Extended reading -->
+  <div style="margin-top:24px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+    <div style="font-size:0.82em;color: var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span>📖 拓展阅读</span><a href="https://ip.net.coffee/news/" target="_blank" rel="noopener" title="查看全部 AI 资讯" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">更多资讯</a></div>
+    <div class="reading-grid">
+      <a href="/gpt/status.html" target="_blank">ChatGPT / OpenAI 实时服务状态监控</a>
+      <a href="/gpt/site.html" target="_blank">Codex / ChatGPT 域名分流规则大全</a>
+      <a href="/gpt/codex.html" target="_blank">Codex 稳定使用指南：11 项关键配置</a>
+      <a href="/gpt/identity.html" target="_blank">ChatGPT「异常活动」报错自查与 IP 风控指南</a>
+      <a href="/gpt/ban.html" target="_blank">ChatGPT 大面积封号：哪些号容易被封 + 防封指南</a>
+      <a href="/gpt/ipv6.html" target="_blank">为什么不建议用 IPv6 访问 ChatGPT / Codex</a>
+      <a href="/gpt/news/20260915b.html" target="_blank" data-news="2026-09-15">Codex 没等到的例外，谷歌给了 Claude</a>
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/gpt/" style="color: var(--text-muted);text-decoration:none">ChatGPT 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+
+<script src="/gpt/gpt-page.js?v=20260916a"></script>
+
+</body>
+</html>

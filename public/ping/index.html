@@ -3,15 +3,15 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IP 查询 - IP分流测试 - Net.Coffee</title>
-<meta name="description" content="查询本机 IP 地址及归属地，测试分流规则是否生效。支持国内外 35+ 网站出口 IP 检测、网络连通性测试，一键查看 Cloudflare、Discord、ChatGPT 等站点的实际出口。">
-<meta name="keywords" content="IP查询,IP地址,分流测试,Split Tunnel,出口IP,Cloudflare,网络连通性,IP归属地,ASN查询">
+<title>全球 Ping 测试 - 多节点延迟检测 - Net.Coffee</title>
+<meta name="description" content="从全球 12 个节点对目标 IP 进行 Ping 延迟测试，覆盖香港、东京、新加坡、洛杉矶、法兰克福等地区，实时查看网络延迟。">
+<meta name="keywords" content="Ping测试,全球Ping,延迟检测,网络延迟,多节点Ping,香港Ping,东京Ping,服务器延迟">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://ip.net.coffee/">
-<meta property="og:title" content="IP 查询 - IP分流测试 - Net.Coffee">
-<meta property="og:description" content="查询本机 IP 地址及归属地，测试分流规则是否生效。支持 35+ 网站出口 IP 检测和网络连通性测试。">
+<link rel="canonical" href="https://ip.net.coffee/ping/">
+<meta property="og:title" content="全球 Ping 测试 - 多节点延迟检测 - Net.Coffee">
+<meta property="og:description" content="从全球 12 个节点对目标 IP 进行 Ping 延迟测试，实时查看网络延迟。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ip.net.coffee/">
+<meta property="og:url" content="https://ip.net.coffee/ping/">
 <meta property="og:locale" content="zh_CN">
 <meta name="author" content="Net.Coffee">
 <meta name="generator" content="Net.Coffee Tools">
@@ -20,14 +20,14 @@
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 <link rel="dns-prefetch" href="https://www.google-analytics.com">
 <meta property="og:site_name" content="Net.Coffee">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="IP 查询 - IP分流测试 - Net.Coffee">
-<meta name="twitter:description" content="查询本机 IP 地址，测试分流规则。支持 35+ 网站出口 IP 检测。">
 <meta property="og:image" content="https://ip.net.coffee/og-image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="全球 Ping 测试 - 多节点延迟检测 - Net.Coffee">
+<meta name="twitter:description" content="从全球多节点对目标 IP 进行 Ping 延迟测试，实时查看网络延迟。">
 <meta name="twitter:image" content="https://ip.net.coffee/og-image.png">
-<link rel="stylesheet" href="/home-page.css">
+<link rel="stylesheet" href="/ping/ping-page.css?v=20260910a">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"IP 查询与分流测试","url":"https://ip.net.coffee/","description":"查询本机 IP 地址及归属地，测试分流规则是否生效。支持 35+ 网站出口 IP 检测。","applicationCategory":"NetworkingApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"全球 Ping 测试","url":"https://ip.net.coffee/ping/","description":"从全球多节点对目标 IP 进行 Ping 延迟测试，覆盖亚洲、美洲、欧洲。","applicationCategory":"NetworkingApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
 </script>
 <style data-h5nav>
 .nav-scroll{display:contents}
@@ -60,7 +60,7 @@
 
 <div class="container">
   <nav class="nav"><div class="nav-scroll">
-    <a href="/" class="active" aria-current="page"><span class="full">IP查询</span><span class="short">查询</span></a>
+    <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
     <a href="/claude/" title="Claude AI IP 检测 - IP 纯净度"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
     <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
     <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
@@ -68,7 +68,7 @@
     <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
     <a href="/webrtc/" title="WebRTC IP 泄露检测"><span class="full">WebRTC</span><span class="short">UDP</span></a>
     <a href="/cloudflare/" title="Cloudflare 全面检测" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
-    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new"><span class="full">全球Ping</span><span class="short">Ping</span></a>
+    <a href="/ping/" title="全球 Ping 延迟测试" class="pc-only-new active" aria-current="page"><span class="full">全球Ping</span><span class="short">Ping</span></a>
     <a href="/status/" title="服务可用性查询"><span class="full">服务状态</span><span class="short">状态</span></a>
     <div class="nav-more pc-only-new" data-tag="nav-more-dd"><span class="nav-more-trigger">更多 <svg class="nav-more-arrow" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span><div class="nav-more-menu"><a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener" title="精美的网站IP卡片代码">IP卡片</a></div></div>
   </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">更多 <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
@@ -78,22 +78,13 @@
     <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
   </button>
   <div class="ts-menu" id="ts-menu" role="menu">
-    <button class="ts-item" data-mode="light" role="menuitem">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-      亮色模式
-    </button>
-    <button class="ts-item" data-mode="dark" role="menuitem">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      暗黑模式
-    </button>
-    <button class="ts-item" data-mode="auto" role="menuitem">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
-      跟随系统
-    </button>
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>亮色模式</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>暗黑模式</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>跟随系统</button>
   </div>
 </div></nav>
 <div class="nav-h5-grid" id="navH5Grid">
-  <a href="/" class="on">IP查询</a>
+  <a href="/">IP查询</a>
   <a href="/claude/">Claude</a>
   <a href="/ip/">IP评分</a>
   <a href="/gpt/">GPT 检测</a>
@@ -101,127 +92,56 @@
   <a href="/dns/">DNS泄露</a>
   <a href="/webrtc/">WebRTC</a>
   <a href="/cloudflare/">Cloudflare</a>
-  <a href="/ping/">全球Ping</a>
+  <a href="/ping/" class="on">全球Ping</a>
   <a href="/status/">服务状态</a>
   <a href="/whois/" title="全能Whois查询">Whois查询</a><a href="/news/" title="最新AI资讯">AI资讯</a><a href="https://card.net.coffee/ip/" target="_blank" rel="noopener">IP卡片</a>
 </div>
 <script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
 <script>
 (function(){
-  var btn=document.getElementById('ts-btn');
-  var menu=document.getElementById('ts-menu');
-  var wrap=document.getElementById('ts-wrap');
-  var html=document.documentElement;
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
   function readCookie(){var m=document.cookie.match(/(?:^|; )nc_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
-  function writeCookie(v){var base='; path=/; domain=.net.coffee; max-age=31536000; samesite=lax';if(location.protocol==='https:')base+='; secure';document.cookie='nc_theme='+encodeURIComponent(v)+base;}
-  function clearCookie(){document.cookie='nc_theme=; path=/; domain=.net.coffee; max-age=0';}
-  function current(){return readCookie()||localStorage.getItem('theme')||'auto';}
-  function effective(){
-    var c=current();
-    if(c!=='auto')return c;
-    return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
-  }
-  function paint(){
-    var eff=effective(),c=current();
-    btn.querySelectorAll('[data-mode-icon]').forEach(function(el){
-      el.style.display=(el.dataset.modeIcon===c)?'block':'none';
-    });
-    menu.querySelectorAll('.ts-item').forEach(function(it){
-      if(it.dataset.mode===c)it.setAttribute('aria-current','true');
-      else it.removeAttribute('aria-current');
-    });
-  }
-  function setMode(m){
-    if(m==='auto'){localStorage.removeItem('theme');clearCookie();html.removeAttribute('data-theme');}
-    else{localStorage.setItem('theme',m);writeCookie(m);html.setAttribute('data-theme',m);}
-    paint();
-  }
-  btn.addEventListener('click',function(e){
-    e.stopPropagation();
-    var open=menu.classList.toggle('open');
-    btn.setAttribute('aria-expanded',open);
-  });
-  menu.querySelectorAll('.ts-item').forEach(function(it){
-    it.addEventListener('click',function(){
-      setMode(it.dataset.mode);
-      menu.classList.remove('open');
-      btn.setAttribute('aria-expanded','false');
-    });
-  });
-  document.addEventListener('click',function(e){
-    if(menu.classList.contains('open')&&!e.target.closest('#ts-wrap')){
-      menu.classList.remove('open');
-      btn.setAttribute('aria-expanded','false');
-    }
-  });
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'&&menu.classList.contains('open')){
-      menu.classList.remove('open');
-      btn.setAttribute('aria-expanded','false');
-      btn.focus();
-    }
-  });
-  // 系统主题变化时（用户选 auto 才生效）触发图标重绘
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint);
+  function writeCookie(v){var base="; path=/; domain=.net.coffee; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="nc_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="nc_theme=; path=/; domain=.net.coffee; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
   function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
   paint();
 })();
 </script>
-  <!-- My IP Section -->
-  <div class="ip-section">
-    <h1>我的 IP 查询</h1>
-    <div class="ip-section-header">
-      <p class="desc">查看当前的 IP地址、地理位置 、网络连通性和 IP分流</p>
-      <!-- 隐藏IP 开关（iOS 风格）— 默认关；开启后所有 IPv4 C/D 段、IPv6 后段被 * 替换 -->
-      <label class="ip-mask-toggle">
-        <span class="ip-mask-toggle-label">隐藏IP</span>
-        <input type="checkbox" id="ipMaskToggle">
-        <span class="ip-mask-toggle-slider"></span>
-      </label>
-    </div>
-    <div class="ip-card" id="ipCard">
-      <div class="ip-card-top">
-        <div class="ip-info-col">
-          <div class="label">IPv4</div>
-          <div class="ip-value" id="ipValue"><div class="loading-bar" style="width:200px;height:28px"></div></div>
-          <div class="ip-geo" id="ipGeo"><div class="loading-bar" style="width:280px"></div></div>
-          <div class="ip-source" id="ipSource"></div>
-        </div>
-        <div class="ping-col">
-          <div class="label" style="display:flex;justify-content:space-between;align-items:center;gap:8px">网络连通性<a href="https://ip.net.coffee/link/" target="_blank" rel="noopener" style="font-size:0.88em;font-weight:400;color:var(--text-soft);text-decoration:none;white-space:nowrap">查看更多 &rsaquo;</a></div>
-          <div class="ping-grid" id="pingGrid"></div>
-        </div>
-      </div>
-      <div class="split-summary">
-        <p class="split-summary-title">分流出口 IP 汇总（点击查询 IP 质量）</p>
-        <div class="split-ip-grid" id="splitIpGrid"></div>
-      </div>
-    </div>
+
+  <h1>全球 Ping 测试</h1>
+  <p class="desc">从全球 20 个节点检测目标 IP 的网络延迟</p>
+
+  <div class="search-bar">
+    <input type="text" id="hostInput" placeholder="输入 IP 地址或域名..." value="">
+    <button id="pingBtn" onclick="startPing()">Ping</button>
   </div>
 
-  <hr class="section-divider">
-
-  <!-- Split Tunnel Section -->
-  <header>
-    <h2>网站分流测试</h2>
-    <p>如果当前网络进行了IP分流，那么下面可以看到访问不同网站时所使用的IP 及分流规则。如果出现"未知"状态，这并不代表你的网络有问题</p>
-  </header>
-
-  <table class="main-table" id="mainTable">
+  <table class="results-table">
     <thead>
       <tr>
-        <th>Website</th>
-        <th class="flag-col"></th>
-        <th class="ip-col">IP</th>
-        <th class="geo-col">Geolocation</th>
+        <th>节点</th>
+        <th style="text-align:center">最小</th>
+        <th style="text-align:center">平均</th>
+        <th style="text-align:center">最大</th>
       </tr>
     </thead>
-    <tbody id="tableBody"></tbody>
+    <tbody id="resultsBody"></tbody>
   </table>
 </div>
 
-<script src="/home-page.js"></script>
 <footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/claude/" style="color: var(--text-muted);text-decoration:none">Claude AI 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+
+<script src="/ping/ping-page.js?v=20260910a"></script>
+
 
 </body>
 </html>
