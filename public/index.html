@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP分流 & AI可用性检测 - 支持 Gemini / ChatGPT / Claude</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --safe: #22c55e;
+      --safe-bg: rgba(34, 197, 94, 0.15);
+      --warn: #eab308;
+      --warn-bg: rgba(234, 179, 8, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:hover:not(:disabled) { opacity: 0.9; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    .service-card.status-safe { border-left: 4px solid var(--safe); }
+    .service-card.status-danger { border-left: 4px solid var(--danger); }
+    .service-card.status-unknown { border-left: 4px solid var(--warn); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .badge-safe { background: var(--safe-bg); color: var(--safe); }
+    .badge-danger { background: var(--danger-bg); color: var(--danger); }
+    .badge-warn { background: var(--warn-bg); color: var(--warn); }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+    .info-label { color: var(--text-muted); }
+    .info-val { font-weight: 500; text-align: right; word-break: break-all; }
+
+    .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .tag-res { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .tag-hosting { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+
+    .card-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.2);
+      padding: 8px;
+      border-radius: 6px;
+      line-height: 1.4;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .risk-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      padding: 6px 0;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 32px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>☕ IP 分流 & AI 可用性检测系统</h1>
+      <button class="btn" id="refreshBtn" onclick="runDetection()">重新检测</button>
+    </header>
+
+    <div class="section-title">核心 AI 分流出口检测</div>
+    <div class="grid">
+      <!-- Gemini 专属卡片 -->
+      <div class="service-card" id="card-gemini">
+        <div class="card-header">
+          <div class="card-title"><span>✨</span><strong>Google Gemini AI</strong></div>
+        </div>
+        <div class="card-body">检测中...</div>
+      </div>
+
+      <!-- ChatGPT 卡片 -->
+      <div class="service-card" id="card-gpt">
+        <div class="card-header">
+          <div class="card-title"><span>🤖</span><strong>OpenAI ChatGPT</strong></div>
+        </div>
+        <div class="card-body">检测中...</div>
+      </div>
+
+      <!-- Claude 卡片 -->
+      <div class="service-card" id="card-claude">
+        <div class="card-header">
+          <div class="card-title"><span>🧠</span><strong>Anthropic Claude</strong></div>
+        </div>
+        <div class="card-body">检测中...</div>
+      </div>
+
+      <!-- 默认 Cloudflare 卡片 -->
+      <div class="service-card" id="card-cf">
+        <div class="card-header">
+          <div class="card-title"><span>🌐</span><strong>默认出口 IP</strong></div>
+        </div>
+        <div class="card-body">检测中...</div>
+      </div>
+    </div>
+
+    <div class="section-title">浏览器安全指纹 (Anti-Tracking)</div>
+    <div class="panel" id="fingerprint-info">
+      读取中...
+    </div>
+
+    <footer>
+      <span>OpenClaw 复刻版 · 支持 Gemini、ChatGPT、Claude 分流检测与 IP 纯净度分析</span>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

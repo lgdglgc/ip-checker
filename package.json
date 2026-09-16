@@ -1,0 +1,10 @@
+{
+  "name": "ip-net-coffee-clone",
+  "version": "1.0.0",
+  "description": "IP Query and AI Streaming Detection tool including Gemini, ChatGPT, Claude",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {}
+}
