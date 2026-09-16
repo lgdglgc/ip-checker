@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">IP 评分与深度画像 - Net.Coffee</title>
+  <meta name="description" content="IP 信任评分与深度画像：原生住宅/机房识别、ASN 归属、地理位置、业务场景评估、全球威胁黑名单与全球延迟检测。">
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    })();
+  </script>
+  <style>
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .search-bar input {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-bar input:focus {
+      border-color: var(--primary);
+    }
+    .search-bar button {
+      padding: 12px 24px;
+      font-size: 0.95rem;
+    }
+    .score-summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .score-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .score-number {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .score-number small {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .score-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .scenario-item {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .scenario-title {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scenario-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .data-table td {
+      padding: 10px 14px 10px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    .data-label {
+      color: var(--text-muted);
+      width: 140px;
+      white-space: nowrap;
+    }
+    .data-val {
+      font-weight: 500;
+      color: var(--text);
+    }
+    .section-block-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 24px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ping-delay-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .ping-delay-tag {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+    }
+    .dnsbl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .dnsbl-item {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部极简导航栏 (对齐 ip.net.coffee) -->
+    <nav class="nav">
+      <a href="/">IP查询</a>
+      <a href="/ip/" class="active" title="IP 评分查询 - ASN / 风险检测">IP评分</a>
+      <a href="https://github.com/lgdglgc/ip-checker" target="_blank" rel="noopener">GitHub</a>
+
+      <!-- 独立圆形主题切换器 -->
+      <div class="ts-wrap" id="ts-wrap">
+        <button class="ts-btn" id="ts-btn" aria-label="切换主题模式">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+        </button>
+        <div class="ts-menu" id="ts-menu">
+          <button class="ts-item" data-theme="light">☀️ 亮色模式</button>
+          <button class="ts-item" data-theme="dark">🌙 暗黑模式</button>
+          <button class="ts-item" data-theme="auto">💻 跟随系统</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 标题与隐藏 IP 开关 -->
+    <div class="ip-section-header">
+      <div>
+        <h1 style="font-size: 1.75em; font-weight: 700; margin-bottom: 4px;">
+          IP <span class="h1-ip font-mono" id="h1Ip">...</span> 评分
+        </h1>
+        <p class="desc">IP 深度画像，原生住宅 or 机房识别、多源比对、地理经纬度、场景评估、黑名单与全球延迟检测</p>
+      </div>
+      <label class="ip-mask-toggle" title="开启后对 IP 敏感段进行脱敏">
+        <span>隐藏IP</span>
+        <input type="checkbox" id="ipMaskToggle">
+        <span class="ip-mask-slider"></span>
+      </label>
+    </div>
+
+    <!-- 搜索栏 -->
+    <div class="search-bar">
+      <input type="text" id="ip-input" placeholder="如 8.8.8.8 或 216.167.124.197，留空自动查询当前 IP" />
+      <button class="btn" id="search-btn">查询</button>
+    </div>
+
+    <!-- 核心评分内容区 -->
+    <div id="resultContent">
+      <div class="score-summary-card">
+        <div class="score-badge-row">
+          <div class="score-number" id="scoreNum" style="color: var(--safe)">
+            -- <small>/ 100</small>
+          </div>
+          <div>
+            <div class="score-level-badge badge-safe" id="scoreLevelBadge">
+              正在评估信任评分…
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-soft); margin-top: 6px;" id="scoreHint">
+              数据中心、Tor、代理与历史滥用会扣分；原生住宅、白名单 ASN 会加分
+            </div>
+          </div>
+        </div>
+
+        <!-- 场景评估 -->
+        <div class="scenario-grid">
+          <div class="scenario-item">
+            <div class="scenario-title"><span>🎵</span> TikTok 运营适用性</div>
+            <div class="scenario-val" id="scTikTok">--</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-title"><span>🤖</span> AI 平台 (ChatGPT / Claude / Gemini)</div>
+            <div class="scenario-val" id="scAi">--</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-title"><span>📱</span> 国际社媒与海外电商</div>
+            <div class="scenario-val" id="scSocial">--</div>
+          </div>
+        </div>
+
+        <!-- 基础数据表格 -->
+        <h3 class="section-block-title">📊 基础数据画像</h3>
+        <table class="data-table">
+          <tbody>
+            <tr>
+              <td class="data-label">IP 地址</td>
+              <td class="data-val font-mono" id="tbIp">--</td>
+            </tr>
+            <tr>
+              <td class="data-label">协议版本</td>
+              <td class="data-val" id="tbProtocol">--</td>
+            </tr>
+            <tr>
+              <td class="data-label">国家 / 地区</td>
+              <td class="data-val" id="tbCountry">--</td>
+            </tr>
+            <tr>
+              <td class="data-label">城市 / 经纬度</td>
+              <td class="data-val" id="tbCity">--</td>
+            </tr>
+            <tr>
+              <td class="data-label">网络属性</td>
+              <td class="data-val" id="tbType">--</td>
+            </tr>
+            <tr>
+              <td class="data-label">运营商 / ASN</td>
+              <td class="data-val font-mono" id="tbAsn">--</td>
+            </tr>
+            <tr>
+              <td class="data-label">公司组织</td>
+              <td class="data-val" id="tbOrg">--</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 全球延迟预估 -->
+        <h3 class="section-block-title">⚡ 全球网络延迟测速估算 (Ping RTT)</h3>
+        <div class="ping-delay-list" id="pingList">
+          <span class="loading-bar" style="width: 320px; height: 28px;"></span>
+        </div>
+
+        <!-- BGP 路由拓扑 -->
+        <h3 class="section-block-title">🌐 BGP 路由拓扑与前缀</h3>
+        <div style="font-size: 0.92rem; color: var(--text-soft);" id="bgpInfo">
+          正在读取 BGP 路由表信息…
+        </div>
+
+        <!-- 权威 DNSBL 黑名单检测 -->
+        <h3 class="section-block-title">🛡 全球威胁与垃圾邮件黑名单 (DNSBL)</h3>
+        <div style="font-size: 0.88rem; color: var(--text-soft); margin-bottom: 8px;" id="dnsblSummary">
+          12 家主流检测源
+        </div>
+        <div class="dnsbl-grid" id="dnsblGrid">
+          <!-- 动态渲染 12 家 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+      <p>© 2026 <strong>Net.Coffee</strong> Clone · IP 评分与深度画像系统</p>
+      <p>权威数据融合 · 智能防封场景分析 · 实时路由拓扑</p>
+    </footer>
+  </div>
+
+  <script src="/ip.js"></script>
+</body>
+</html>
