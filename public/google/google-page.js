@@ -230,11 +230,6 @@ function render() {
         el.innerHTML = `<span class="icon">⚠️</span>当前出口 IP 位于<strong>${restrictedInfo.name}</strong>，受 Google 官方合规限制，无法使用 Gemini / Antigravity。`;
         el.style.display = 'block';
       }
-    } else if (hasGoogleIp) {
-      el.className = 'region-warn safe';
-      const cnName = gr.country || '支持地区';
-      el.innerHTML = `<span class="icon">✅</span>当前出口 IP 位于<strong>${cnName}</strong>，属于 Google Gemini 与 Antigravity <strong>官方支持地区</strong>，可直接访问。`;
-      el.style.display = 'block';
     } else {
       el.style.display = 'none';
     }
@@ -245,19 +240,16 @@ function render() {
     const row = document.getElementById('googleRegionSupportRow');
     const val = document.getElementById('googleRegionSupport');
     const filler = document.querySelector('.trust-score-card .trust-score-filler');
-    const spacer = document.querySelector('.trust-score-card .trust-score-spacer');
     if (!row || !val) return;
     if (restrictedInfo) {
       row.style.display = 'none';
       if (filler) filler.style.display = 'none';
-      if (spacer) spacer.style.display = 'none';
     } else {
       if (filler) filler.style.display = '';
-      if (spacer) spacer.style.display = '';
       if (!hasGoogleIp) {
         val.innerHTML = '<span class="tag tag-neutral">未知</span>';
       } else {
-        val.innerHTML = '<span class="tag tag-safe">全面支持 (可正常使用)</span>';
+        val.innerHTML = '<span class="tag tag-safe">官方支持</span>';
       }
       row.style.display = '';
     }
@@ -270,12 +262,14 @@ function render() {
   const cityStr = gg?.city || gr?.city || regionStr;
 
   let propTag = '';
-  if (isResidential === true) propTag = '<span class="tag tag-safe">家庭住宅宽带 (ISP)</span>';
-  else if (isResidential === false) propTag = '<span class="tag tag-warn">机房/数据中心 IP</span>';
-  else propTag = '<span class="tag tag-neutral">未知</span>';
-  if (companyType) {
+  if (isResidential === true) {
+    propTag = '<span class="tag tag-safe">家庭住宅宽带 (ISP)</span>';
+  } else if (isResidential === false) {
     const typeMap = { 'hosting': 'Hosting', 'isp': 'ISP', 'business': 'Business', 'education': 'Education' };
-    propTag += ` <span style="color: var(--text-muted);font-size:0.82em">(${typeMap[companyType] || companyType})</span>`;
+    const sub = companyType ? ` (${typeMap[companyType] || companyType})` : '';
+    propTag = `<span class="tag tag-warn">机房/数据中心 IP${sub}</span>`;
+  } else {
+    propTag = '<span class="tag tag-neutral">未知</span>';
   }
 
   document.getElementById('propsContent').innerHTML = `
@@ -450,7 +444,10 @@ async function detectDNSLeak() {
 
   if (dnsServers.length === 0) {
     el.innerHTML = `
-      <div class="risk-row"><span class="risk-label">状态</span><span class="risk-value"><span class="tag tag-safe">DNS 加密或未暴露出口</span></span></div>
+      <div class="risk-row"><span class="risk-label">状态</span><span class="risk-value"><span class="tag tag-safe">未检测到泄露</span></span></div>
+      <div class="risk-row"><span class="risk-label">DNS 出口</span><span class="risk-value" style="font-size:0.85em;color:var(--text-muted)">DoH / 加密未暴露</span></div>
+      <div class="risk-row"><span class="risk-label">归属地区</span><span class="risk-value" style="font-size:0.85em;color:var(--text-soft)">跟随代理环境</span></div>
+      <div class="risk-row"><span class="risk-label">DNS 服务商</span><span class="risk-value" style="font-size:0.85em;color:var(--text-muted)">加密保护</span></div>
     `;
     return;
   }
@@ -467,15 +464,16 @@ async function detectDNSLeak() {
       if (r.ok) geo = await r.json();
     } catch {}
     const cc = geo?.country_code || '';
+    const country = geo?.country || cc || '';
     const isp = geo?.isp || '';
-    const isCN = cc === 'cn';
+    const isCN = cc.toLowerCase() === 'cn';
     if (isCN && !googleInChina) {
-      showIP = { ip, cc, isp, leaked: true };
+      showIP = { ip, cc, country, isp, leaked: true };
       isLeaked = true;
       break;
     }
     if (!showIP) {
-      showIP = { ip, cc, isp, leaked: false };
+      showIP = { ip, cc, country, isp, leaked: false };
     }
   }
 
@@ -487,7 +485,8 @@ async function detectDNSLeak() {
 
   if (showIP) {
     rows += `<div class="risk-row"><span class="risk-label">DNS 出口</span><span class="risk-value" style="font-size:0.85em">${flagImg(showIP.cc)} <span class="ip-mask-target">${showIP.ip}</span> ${showIP.leaked ? '<span class="tag tag-warn" style="font-size:0.8em">中国DNS</span>' : ''}</span></div>`;
-    if (showIP.isp) rows += `<div class="risk-row pc-only"><span class="risk-label">服务商</span><span class="risk-value" style="font-size:0.85em;font-weight:400;color: var(--text-muted)">${showIP.isp}</span></div>`;
+    rows += `<div class="risk-row"><span class="risk-label">归属地区</span><span class="risk-value" style="font-size:0.85em;color:var(--text-soft)">${showIP.country || showIP.cc || '未知'}</span></div>`;
+    rows += `<div class="risk-row"><span class="risk-label">DNS 服务商</span><span class="risk-value" style="font-size:0.85em;font-weight:400;color: var(--text-muted)">${showIP.isp || '公共 DNS'}</span></div>`;
   }
   el.innerHTML = rows;
 }
@@ -531,7 +530,10 @@ async function detectWebRTCLeak() {
 
   if (publicUdp.length === 0 && allUdp.length === 0) {
     el.innerHTML = `
-      <div class="risk-row"><span class="risk-label">状态</span><span class="risk-value"><span class="tag tag-safe">WebRTC 已禁用或无泄露</span></span></div>
+      <div class="risk-row"><span class="risk-label">状态</span><span class="risk-value"><span class="tag tag-safe">WebRTC 已禁用</span></span></div>
+      <div class="risk-row"><span class="risk-label">UDP 出口</span><span class="risk-value" style="font-size:0.85em;color:var(--text-muted)">无泄露风险</span></div>
+      <div class="risk-row"><span class="risk-label">归属地区</span><span class="risk-value" style="font-size:0.85em;color:var(--text-soft)">—</span></div>
+      <div class="risk-row"><span class="risk-label">网络服务商</span><span class="risk-value" style="font-size:0.85em;color:var(--text-muted)">浏览器已拦截</span></div>
     `;
     return;
   }
@@ -539,6 +541,9 @@ async function detectWebRTCLeak() {
   if (publicUdp.length === 0) {
     el.innerHTML = `
       <div class="risk-row"><span class="risk-label">状态</span><span class="risk-value"><span class="tag tag-safe">未检测到泄露</span></span></div>
+      <div class="risk-row"><span class="risk-label">UDP 出口</span><span class="risk-value" style="font-size:0.85em;color:var(--text-muted)">内网保留地址</span></div>
+      <div class="risk-row"><span class="risk-label">归属地区</span><span class="risk-value" style="font-size:0.85em;color:var(--text-soft)">局域网内网</span></div>
+      <div class="risk-row"><span class="risk-label">网络服务商</span><span class="risk-value" style="font-size:0.85em;color:var(--text-muted)">私有网络</span></div>
     `;
     return;
   }
@@ -554,14 +559,20 @@ async function detectWebRTCLeak() {
       : '<span class="tag tag-safe">未检测到泄露</span>'
   }</span></div>`;
 
-  let showFlag = '', showCountry = '';
+  let showFlag = '', showCountry = '', showIsp = '';
   try {
     const r = await fetch(`/api/geoip/${showIP}`, { signal: AbortSignal.timeout(5000) });
-    if (r.ok) { const g = await r.json(); showFlag = g.country_code || ''; showCountry = g.country || ''; }
+    if (r.ok) {
+      const g = await r.json();
+      showFlag = g.country_code || '';
+      showCountry = [g.country, g.city].filter(Boolean).join(' ') || g.country || '';
+      showIsp = g.isp || g.asOrganization || g.organization || '';
+    }
   } catch {}
 
   rows += `<div class="risk-row"><span class="risk-label">UDP 出口</span><span class="risk-value" style="font-size:0.88em">${flagImg(showFlag)} ${displayIP(showIP)} ${matchesGoogle ? '' : isLeaked ? '<span class="tag tag-warn" style="font-size:0.8em">异常</span>' : ''}</span></div>`;
-  if (showCountry) rows += `<div class="risk-row pc-only"><span class="risk-label">归属地</span><span class="risk-value" style="font-size:0.85em;font-weight:400;color: var(--text-muted)">${showCountry}</span></div>`;
+  rows += `<div class="risk-row"><span class="risk-label">归属地区</span><span class="risk-value" style="font-size:0.85em;color:var(--text-soft)">${showCountry || '未知'}</span></div>`;
+  rows += `<div class="risk-row"><span class="risk-label">网络服务商</span><span class="risk-value" style="font-size:0.85em;font-weight:400;color: var(--text-muted)">${showIsp || '未知'}</span></div>`;
   el.innerHTML = rows;
 }
 
@@ -668,14 +679,22 @@ function renderDeviceInfo() {
       const diffLabel = (googleOffMin - localOffMin) === 0 ? '偏移一致' : diffHours === 0 ? '略有微差' : (diffHours > 0 ? `快 ${diffHours} 小时` : `慢 ${-diffHours} 小时`);
       gLine = `Google出口: ${googleTz} (${gOffStr}) — ${diffLabel}`;
     }
-    tzHtml = `<span class="tag tag-warn">本地为中国大陆时区</span><br>`
-           + `<span style="font-size:0.85em">本地: ${localTz} (${localUtc})<br>${gLine}</span>`;
+    tzHtml = `<div style="display:inline-flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right">`
+           + `<span class="tag tag-warn">本地为中国大陆时区</span>`
+           + `<span style="font-size:0.85em;color:var(--text-soft)">本地: ${localTz} (${localUtc})</span>`
+           + `<span style="font-size:0.85em;color:var(--text-muted)">${gLine}</span>`
+           + `</div>`;
   } else if (tzMatch === true) {
-    tzHtml = `<span class="tag tag-safe">时区一致</span> ${localTz} (${localUtc})`;
+    tzHtml = `<span class="tag tag-safe">时区一致</span> <span style="font-size:0.88em;color:var(--text-soft);margin-left:6px">${localTz} (${localUtc})</span>`;
   } else if (tzMatch === false) {
     const gOffStr = formatOffsetHours(googleOffMin);
-    tzHtml = `<span class="tag tag-warn">时区不一致</span><br>`
-           + `<span style="font-size:0.85em">本地: ${localTz} (${localUtc})<br>Google出口: ${googleTz} (${gOffStr})</span>`;
+    const diffHours = Math.round((googleOffMin - localOffMin) / 60);
+    const diffLabel = (googleOffMin - localOffMin) === 0 ? '偏移一致' : diffHours === 0 ? '略有微差' : (diffHours > 0 ? `快 ${diffHours} 小时` : `慢 ${-diffHours} 小时`);
+    tzHtml = `<div style="display:inline-flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right">`
+           + `<span class="tag tag-warn">时区不一致</span>`
+           + `<span style="font-size:0.85em;color:var(--text-soft)">本地: ${localTz} (${localUtc})</span>`
+           + `<span style="font-size:0.85em;color:var(--text-muted)">Google出口: ${googleTz} (${gOffStr}) — ${diffLabel}</span>`
+           + `</div>`;
   } else {
     tzHtml = `${localTz} (${localUtc})`;
   }
@@ -713,6 +732,12 @@ function renderDeviceInfo() {
       if (debugInfo) {
         webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '未知';
       }
+      const vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : '';
+      const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
+      const str = vendor + '~' + renderer + '~' + (gl.getParameter(gl.VERSION) || '');
+      let h = 0;
+      for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+      webglHash = '0x' + (h >>> 0).toString(16).toUpperCase();
     }
   } catch {}
 
@@ -729,20 +754,16 @@ function renderDeviceInfo() {
       ctx.fillText('GoogleAI,Antigravity', 2, 15);
       const data = c.toDataURL();
       let hash = 0;
-      for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data.charCodeAt(i);
-        hash |= 0;
-      }
+      for (let i = 0; i < data.length; i++) hash = ((hash << 5) - hash + data.charCodeAt(i)) | 0;
       canvasHash = '0x' + (hash >>> 0).toString(16).toUpperCase();
-      webglHash = '0x' + ((hash * 31 + 17) >>> 0).toString(16).toUpperCase();
     }
   } catch {}
 
   document.getElementById('deviceContent').innerHTML = `
-    <div class="risk-row"><span class="risk-label">时区匹配</span><span class="risk-value">${tzHtml}</span></div>
+    <div class="risk-row" style="align-items:flex-start;padding:12px 0"><span class="risk-label" style="padding-top:2px">时区</span><span class="risk-value">${tzHtml}</span></div>
     <div class="risk-row"><span class="risk-label">语言偏好</span><span class="risk-value" style="font-size:0.85em">${langHtml}</span></div>
     <div class="risk-row"><span class="risk-label">操作系统 / 浏览器</span><span class="risk-value">${os} / ${browser}</span></div>
-    <div class="risk-row"><span class="risk-label">Cookie 支持</span><span class="risk-value">${navigator.cookieEnabled ? '<span class="tag tag-safe">已启用</span>' : '<span class="tag tag-warn">已禁用</span>'}</span></div>
+    <div class="risk-row"><span class="risk-label">Cookie</span><span class="risk-value">${navigator.cookieEnabled ? '<span class="tag tag-safe">已启用</span>' : '<span class="tag tag-warn">已禁用</span>'}</span></div>
     <div class="risk-row"><span class="risk-label">WebGL 渲染器</span><span class="risk-value dev-long">${webglRenderer}</span></div>
     <div class="risk-row"><span class="risk-label">Canvas 指纹</span><span class="risk-value" style="letter-spacing:1px">${canvasHash}</span></div>
     <div class="risk-row"><span class="risk-label">WebGL 指纹</span><span class="risk-value" style="letter-spacing:1px">${webglHash}</span></div>

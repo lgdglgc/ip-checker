@@ -33,7 +33,7 @@
 <meta name="twitter:title" content="Google AI IP 检测 - Gemini / Antigravity 可用性与纯净度检测 - Net.Coffee">
 <meta name="twitter:description" content="Google AI 检测：Gemini 与 Antigravity 节点可用性、纯净度、香港/大陆受限诊断与网络泄露分析。">
 <meta property="og:image" content="https://ip.net.coffee/favicons/gemini.svg">
-<link rel="stylesheet" href="/google/google-page.css?v=20260921a">
+<link rel="stylesheet" href="/google/google-page.css?v=20260922b">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Google AI IP 检测","url":"https://ip.net.coffee/google/","description":"Google AI IP 检测：检测当前节点是否能使用 Google Gemini 与 Google Antigravity，诊断地区限制、IP纯净度和网络泄露。","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
 </script>
@@ -76,8 +76,8 @@
     <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
     <a href="/claude/" title="Claude AI IP 检测"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
     <a href="/google/" class="active" aria-current="page"><span class="full">Google AI 检测</span><span class="short">Google</span><span class="shortest">Google</span></a>
-    <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
     <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
     <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
     <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
     <a href="/webrtc/" title="WebRTC IP 泄露检测"><span class="full">WebRTC</span><span class="short">UDP</span></a>
@@ -100,8 +100,8 @@
   <a href="/">IP查询</a>
   <a href="/claude/">Claude</a>
   <a href="/google/" class="on">Google AI</a>
-  <a href="/ip/">IP评分</a>
   <a href="/gpt/">GPT 检测</a>
+  <a href="/ip/">IP评分</a>
   <a href="/link/">网络连通</a>
   <a href="/dns/">DNS泄露</a>
   <a href="/webrtc/">WebRTC</a>
@@ -175,8 +175,7 @@
         <div class="region-warn" id="regionWarn" style="display:none"></div>
       </div>
       <div class="trust-score-filler"></div>
-      <div class="risk-row" id="googleRegionSupportRow" style="display:none"><span class="risk-label">Gemini/Antigravity 地区支持</span><span class="risk-value" id="googleRegionSupport"></span></div>
-      <div class="trust-score-spacer" id="googleRegionSupportSpacer"></div>
+      <div class="risk-row" id="googleRegionSupportRow" style="display:none"><span class="risk-label">Google AI 支持地区</span><span class="risk-value" id="googleRegionSupport"></span></div>
     </div>
 
     <!-- IP Properties -->
@@ -219,14 +218,18 @@
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">DNS 泄露检测<a href="/dns/" target="_blank" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">查询DNS安全</a></div>
       <div id="dnsLeakContent">
         <div class="risk-row"><span class="risk-label">状态</span><div class="loading-bar" style="width:80px"></div></div>
-        <div class="risk-row"><span class="risk-label">DNS 出口 IP</span><div class="loading-bar" style="width:140px"></div></div>
+        <div class="risk-row"><span class="risk-label">DNS 出口</span><div class="loading-bar" style="width:140px"></div></div>
+        <div class="risk-row"><span class="risk-label">归属地区</span><div class="loading-bar" style="width:100px"></div></div>
+        <div class="risk-row"><span class="risk-label">DNS 服务商</span><div class="loading-bar" style="width:120px"></div></div>
       </div>
     </div>
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">WebRTC UDP 泄露检测<a href="/webrtc/" target="_blank" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">深度查询</a></div>
       <div id="udpLeakContent">
         <div class="risk-row"><span class="risk-label">状态</span><div class="loading-bar" style="width:80px"></div></div>
-        <div class="risk-row"><span class="risk-label">UDP 出口 IP</span><div class="loading-bar" style="width:140px"></div></div>
+        <div class="risk-row"><span class="risk-label">UDP 出口</span><div class="loading-bar" style="width:140px"></div></div>
+        <div class="risk-row"><span class="risk-label">归属地区</span><div class="loading-bar" style="width:100px"></div></div>
+        <div class="risk-row"><span class="risk-label">网络服务商</span><div class="loading-bar" style="width:120px"></div></div>
       </div>
     </div>
   </div>
@@ -236,10 +239,10 @@
     <div class="card">
       <div class="card-title">Google AI 访问端设备与环境特征</div>
       <div id="deviceContent">
-        <div class="risk-row"><span class="risk-label">时区匹配</span><div class="loading-bar" style="width:120px"></div></div>
+        <div class="risk-row" style="align-items:flex-start;padding:12px 0"><span class="risk-label" style="padding-top:2px">时区</span><div class="loading-bar" style="width:120px"></div></div>
         <div class="risk-row"><span class="risk-label">语言偏好</span><div class="loading-bar" style="width:160px"></div></div>
         <div class="risk-row"><span class="risk-label">操作系统 / 浏览器</span><div class="loading-bar" style="width:200px"></div></div>
-        <div class="risk-row"><span class="risk-label">Cookie 支持</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">Cookie</span><div class="loading-bar" style="width:60px"></div></div>
         <div class="risk-row"><span class="risk-label">WebGL 渲染器</span><div class="loading-bar" style="width:200px"></div></div>
         <div class="risk-row"><span class="risk-label">Canvas 指纹</span><div class="loading-bar" style="width:160px"></div></div>
         <div class="risk-row"><span class="risk-label">WebGL 指纹</span><div class="loading-bar" style="width:160px"></div></div>
@@ -277,7 +280,7 @@
 
 <footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/claude/" style="color: var(--text-muted);text-decoration:none">Claude AI 检测</a> · <a href="https://ip.net.coffee/google/" style="color: var(--text-muted);text-decoration:none">Google AI 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
 
-<script src="/google/google-page.js?v=20260921c"></script>
+<script src="/google/google-page.js?v=20260922b"></script>
 
 </body>
 </html>
