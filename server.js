@@ -5,99 +5,44 @@ const path = require('path');
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-// 内存缓存
-const geoCache = new Map();
-const riskCache = new Map();
-
-function fetchJson(url) {
-  return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    }).on('error', reject);
-  });
-}
-
-// 适配 ip.net.coffee 契约的 GeoIP 响应
-async function getGeoIP(ip) {
-  if (geoCache.has(ip)) return geoCache.get(ip);
-  try {
-    const url = `http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query,hosting,proxy`;
-    const json = await fetchJson(url);
-    if (json.status === 'success') {
-      const res = {
-        country: json.country || '',
-        region: json.regionName || '',
-        city: json.city || '',
-        isp: json.isp || '',
-        country_code: (json.countryCode || '').toLowerCase()
-      };
-      geoCache.set(ip, res);
-      return res;
-    }
-  } catch (e) {}
-  return { country: '', region: '', city: '', isp: '', country_code: '' };
-}
-
-// 适配 ip.net.coffee 契约的 iprisk 响应
-async function getIpRisk(ip) {
-  if (riskCache.has(ip)) return riskCache.get(ip);
-  try {
-    const url = `http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,isp,org,as,query,hosting,proxy`;
-    const json = await fetchJson(url);
-    if (json.status === 'success') {
-      const isHosting = !!json.hosting;
-      const isProxy = !!json.proxy;
-      const res = {
-        ip: json.query,
-        cidr: ip.replace(/\.\d+$/, '.0/24'),
-        is_bogon: false,
-        is_datacenter: isHosting,
-        isResidential: !isHosting && !isProxy,
-        is_vpn: false,
-        is_proxy: isProxy,
-        is_tor: false,
-        is_crawler: false,
-        is_abuser: false,
-        is_mobile: false,
-        company_type: isHosting ? 'hosting' : 'isp',
-        company_name: json.org || json.isp || '',
-        abuser_score: isHosting ? '0.0150 (Elevated)' : '0.0000 (Low)',
-        datacenter_name: isHosting ? json.isp : '',
-        asn: parseInt((json.as || '').replace(/^AS/, '')) || 0,
-        asOrganization: json.isp || '',
-        country: json.country || '',
-        countryCode: (json.countryCode || '').toLowerCase(),
-        region: json.regionName || '',
-        city: json.city || '',
-        trust_score: isHosting ? 55 : 92,
-        ai_verdict: {
-          label: isHosting ? 'Suspicious' : 'Clean',
-          confidence: 85,
-          reasoning: isHosting ? 'Datacenter / Hosting IP' : 'Residential ISP IP'
-        },
-        rep_threat: isHosting ? 20 : 0
-      };
-      riskCache.set(ip, res);
-      return res;
-    }
-  } catch (e) {}
-  return { ip, trust_score: 50 };
-}
+// 导入 API 模块
+const traceHandler = require('./api/trace');
+const ipLookupHandler = require('./api/ip-lookup');
+const ipHeatHandler = require('./api/ip-v2-heat');
+const ipBgpHandler = require('./api/ip-v2-bgp');
+const ipDnsblHandler = require('./api/ip-v2-dnsbl');
+const ipAsncosHandler = require('./api/ip-v2-asncos');
+const ipRelatedHandler = require('./api/ip-related');
+const ipPingcheckHandler = require('./api/ip-pingcheck');
+const ipPortscanHandler = require('./api/ip-portscan');
+const pingGlobalHandler = require('./api/ping-global');
+const geoipHandler = require('./api/geoip');
+const geoipBatchHandler = require('./api/geoip-batch');
+const ipscoreHandler = require('./api/ipscore');
+const myipHandler = require('./api/myip');
 
 const server = http.createServer(async (req, res) => {
-  const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+  const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = parsedUrl.pathname;
 
+  // 扩展标准 Express/Vercel 辅助方法
+  req.query = Object.fromEntries(parsedUrl.searchParams.entries());
+  if (!res.status) {
+    res.status = function(code) {
+      this.statusCode = code;
+      return this;
+    };
+  }
+  if (!res.json) {
+    res.json = function(data) {
+      this.setHeader('Content-Type', 'application/json; charset=utf-8');
+      this.end(JSON.stringify(data));
+      return this;
+    };
+  }
+
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -106,42 +51,118 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // API 1: /api/myip
+  // 1. Cloudflare trace 模拟
+  if (pathname === '/cdn-cgi/trace') {
+    return traceHandler(req, res);
+  }
+
+  // 2. /api/myip
   if (pathname === '/api/myip') {
-    const clientIp = req.headers['x-forwarded-for']?.split(',')[0].trim() ||
-                     req.headers['x-real-ip'] ||
-                     req.socket.remoteAddress || '';
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ip: clientIp }));
-    return;
+    return myipHandler(req, res);
   }
 
-  // API 2: /api/geoip/:ip
+  // 3. /api/geoip/:ip
   if (pathname.startsWith('/api/geoip/')) {
-    const ip = pathname.replace('/api/geoip/', '').trim();
-    const data = await getGeoIP(ip);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
-    return;
+    req.query.ip = pathname.replace('/api/geoip/', '').trim();
+    return geoipHandler(req, res);
+  }
+  if (pathname === '/api/geoip') {
+    return geoipHandler(req, res);
   }
 
-  // API 3: /api/iprisk/:ip
-  if (pathname.startsWith('/api/iprisk/')) {
-    const ip = pathname.replace('/api/iprisk/', '').trim();
-    const data = await getIpRisk(ip);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
-    return;
+  // 4. /api/geoip-batch
+  if (pathname === '/api/geoip-batch') {
+    return geoipBatchHandler(req, res);
   }
 
-  // 静态文件与页面路由
+  // 5. /api/ipscore/:ip
+  if (pathname.startsWith('/api/ipscore/')) {
+    req.query.ip = pathname.replace('/api/ipscore/', '').trim();
+    return ipscoreHandler(req, res);
+  }
+  if (pathname === '/api/ipscore') {
+    return ipscoreHandler(req, res);
+  }
+
+  // 6. /api/ip/lookup/:ip & /api/ipv2/lookup/:ip
+  if (pathname.startsWith('/api/ip/lookup/')) {
+    req.query.ip = pathname.replace('/api/ip/lookup/', '').trim();
+    return ipLookupHandler(req, res);
+  }
+  if (pathname.startsWith('/api/ipv2/lookup/')) {
+    req.query.ip = pathname.replace('/api/ipv2/lookup/', '').trim();
+    return ipLookupHandler(req, res);
+  }
+
+  // 7. /api/ipv2/heat/:ip
+  if (pathname.startsWith('/api/ipv2/heat/')) {
+    req.query.ip = pathname.replace('/api/ipv2/heat/', '').trim();
+    return ipHeatHandler(req, res);
+  }
+
+  // 8. /api/ipv2/bgp/:ip
+  if (pathname.startsWith('/api/ipv2/bgp/')) {
+    req.query.ip = pathname.replace('/api/ipv2/bgp/', '').trim();
+    return ipBgpHandler(req, res);
+  }
+
+  // 9. /api/ipv2/dnsbl/:ip
+  if (pathname.startsWith('/api/ipv2/dnsbl/')) {
+    req.query.ip = pathname.replace('/api/ipv2/dnsbl/', '').trim();
+    return ipDnsblHandler(req, res);
+  }
+
+  // 10. /api/ipv2/asncos/:asn
+  if (pathname.startsWith('/api/ipv2/asncos/')) {
+    req.query.asn = pathname.replace('/api/ipv2/asncos/', '').trim();
+    return ipAsncosHandler(req, res);
+  }
+
+  // 11. /api/ip/related/:ip
+  if (pathname.startsWith('/api/ip/related/')) {
+    req.query.ip = pathname.replace('/api/ip/related/', '').trim();
+    return ipRelatedHandler(req, res);
+  }
+
+  // 12. /api/ip/pingcheck/:ip
+  if (pathname.startsWith('/api/ip/pingcheck/')) {
+    req.query.ip = pathname.replace('/api/ip/pingcheck/', '').trim();
+    return ipPingcheckHandler(req, res);
+  }
+
+  // 13. /api/ip/portscan/:ip
+  if (pathname.startsWith('/api/ip/portscan/')) {
+    req.query.ip = pathname.replace('/api/ip/portscan/', '').trim();
+    return ipPortscanHandler(req, res);
+  }
+
+  // 14. /api/ping/global
+  if (pathname === '/api/ping/global') {
+    return pingGlobalHandler(req, res);
+  }
+
+  // 15. /ip SPA 页面路由处理
+  // 若请求的是 /ip、/ip/ 或 /ip/<目标IP>（排除静态资源拓展名），统一交付 /public/ip/index.html
+  const isIpRoute = pathname === '/ip' || pathname === '/ip/' || pathname.startsWith('/ip/');
+  const hasStaticExt = /\.(js|css|png|jpg|jpeg|svg|webp|ico|txt|json|woff2?|ttf)$/i.test(pathname);
+
+  if (isIpRoute && !hasStaticExt) {
+    const ipHtmlPath = path.join(PUBLIC_DIR, 'ip', 'index.html');
+    if (fs.existsSync(ipHtmlPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(ipHtmlPath).pipe(res);
+      return;
+    }
+  }
+
+  // 16. 静态文件处理
   let relPath = pathname;
   if (relPath === '/' || relPath === '') {
     relPath = '/index.html';
   }
 
   let filePath = path.join(PUBLIC_DIR, relPath);
-  
+
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');
   } else if (!fs.existsSync(filePath) && fs.existsSync(filePath + '.html')) {
@@ -154,16 +175,17 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const ext = path.extname(filePath);
+  const ext = path.extname(filePath).toLowerCase();
   const contentTypes = {
     '.html': 'text/html; charset=utf-8',
     '.css': 'text/css; charset=utf-8',
     '.js': 'application/javascript; charset=utf-8',
-    '.json': 'application/json',
+    '.json': 'application/json; charset=utf-8',
     '.svg': 'image/svg+xml',
     '.png': 'image/png',
     '.webp': 'image/webp',
-    '.ico': 'image/x-icon'
+    '.ico': 'image/x-icon',
+    '.txt': 'text/plain; charset=utf-8'
   };
 
   res.writeHead(200, { 'Content-Type': contentTypes[ext] || 'application/octet-stream' });

@@ -2,6 +2,10 @@
   "version": 2,
   "routes": [
     {
+      "src": "/cdn-cgi/trace",
+      "dest": "/api/trace.js"
+    },
+    {
       "src": "/api/myip",
       "dest": "/api/myip.js"
     },
@@ -18,12 +22,56 @@
       "dest": "/api/ipscore.js?ip=$1"
     },
     {
+      "src": "/api/ip/lookup/(.*)",
+      "dest": "/api/ip-lookup.js?ip=$1"
+    },
+    {
+      "src": "/api/ipv2/lookup/(.*)",
+      "dest": "/api/ip-lookup.js?ip=$1"
+    },
+    {
+      "src": "/api/ipv2/heat/(.*)",
+      "dest": "/api/ip-v2-heat.js?ip=$1"
+    },
+    {
+      "src": "/api/ipv2/bgp/(.*)",
+      "dest": "/api/ip-v2-bgp.js?ip=$1"
+    },
+    {
+      "src": "/api/ipv2/dnsbl/(.*)",
+      "dest": "/api/ip-v2-dnsbl.js?ip=$1"
+    },
+    {
+      "src": "/api/ipv2/asncos/(.*)",
+      "dest": "/api/ip-v2-asncos.js?asn=$1"
+    },
+    {
+      "src": "/api/ip/related/(.*)",
+      "dest": "/api/ip-related.js?ip=$1"
+    },
+    {
+      "src": "/api/ip/pingcheck/(.*)",
+      "dest": "/api/ip-pingcheck.js?ip=$1"
+    },
+    {
+      "src": "/api/ip/portscan/(.*)",
+      "dest": "/api/ip-portscan.js?ip=$1"
+    },
+    {
+      "src": "/api/ping/global",
+      "dest": "/api/ping-global.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1.js"
     },
     {
-      "src": "/ip/(.*)",
-      "dest": "/public/ip.html"
+      "src": "^/ip/(.*\\.(?:js|css|png|jpg|svg|txt|webp))$",
+      "dest": "/public/ip/$1"
+    },
+    {
+      "src": "^/ip(?:/.*)?$",
+      "dest": "/public/ip/index.html"
     },
     {
       "src": "/(.*)",
