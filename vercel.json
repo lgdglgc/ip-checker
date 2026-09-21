@@ -22,6 +22,14 @@
       "dest": "/api/ipscore.js?ip=$1"
     },
     {
+      "src": "/api/iprisk/(.*)",
+      "dest": "/api/iprisk.js?ip=$1"
+    },
+    {
+      "src": "/api/dns/result/(.*)",
+      "dest": "/api/dns-result.js?token=$1"
+    },
+    {
       "src": "/api/ip/lookup/(.*)",
       "dest": "/api/ip-lookup.js?ip=$1"
     },

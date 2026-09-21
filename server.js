@@ -21,6 +21,8 @@ const geoipBatchHandler = require('./api/geoip-batch');
 const ipscoreHandler = require('./api/ipscore');
 const myipHandler = require('./api/myip');
 const googleCheckHandler = require('./api/google-check');
+const ipriskHandler = require('./api/iprisk');
+const dnsResultHandler = require('./api/dns-result');
 
 const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
@@ -83,6 +85,21 @@ const server = http.createServer(async (req, res) => {
   }
   if (pathname === '/api/ipscore') {
     return ipscoreHandler(req, res);
+  }
+
+  // 5.1 /api/iprisk/:ip
+  if (pathname.startsWith('/api/iprisk/')) {
+    req.query.ip = pathname.replace('/api/iprisk/', '').trim();
+    return ipriskHandler(req, res);
+  }
+  if (pathname === '/api/iprisk') {
+    return ipriskHandler(req, res);
+  }
+
+  // 5.2 /api/dns/result/:token
+  if (pathname.startsWith('/api/dns/result/')) {
+    req.query.token = pathname.replace('/api/dns/result/', '').trim();
+    return dnsResultHandler(req, res);
   }
 
   // 6. /api/ip/lookup/:ip & /api/ipv2/lookup/:ip
