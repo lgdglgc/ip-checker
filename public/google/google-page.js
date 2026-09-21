@@ -324,11 +324,33 @@ async function fetchCNIP() {
   return null;
 }
 
+// ===== Helper to parse IP from Google DoH Answer =====
+function extractIpFromGoogleDns(data) {
+  if (!data || !Array.isArray(data.Answer)) return null;
+  let candidate = null;
+  for (const ans of data.Answer) {
+    const raw = String(ans.data || '').replace(/"/g, '').trim();
+    const m4 = raw.match(/\b([0-9]{1,3}(?:\.[0-9]{1,3}){3})\b/);
+    if (m4 && !m4[1].startsWith('0.') && !m4[1].startsWith('127.')) {
+      if (!m4[1].endsWith('.0')) {
+        return m4[1];
+      }
+      candidate = candidate || m4[1];
+    }
+    const m6 = raw.match(/([a-f0-9:]{5,})/i);
+    if (m6) return m6[1];
+  }
+  return candidate;
+}
+
 // ===== Fetch Google AI IP =====
 // Strategy:
 // 1. Check URL query ?ip=
-// 2. Query Google STUN (stun:stun.l.google.com:19302) to get client's public IP as seen by Google
-// 3. Fallback to /api/myip or CF IP
+// 2. Query Google DoH (https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT)
+// 3. Query api.ipify.org through proxy for full host IP
+// 4. Fallback to Cloudflare exit IP (state.ip)
+// NOTE: WebRTC STUN UDP is intentionally NOT used here because most proxies bypass UDP,
+// which would mistakenly expose the user's direct Chinese ISP IP instead of their proxy exit.
 async function fetchGoogleIP() {
   const urlParams = new URLSearchParams(window.location.search);
   const qIp = urlParams.get('ip');
@@ -336,57 +358,55 @@ async function fetchGoogleIP() {
     return { ip: qIp.trim(), source: 'query' };
   }
 
-  // WebRTC STUN against Google server
+  // 1. Google DoH
   try {
-    const googleStunIP = await new Promise((resolve) => {
-      let resolved = false;
-      const pc = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-      });
-      const timer = setTimeout(() => {
-        if (!resolved) { resolved = true; pc.close(); resolve(null); }
-      }, 3500);
-
-      pc.onicecandidate = (e) => {
-        if (e.candidate) {
-          const m = e.candidate.candidate.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/);
-          if (m) {
-            const ip = m[0];
-            if (!ip.startsWith('0.') && !ip.startsWith('127.') && !ip.startsWith('192.168.') && !ip.startsWith('10.') && !ip.startsWith('172.') && !ip.startsWith('198.18.') && !ip.startsWith('100.64.')) {
-              if (!resolved) {
-                resolved = true;
-                clearTimeout(timer);
-                pc.close();
-                resolve(ip);
-              }
-            }
-          }
-        }
-      };
-      pc.createDataChannel('');
-      pc.createOffer().then(o => pc.setLocalDescription(o)).catch(() => {
-        if (!resolved) { resolved = true; clearTimeout(timer); pc.close(); resolve(null); }
-      });
+    const r = await fetch('https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(3500)
     });
-
-    if (googleStunIP) {
-      return { ip: googleStunIP, source: 'google_stun' };
-    }
-  } catch {}
-
-  // Fallback: /api/myip
-  try {
-    const r = await fetch('/api/myip', { signal: AbortSignal.timeout(4000) });
     if (r.ok) {
       const data = await r.json();
-      if (data.ip) return { ip: data.ip, source: 'myip' };
+      const ip = extractIpFromGoogleDns(data);
+      if (ip && !ip.endsWith('.0')) return { ip, source: 'google_doh' };
     }
   } catch {}
 
-  // Fallback to Cloudflare IP if available
+  // 2. api.ipify.org (full host IP through proxy)
+  try {
+    const r = await fetch('https://api.ipify.org?format=json', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(3000)
+    });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.ip) return { ip: data.ip, source: 'ipify' };
+    }
+  } catch {}
+
+  // 3. api.ip.sb
+  try {
+    const r = await fetch('https://api.ip.sb/geoip', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(3000)
+    });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.ip) return { ip: data.ip, source: 'ipsb' };
+    }
+  } catch {}
+
+  // 4. Cloudflare exit IP (state.ip)
   if (state.ip) {
     return { ip: state.ip, source: 'cf' };
   }
+
+  // 5. Direct Cloudflare trace
+  try {
+    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) });
+    const txt = await r.text();
+    const m = txt.match(/ip=([^\n]+)/);
+    if (m) return { ip: m[1].trim(), source: 'cf_trace' };
+  } catch {}
 
   return null;
 }

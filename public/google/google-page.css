@@ -58,8 +58,7 @@ body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Ro
   .ts-btn svg { width: 12px; height: 12px; }
 }
 
-h1 { font-size: 1.8em; margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-h1 img { width: 32px; height: 32px; vertical-align: -4px; }
+h1 { font-size: 1.8em; margin-bottom: 6px; font-weight: 700; }
 .desc { color: var(--text-soft); font-size: 0.92em; margin-bottom: 20px; }
 
 .ip-dual { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
