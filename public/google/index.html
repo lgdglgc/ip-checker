@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#cc785c">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#cc785c">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f1e1d">
-<meta name="application-name" content="ChatGPT IP 检测">
+<meta name="theme-color" content="#4285f4">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#4285f4">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161b22">
+<meta name="application-name" content="Google AI 检测">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ChatGPT IP 检测">
+<meta name="apple-mobile-web-app-title" content="Google AI 检测">
 <meta name="format-detection" content="telephone=no">
-<title>ChatGPT · Codex IP 检测 - IP纯净度 - ChatGPT IP 风险查询 - Net.Coffee</title>
-<meta name="description" content="ChatGPT IP 检测，ChatGPT IP的纯净度和信任评分，判断该 IP 是否为住宅IP或机房IP，识别ChatGPT IP是否是 Tor 与高风险 IP。同时展示默认出口 IP 和 Cloudflare 出口 IP，做分流查询。">
-<meta name="keywords" content="ChatGPT IP检测,ChatGPT IP查询,ChatGPT IP风险检测,ChatGPT IP纯净度,ChatGPT 住宅IP,ChatGPT 机房IP,ChatGPT Trust Score,ChatGPT出口IP,ChatGPT IP安全检测,ChatGPT可用性检测,ChatGPT登录,ChatGPT 封号检测,ASN查询,IP归属地,IP地理位置">
+<title>Google AI IP 检测 - Gemini / Antigravity 可用性与纯净度检测 - Net.Coffee</title>
+<meta name="description" content="Google AI IP 检测工具：检测当前节点是否能正常使用 Google Gemini 与 Google Antigravity，深度诊断香港及中国大陆等受限地区 Location not supported 报错，查询 IP 纯净度评分、住宅/机房属性、DNS 与 WebRTC 泄露，一站式保障 Google AI 稳定访问。">
+<meta name="keywords" content="Google AI IP检测,Gemini检测,Antigravity检测,Google AI出口IP,Gemini可用性,Antigravity可用性,香港Gemini,Location not supported,Gemini封号,IP纯净度,住宅IP,机房IP,Trust Score,DNS泄露,WebRTC泄露,Net.Coffee">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://ip.net.coffee/gpt/">
-<meta property="og:title" content="ChatGPT · Codex IP 检测 - IP纯净度 - ChatGPT IP 风险查询 - Net.Coffee">
-<meta property="og:description" content="ChatGPT IP 检测：ChatGPT IP 纯净度、信任评分、住宅/机房属性、Tor 与高风险识别，一站式 ChatGPT IP 风险查询。">
+<link rel="canonical" href="https://ip.net.coffee/google/">
+<meta property="og:title" content="Google AI IP 检测 - Gemini / Antigravity 可用性与纯净度检测 - Net.Coffee">
+<meta property="og:description" content="Google AI (Gemini / Antigravity) IP 检测：检测当前出口 IP 是否受限（特别诊断香港 Location not supported 报错），IP 纯净度、家庭住宅/机房属性、DNS 与 WebRTC 泄露检测。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ip.net.coffee/gpt/">
+<meta property="og:url" content="https://ip.net.coffee/google/">
 <meta property="og:locale" content="zh_CN">
 <meta name="author" content="Net.Coffee">
 <meta name="generator" content="Net.Coffee Tools">
@@ -30,24 +30,18 @@
 <link rel="dns-prefetch" href="https://www.google-analytics.com">
 <meta property="og:site_name" content="Net.Coffee">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ChatGPT · Codex IP 检测 - IP纯净度 - ChatGPT IP 风险查询 - Net.Coffee">
-<meta name="twitter:description" content="ChatGPT IP 检测：ChatGPT IP 纯净度、信任评分、住宅/机房、Tor 与高风险识别，ChatGPT IP 风险查询。">
-<meta property="og:image" content="https://ip.net.coffee/og-image-chatgpt.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ChatGPT · Codex IP 检测 - 纯净度评分 · 风险检测 · Net.Coffee">
-<meta property="og:image:type" content="image/png">
-<meta name="twitter:image" content="https://ip.net.coffee/og-image-chatgpt.png">
-<meta name="twitter:image:alt" content="ChatGPT · Codex IP 检测 - 纯净度评分 · 风险检测 · Net.Coffee">
-<link rel="stylesheet" href="/gpt/gpt-page.css?v=20260916a">
+<meta name="twitter:title" content="Google AI IP 检测 - Gemini / Antigravity 可用性与纯净度检测 - Net.Coffee">
+<meta name="twitter:description" content="Google AI 检测：Gemini 与 Antigravity 节点可用性、纯净度、香港/大陆受限诊断与网络泄露分析。">
+<meta property="og:image" content="https://ip.net.coffee/favicons/gemini.webp">
+<link rel="stylesheet" href="/google/google-page.css?v=20260921a">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"ChatGPT · Codex IP 检测","url":"https://ip.net.coffee/gpt/","description":"ChatGPT IP 检测：ChatGPT IP 的纯净度和信任评分，判断该 IP 是否为住宅IP或机房IP，识别 ChatGPT IP 是否是 Tor 与高风险 IP，提供 ChatGPT IP 风险查询与分流检测。","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Google AI IP 检测","url":"https://ip.net.coffee/google/","description":"Google AI IP 检测：检测当前节点是否能使用 Google Gemini 与 Google Antigravity，诊断地区限制、IP纯净度和网络泄露。","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://net.coffee/"},{"@type":"ListItem","position":2,"name":"ChatGPT · Codex IP 检测","item":"https://ip.net.coffee/gpt/"}]}
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://net.coffee/"},{"@type":"ListItem","position":2,"name":"Google AI IP 检测","item":"https://ip.net.coffee/google/"}]}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ChatGPT 检测的 IP 是哪个？","acceptedAnswer":{"@type":"Answer","text":"ChatGPT 检测的是浏览器与 ChatGPT.ai 服务器握手时使用的出口 IP。如果你走代理或 VPN，这个 IP 就是代理出口；如果直连，就是本机宽带的公网 IP。"}},{"@type":"Question","name":"ChatGPT 封号常和 IP 有关吗？","acceptedAnswer":{"@type":"Answer","text":"ChatGPT 对机房 IP、Tor 出口、共享代理、滥用历史 IP 风控严格。住宅 IP 通过率最高。本工具可一键看出 IP 类型与风险分数，帮助判断当前出口是否安全。"}},{"@type":"Question","name":"什么是 IP 纯净度？","acceptedAnswer":{"@type":"Answer","text":"IP 纯净度是综合 IP 历史行为（垃圾邮件、刷量、Tor、暴破）和归属类型（住宅/机房/移动）的信用评分。分数越高代表 IP 越像普通家庭用户，访问 AI 服务越不易被风控。"}},{"@type":"Question","name":"住宅 IP 和机房 IP 有什么区别？","acceptedAnswer":{"@type":"Answer","text":"住宅 IP 由 ISP 分配给家庭宽带用户，行为像普通人；机房 IP 由云服务商（AWS/Azure/DO 等）分配给服务器，常被用于自动化和爬虫，ChatGPT 等 AI 服务对其管控更严。"}},{"@type":"Question","name":"为什么显示了三个 IP？","acceptedAnswer":{"@type":"Answer","text":"页面同时展示三个出口：中国出口 IP（直连普通网站）、Cloudflare 出口 IP（经 CF 边缘）、以及 ChatGPT 出口 IP（访问 chatgpt.com 时的真实出口）。三者可能不同，因为很多代理对不同流量做了分流。判断 ChatGPT 是否安全，看的就是 ChatGPT 出口 IP 这一个。"}},{"@type":"Question","name":"Trust Score 多少算安全？","acceptedAnswer":{"@type":"Answer","text":"Trust Score 70 以上一般可放心访问 ChatGPT；50-70 偶有风控；50 以下高概率触发人机验证或封禁。具体分数依不同评分源略有差异，建议综合多个指标判断。"}},{"@type":"Question","name":"本工具检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"数据来自 IPinfo、ipapi.is、Cloudflare 等多个商业级 IP 情报源，配合 ASN 与历史行为分析，准确率与 ChatGPT 实际风控判断高度一致。仅供参考，最终结果以 ChatGPT 服务为准。"}},{"@type":"Question","name":"工具收费吗？需要注册吗？","acceptedAnswer":{"@type":"Answer","text":"完全免费，无需注册或登录。打开页面即可检测当前出口 IP，所有数据来源公开，本站不记录用户查询历史。"}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Google Gemini 和 Antigravity 对 IP 有什么地区要求？","acceptedAnswer":{"@type":"Answer","text":"Google Gemini 与 Antigravity 对用户所在国家和地区有严格限制。香港 (HK)、中国大陆 (CN)、澳门 (MO)、俄罗斯 (RU)、伊朗 (IR)、朝鲜 (KP) 等地区在官方黑名单中，访问时通常会提示 'Location not supported' 或直接阻断。推荐使用美国 (US)、日本 (JP)、新加坡 (SG)、中国台湾 (TW) 等支持地区的优质节点。"}},{"@type":"Question","name":"为什么我的节点能正常打开 Google 搜索，却打不开 Gemini 或 Antigravity？","acceptedAnswer":{"@type":"Answer","text":"Google 搜索和 YouTube 对全球绝大多数地区开放，但 Gemini 及 Antigravity 实施了独立的地理围栏（Geo-fencing）和更高级别的服务准入。很多代理用户使用香港节点，就会出现'Google 搜索正常但 Gemini 报错 Location not supported'的情况，需在分流工具中将 Google AI 相关域名分流至美国或日本节点。"}},{"@type":"Question","name":"什么是 Google Antigravity？","acceptedAnswer":{"@type":"Answer","text":"Google Antigravity 是由 Google DeepMind 研发的新一代智能与高级代码智能交互平台，要求高纯净度的合法地区 IP 与稳定的 Google 账户安全环境支持。"}},{"@type":"Question","name":"机房 IP 会对使用 Google AI 产生什么影响？","acceptedAnswer":{"@type":"Answer","text":"机房 IP（Datacenter / Hosting）容易触发 Google reCAPTCHA 频繁的人机验证，甚至可能导致 API 限制。家庭住宅宽带 (ISP) 具有最高的信任评分与通过率。"}},{"@type":"Question","name":"本工具收费吗？","acceptedAnswer":{"@type":"Answer","text":"完全免费，无需注册或登录。打开页面即可实时检测当前网络节点的 Google AI 可用性与纯净度。"}}]}
 </script>
 <style data-h5nav>
 .nav-scroll{display:contents}
@@ -71,20 +65,19 @@
   .ts-wrap .ts-btn svg{width:14px;height:14px}
 }
 @media (max-width:399px){
-  .nav-scroll a[href$="/gpt/"] .short{display:inline}
+  .nav-scroll a[href$="/google/"] .short{display:inline}
 }
 </style>
 </head>
 <body>
 
-
 <div class="container">
   <nav class="nav"><div class="nav-scroll">
     <a href="/" title="首页 - IP 查询与分流测试"><span class="full">IP查询</span><span class="short">查询</span></a>
-    <a href="/claude/" title="Claude AI IP 检测 - IP 纯净度"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
-    <a href="/google/" title="Google AI · Gemini · Antigravity 检测"><span class="full">Google AI 检测</span><span class="short">Google</span></a>
+    <a href="/claude/" title="Claude AI IP 检测"><span class="full">Claude AI IP 检测</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="/google/" class="active" aria-current="page"><span class="full">Google AI 检测</span><span class="short">Google</span><span class="shortest">Google</span></a>
     <a href="/ip/" title="IP 评分查询 - ASN / 风险检测"><span class="full">IP评分</span><span class="short">评分</span></a>
-    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new active" aria-current="page"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
+    <a href="/gpt/" title="ChatGPT · Codex IP 风险检测" class="pc-only-new"><span class="full">GPT 检测</span><span class="short">GPT</span></a>
     <a href="/link/" title="全球网络连通性测试" class="pc-only-new"><span class="full">网络连通</span><span class="short">连通</span></a>
     <a href="/dns/" title="DNS 泄露检测"><span class="full">DNS泄露</span><span class="short">DNS</span></a>
     <a href="/webrtc/" title="WebRTC IP 泄露检测"><span class="full">WebRTC</span><span class="short">UDP</span></a>
@@ -106,9 +99,9 @@
 <div class="nav-h5-grid" id="navH5Grid">
   <a href="/">IP查询</a>
   <a href="/claude/">Claude</a>
-  <a href="/google/">Google AI</a>
+  <a href="/google/" class="on">Google AI</a>
   <a href="/ip/">IP评分</a>
-  <a href="/gpt/" class="on">GPT 检测</a>
+  <a href="/gpt/">GPT 检测</a>
   <a href="/link/">网络连通</a>
   <a href="/dns/">DNS泄露</a>
   <a href="/webrtc/">WebRTC</a>
@@ -138,10 +131,10 @@
 })();
 </script>
 
-  <h1>ChatGPT · Codex IP 风险检测</h1>
+  <h1><img src="/favicons/gemini.webp" alt="Google AI" style="width:32px;height:32px;border-radius:6px;vertical-align:-4px">Google AI IP 检测 (Gemini · Antigravity)</h1>
   <div class="ip-section-header">
-    <p class="desc">检测当前ChatGPT出口 IP 的纯净度、风险、IP 属性（住宅/机房/原生）、DNS、UDP、指纹、历史和安全性</p>
-    <!-- 隐藏IP 开关（iOS 风格）— 默认关；开启后所有 IPv4 C/D 段、IPv6 后段被 * 替换 -->
+    <p class="desc">检测当前节点是否能正常使用 Google Gemini 与 Google Antigravity、排查香港/大陆受限报错、评估 IP 纯净度、住宅/机房属性及网络泄露</p>
+    <!-- 隐藏IP 开关（iOS 风格） -->
     <label class="ip-mask-toggle">
       <span class="ip-mask-toggle-label">隐藏IP</span>
       <input type="checkbox" id="ipMaskToggle">
@@ -149,9 +142,9 @@
     </label>
   </div>
 
-  <div class="ipv6-warn" id="ipv6Warn">⚠️ 当前为 IPv6 环境，不建议采用 IPv6 访问Codex。部分检测结果可能不完整。<br><a href="/gpt/ipv6.html" target="_blank" style="color:#92400e;font-weight:600">了解为什么不建议用 IPv6</a></div>
+  <div class="ipv6-warn" id="ipv6Warn">⚠️ 当前为 IPv6 环境，访问 Google Gemini / Antigravity 可能会因 IPv6 归属偏差遭遇地区封锁（Location not supported）或验证码，建议配置仅走 IPv4 代理出口。</div>
 
-  <!-- Dual IP display -->
+  <!-- Dual / Triple IP display -->
   <div class="ip-dual">
     <div class="ip-hero" id="ipHeroCN">
       <div class="label">中国出口IPv4</div>
@@ -163,17 +156,17 @@
       <div class="ip-addr" id="ipAddr"><div class="loading-bar" style="width:180px;height:24px"></div></div>
       <div class="ip-geo" id="ipGeo"><div class="loading-bar" style="width:220px"></div></div>
     </div>
-    <div class="ip-hero" id="ipHeroChatGPT">
-      <div class="label"><img src="/favicons/chatgpticon.png?v=1" alt="ChatGPT" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px">ChatGPT出口IP</div>
-      <div class="ip-addr" id="ipAddrChatGPT"><div class="loading-bar" style="width:180px;height:24px"></div></div>
-      <div class="ip-geo" id="ipGeoChatGPT"><div class="loading-bar" style="width:220px"></div></div>
+    <div class="ip-hero" id="ipHeroGoogle">
+      <div class="label"><img src="/favicons/gemini.webp" alt="Google AI" style="width:16px;height:16px;border-radius:3px;vertical-align:-2px;margin-right:4px">Google AI 出口IP</div>
+      <div class="ip-addr" id="ipAddrGoogle"><div class="loading-bar" style="width:180px;height:24px"></div></div>
+      <div class="ip-geo" id="ipGeoGoogle"><div class="loading-bar" style="width:220px"></div></div>
     </div>
   </div>
 
   <div class="cards">
     <!-- Risk Score -->
     <div class="card trust-score-card">
-      <div class="card-title">ChatGPT信任评分(Trust Score)</div>
+      <div class="card-title">Google AI 信任评分 (Trust Score)</div>
       <div class="gauge-wrap" id="gaugeWrap">
         <div class="gauge-score" id="gaugeScore"><div class="loading-bar" style="width:60px;height:28px"></div></div>
         <div class="gauge-text" id="gaugeText"></div>
@@ -181,17 +174,14 @@
         <div class="gauge-labels"><span>0 高危</span><span>25</span><span>50</span><span>75</span><span>100 可信</span></div>
         <div class="region-warn" id="regionWarn" style="display:none"></div>
       </div>
-      <!-- Filler + bottom spacer only kick in on multi-column desktop layout
-           where cross-card alignment matters. Below 720px (single-column H5
-           stack), they collapse via media query — no wasted blank space. -->
       <div class="trust-score-filler"></div>
-      <div class="risk-row" id="chatgptRegionSupportRow" style="display:none"><span class="risk-label">ChatGPT支持地区</span><span class="risk-value" id="chatgptRegionSupport"></span></div>
-      <div class="trust-score-spacer" id="chatgptRegionSupportSpacer"></div>
+      <div class="risk-row" id="googleRegionSupportRow" style="display:none"><span class="risk-label">Gemini/Antigravity 地区支持</span><span class="risk-value" id="googleRegionSupport"></span></div>
+      <div class="trust-score-spacer" id="googleRegionSupportSpacer"></div>
     </div>
 
     <!-- IP Properties -->
     <div class="card">
-      <div class="card-title">ChatGPT出口IP 属性</div>
+      <div class="card-title">Google AI 出口 IP 属性</div>
       <div id="propsContent">
         <div class="risk-row"><span class="risk-label">地区</span><div class="loading-bar" style="width:80px"></div></div>
         <div class="risk-row"><span class="risk-label">城市</span><div class="loading-bar" style="width:80px"></div></div>
@@ -203,7 +193,7 @@
 
     <!-- Security Detection -->
     <div class="card">
-      <div class="card-title">ChatGPT出口IP安全检测</div>
+      <div class="card-title">Google AI 出口 IP 安全检测</div>
       <div id="securityContent">
         <div class="risk-row"><span class="risk-label">VPN</span><div class="loading-bar" style="width:60px"></div></div>
         <div class="risk-row"><span class="risk-label">代理 (Proxy)</span><div class="loading-bar" style="width:60px"></div></div>
@@ -214,13 +204,15 @@
     </div>
   </div>
 
-  <!-- ChatGPT Availability + Leak Detection -->
+  <!-- Google Availability + Leak Detection -->
   <div class="cards">
     <div class="card">
-      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>GPT · Codex 可用检测<span class="tip-wrap" style="margin-left:4px">ⓘ<span class="tip-text">因为 ChatGPT / OpenAI 服务器通常部署在美国，从亚洲访问出现 100ms 以上延迟是正常的。api.openai.com 是 Codex 与 API 走的接口，和 chatgpt.com 网页/认证链路不同，可能一个通另一个不通——Codex 用户尤其要看这一行。</span></span></span><span onclick="detectChatGPTAvail()" style="font-size:0.75em;color: var(--text-soft);cursor:pointer;font-weight:400;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">刷新</span></div>
-      <div id="chatgptAvailContent">
-        <div class="risk-row"><span class="risk-label">chatgpt.com</span><div class="loading-bar" style="width:80px"></div></div>
-        <div class="risk-row"><span class="risk-label">api.openai.com</span><div class="loading-bar" style="width:80px"></div></div>
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>Google AI 可用性检测<span class="tip-wrap" style="margin-left:4px">ⓘ<span class="tip-text">测试当前网络到 Google Gemini、DeepMind Antigravity、AI Studio API 及 Google 基础连通性服务的延迟与可用状态。</span></span></span><span onclick="detectGoogleAvail()" style="font-size:0.75em;color: var(--text-soft);cursor:pointer;font-weight:400;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">刷新</span></div>
+      <div id="googleAvailContent">
+        <div class="risk-row"><span class="risk-label">Gemini (gemini.google.com)</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">Antigravity (antigravity.google)</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">AI Studio (googleapis.com)</span><div class="loading-bar" style="width:80px"></div></div>
+        <div class="risk-row"><span class="risk-label">Google 连通性 (generate_204)</span><div class="loading-bar" style="width:80px"></div></div>
       </div>
     </div>
     <div class="card">
@@ -239,20 +231,18 @@
     </div>
   </div>
 
-
   <!-- Device Info -->
   <div class="cards" style="grid-template-columns:1fr">
     <div class="card">
-      <div class="card-title">ChatGPT出口IP用户设备信息</div>
+      <div class="card-title">Google AI 访问端设备与环境特征</div>
       <div id="deviceContent">
-        <div class="risk-row"><span class="risk-label">时区</span><div class="loading-bar" style="width:120px"></div></div>
-        <div class="risk-row"><span class="risk-label">语言</span><div class="loading-bar" style="width:160px"></div></div>
+        <div class="risk-row"><span class="risk-label">时区匹配</span><div class="loading-bar" style="width:120px"></div></div>
+        <div class="risk-row"><span class="risk-label">语言偏好</span><div class="loading-bar" style="width:160px"></div></div>
         <div class="risk-row"><span class="risk-label">操作系统 / 浏览器</span><div class="loading-bar" style="width:200px"></div></div>
-        <div class="risk-row"><span class="risk-label">触屏</span><div class="loading-bar" style="width:60px"></div></div>
-        <div class="risk-row"><span class="risk-label">网络类型</span><div class="loading-bar" style="width:80px"></div></div>
-        <div class="risk-row"><span class="risk-label">Do Not Track</span><div class="loading-bar" style="width:60px"></div></div>
+        <div class="risk-row"><span class="risk-label">Cookie 支持</span><div class="loading-bar" style="width:60px"></div></div>
         <div class="risk-row"><span class="risk-label">WebGL 渲染器</span><div class="loading-bar" style="width:200px"></div></div>
         <div class="risk-row"><span class="risk-label">Canvas 指纹</span><div class="loading-bar" style="width:160px"></div></div>
+        <div class="risk-row"><span class="risk-label">WebGL 指纹</span><div class="loading-bar" style="width:160px"></div></div>
       </div>
     </div>
   </div>
@@ -261,7 +251,7 @@
   <div class="cards" style="grid-template-columns:1fr">
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
-        <span>ChatGPT 出口 IP 历史记录<br><span style="font-size:0.7em;color: var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">0记录，100%隐私友好，历史数据仅做浏览器本地存储，方便查阅</span></span>
+        <span>Google AI 出口 IP 历史记录<br><span style="font-size:0.7em;color: var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">0记录，100%隐私友好，历史数据仅做浏览器本地存储，方便查阅</span></span>
         <span onclick="clearIPHistory()" style="font-size:0.75em;color: var(--text-soft);cursor:pointer;font-weight:400;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px;flex-shrink:0">清除</span>
       </div>
       <div id="ipHistoryContent" class="history-grid" style="font-size:0.9em;color: var(--text-muted)">加载中...</div>
@@ -270,23 +260,24 @@
 
   <!-- Extended reading -->
   <div style="margin-top:24px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
-    <div style="font-size:0.82em;color: var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span>📖 拓展阅读</span><a href="https://ip.net.coffee/news/" target="_blank" rel="noopener" title="查看全部 AI 资讯" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">更多资讯</a></div>
+    <div style="font-size:0.82em;color: var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span>📖 Google AI · Gemini · Antigravity 使用与分流指南</span><a href="https://ip.net.coffee/news/" target="_blank" rel="noopener" title="查看全部 AI 资讯" style="font-size:0.75em;color: var(--text-soft);font-weight:400;text-decoration:none;padding:2px 8px;border: 1px solid var(--border-strong);border-radius:6px">更多资讯</a></div>
     <div class="reading-grid">
-      <a href="/gpt/status.html" target="_blank">ChatGPT / OpenAI 实时服务状态监控</a>
-      <a href="/gpt/site.html" target="_blank">Codex / ChatGPT 域名分流规则大全</a>
-      <a href="/gpt/codex.html" target="_blank">Codex 稳定使用指南：11 项关键配置</a>
-      <a href="/gpt/identity.html" target="_blank">ChatGPT「异常活动」报错自查与 IP 风控指南</a>
-      <a href="/gpt/ban.html" target="_blank">ChatGPT 大面积封号：哪些号容易被封 + 防封指南</a>
-      <a href="/gpt/ipv6.html" target="_blank">为什么不建议用 IPv6 访问 ChatGPT / Codex</a>
-      <a href="/gpt/news/20260915b.html" target="_blank" data-news="2026-09-15">Codex 没等到的例外，谷歌给了 Claude</a>
+      <a href="https://gemini.google.com/" target="_blank" rel="noopener">Google Gemini 官方网页端入口</a>
+      <a href="https://deepmind.google/technologies/" target="_blank" rel="noopener">Google DeepMind 前沿 AI 与 Antigravity 平台</a>
+      <a href="/link/" target="_blank">全球网络连通性测速 (含 Google / AI Studio)</a>
+      <a href="/dns/" target="_blank">DNS 泄露深度排查：防止 Google 检测到真实境内 DNS</a>
+      <a href="/webrtc/" target="_blank">WebRTC STUN 泄露自查教程 (Google STUN)</a>
+      <a href="/ip/" target="_blank">IP 纯净度与全球商用威胁信誉深度评分</a>
+      <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio 开发者 API 管理控制台</a>
+      <a href="/status/" target="_blank">全球各大 AI 与云服务实时状态监控</a>
     </div>
   </div>
 
 </div>
 
-<footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/gpt/" style="color: var(--text-muted);text-decoration:none">ChatGPT 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
+<footer style="text-align:center;padding:30px 0 20px;color: var(--text-muted);font-size:0.82em">&copy; 2026 <a href="https://net.coffee/" target="_blank" rel="nofollow noopener noreferrer" title="首页" style="color: var(--text-muted);text-decoration:none">Net.Coffee</a> · <a href="https://ip.net.coffee/" style="color: var(--text-muted);text-decoration:none">IP查询</a> · <a href="https://ip.net.coffee/claude/" style="color: var(--text-muted);text-decoration:none">Claude AI 检测</a> · <a href="https://ip.net.coffee/google/" style="color: var(--text-muted);text-decoration:none">Google AI 检测</a> · <a href="https://ip.net.coffee/ip/" style="color: var(--text-muted);text-decoration:none">IP评分</a></footer>
 
-<script src="/gpt/gpt-page.js?v=20260916a"></script>
+<script src="/google/google-page.js?v=20260921a"></script>
 
 </body>
 </html>

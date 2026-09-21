@@ -20,6 +20,7 @@ const geoipHandler = require('./api/geoip');
 const geoipBatchHandler = require('./api/geoip-batch');
 const ipscoreHandler = require('./api/ipscore');
 const myipHandler = require('./api/myip');
+const googleCheckHandler = require('./api/google-check');
 
 const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
@@ -141,7 +142,15 @@ const server = http.createServer(async (req, res) => {
     return pingGlobalHandler(req, res);
   }
 
-  // 15. /ip SPA 页面路由处理
+  // 15. /api/google-check & /api/google-check/:ip
+  if (pathname === '/api/google-check' || pathname.startsWith('/api/google-check/')) {
+    if (pathname.startsWith('/api/google-check/')) {
+      req.query.ip = pathname.replace('/api/google-check/', '').trim();
+    }
+    return googleCheckHandler(req, res);
+  }
+
+  // 16. /ip SPA 页面路由处理
   // 若请求的是 /ip、/ip/ 或 /ip/<目标IP>（排除静态资源拓展名），统一交付 /public/ip/index.html
   const isIpRoute = pathname === '/ip' || pathname === '/ip/' || pathname.startsWith('/ip/');
   const hasStaticExt = /\.(js|css|png|jpg|jpeg|svg|webp|ico|txt|json|woff2?|ttf)$/i.test(pathname);
@@ -151,6 +160,17 @@ const server = http.createServer(async (req, res) => {
     if (fs.existsSync(ipHtmlPath)) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       fs.createReadStream(ipHtmlPath).pipe(res);
+      return;
+    }
+  }
+
+  // 17. /google & /gemini 页面路由处理
+  const isGoogleRoute = pathname === '/google' || pathname === '/google/' || pathname.startsWith('/google/') || pathname === '/gemini' || pathname === '/gemini/' || pathname.startsWith('/gemini/');
+  if (isGoogleRoute && !hasStaticExt) {
+    const googleHtmlPath = path.join(PUBLIC_DIR, 'google', 'index.html');
+    if (fs.existsSync(googleHtmlPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(googleHtmlPath).pipe(res);
       return;
     }
   }

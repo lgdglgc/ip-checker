@@ -62,6 +62,10 @@
       "dest": "/api/ping-global.js"
     },
     {
+      "src": "/api/google-check/(.*)",
+      "dest": "/api/google-check.js?ip=$1"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1.js"
     },
@@ -72,6 +76,14 @@
     {
       "src": "^/ip(?:/.*)?$",
       "dest": "/public/ip/index.html"
+    },
+    {
+      "src": "^/google/(.*\\.(?:js|css|png|jpg|svg|txt|webp))$",
+      "dest": "/public/google/$1"
+    },
+    {
+      "src": "^/(?:google|gemini)(?:/.*)?$",
+      "dest": "/public/google/index.html"
     },
     {
       "src": "/(.*)",
