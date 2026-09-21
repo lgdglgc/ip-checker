@@ -580,19 +580,19 @@ async function detectWebRTCLeak() {
 async function detectGoogleAvail() {
   const el = document.getElementById('googleAvailContent');
   const targets = [
-    { name: 'Gemini (gemini.google.com)', url: 'https://gemini.google.com/favicon.ico', isAI: true },
-    { name: 'Antigravity (antigravity.google)', url: 'https://deepmind.google/favicon.ico', isAI: true },
-    { name: 'AI Studio (googleapis.com)', url: 'https://generativelanguage.googleapis.com/favicon.ico', isAI: true },
-    { name: 'Google 连通性 (generate_204)', url: 'https://www.google.com/generate_204', isAI: false },
+    { name: 'Gemini', host: 'gemini.google.com', url: 'https://gemini.google.com/favicon.ico', isAI: true },
+    { name: 'Antigravity', host: 'antigravity.google', url: 'https://deepmind.google/favicon.ico', isAI: true },
+    { name: 'AI Studio', host: 'googleapis.com', url: 'https://generativelanguage.googleapis.com/favicon.ico', isAI: true },
+    { name: 'Google 连通性', host: 'generate_204', url: 'https://www.google.com/generate_204', isAI: false },
   ];
 
   const results = await Promise.allSettled(targets.map(async t => {
     const start = performance.now();
     try {
       await fetch(t.url + '?_=' + Date.now(), { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(5000) });
-      return { name: t.name, ms: Math.round(performance.now() - start), ok: true, isAI: t.isAI };
+      return { name: t.name, host: t.host, ms: Math.round(performance.now() - start), ok: true, isAI: t.isAI };
     } catch {
-      return { name: t.name, ms: -1, ok: false, isAI: t.isAI };
+      return { name: t.name, host: t.host, ms: -1, ok: false, isAI: t.isAI };
     }
   }));
 
@@ -602,20 +602,21 @@ async function detectGoogleAvail() {
 
   results.forEach(r => {
     const d = r.value;
+    const titleAttr = d.host ? ` title="${d.name} (${d.host})"` : '';
     if (d.isAI && restricted) {
       if (ccUpper === 'HK') {
-        rows += `<div class="risk-row"><span class="risk-label">${d.name}</span><span class="risk-value"><span class="tag tag-danger">地区受限 (HK封锁)</span></span></div>`;
+        rows += `<div class="risk-row"><span class="risk-label"${titleAttr}>${d.name}</span><span class="risk-value"><span class="tag tag-danger">地区受限</span></span></div>`;
       } else if (ccUpper === 'CN') {
-        rows += `<div class="risk-row"><span class="risk-label">${d.name}</span><span class="risk-value"><span class="tag tag-danger">网络阻断</span></span></div>`;
+        rows += `<div class="risk-row"><span class="risk-label"${titleAttr}>${d.name}</span><span class="risk-value"><span class="tag tag-danger">网络阻断</span></span></div>`;
       } else {
-        rows += `<div class="risk-row"><span class="risk-label">${d.name}</span><span class="risk-value"><span class="tag tag-danger">官方未开放</span></span></div>`;
+        rows += `<div class="risk-row"><span class="risk-label"${titleAttr}>${d.name}</span><span class="risk-value"><span class="tag tag-danger">未开放</span></span></div>`;
       }
     } else if (d.ok) {
       const cls = d.ms < 300 ? 'tag-safe-dark' : d.ms < 700 ? 'tag-safe' : 'tag-warn';
       const label = d.ms < 300 ? '极佳' : d.ms < 700 ? '正常' : '较慢';
-      rows += `<div class="risk-row"><span class="risk-label">${d.name}</span><span class="risk-value"><span class="tag ${cls}">${label}</span> <span style="color: var(--text-muted);font-size:0.85em">${d.ms}ms</span></span></div>`;
+      rows += `<div class="risk-row"><span class="risk-label"${titleAttr}>${d.name}</span><span class="risk-value"><span class="tag ${cls}">${label}</span> <span style="color: var(--text-muted);font-size:0.85em;margin-left:4px">${d.ms}ms</span></span></div>`;
     } else {
-      rows += `<div class="risk-row"><span class="risk-label">${d.name}</span><span class="risk-value"><span class="tag tag-danger">连接超时</span></span></div>`;
+      rows += `<div class="risk-row"><span class="risk-label"${titleAttr}>${d.name}</span><span class="risk-value"><span class="tag tag-danger">连接超时</span></span></div>`;
     }
   });
 
