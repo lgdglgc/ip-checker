@@ -300,7 +300,7 @@ const tests = [
   { name: 'signal.org',        type: 'international', extra: ['social'], method: 'cftrace', domain: 'signal.org' },
 
     // ---- 2.5 国际 AI 专属 ----
-  { name: 'Google Gemini',     type: 'international', extra: ['ai'], method: 'cftrace', domain: 'gemini.google.com', fallbackDomain: 'www.google.com' },
+  { name: 'Google Gemini',     type: 'international', extra: ['ai'], method: 'google', domain: 'gemini.google.com' },
   // ---- 3. 国际 AI ----
   { name: 'anthropic.com',     type: 'international', extra: ['ai'], method: 'cftrace', domain: 'anthropic.com' },
   { name: 'claude.ai',         type: 'international', extra: ['ai'], method: 'cftrace', domain: 'claude.ai' },
@@ -389,7 +389,7 @@ const WEBP_ICONS = new Set([
 ]);
 // These don't have local files — use Google Favicon as fallback
 const GOOGLE_FALLBACK = new Set();  // 2026-05-19 全部本地化
-const PINNED_ICONS = { 'pixpix': '/favicons/link/pixpix.ico?v=4', 'grok': '/favicons/grok.png?v=4', 'chatgpt': '/favicons/chatgpticon.png?v=1' };
+const PINNED_ICONS = { 'pixpix': '/favicons/link/pixpix.ico?v=4', 'grok': '/favicons/grok.png?v=4', 'chatgpt': '/favicons/chatgpticon.png?v=1', 'gemini': '/favicons/gemini.svg?v=1' };
 function faviconUrl(name, domain) {
   const key = LOCAL_FAVICONS[name];
   if (key && PINNED_ICONS[key]) return PINNED_ICONS[key];
@@ -626,6 +626,42 @@ async function detectBytedance(url) {
   throw new Error('未获取到 IP');
 }
 
+// 5. Google Gemini — Google DoH with o-o.myaddr.l.google.com & backend fallback
+async function detectGoogle() {
+  // Strategy 1: Google official DoH (supports CORS, directly resolves client resolver/proxy exit IP)
+  try {
+    const resp = await fetch('https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(4000),
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (Array.isArray(data.Answer)) {
+        for (const ans of data.Answer) {
+          const raw = String(ans.data || '').replace(/"/g, '').trim();
+          const m = raw.match(/\b([0-9]{1,3}(?:\.[0-9]{1,3}){3})\b/);
+          if (m && !m[1].startsWith('0.') && !m[1].startsWith('127.')) {
+            return { ip: m[1] };
+          }
+          const m6 = raw.match(/([a-f0-9:]{5,})/i);
+          if (m6) return { ip: m6[1] };
+        }
+      }
+    }
+  } catch {}
+
+  // Strategy 2: Fallback to /api/google-check (backend check)
+  try {
+    const resp = await fetch('/api/google-check', { signal: AbortSignal.timeout(4000) });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.ip) return { ip: data.ip, loc: data.country_code || null };
+    }
+  } catch {}
+
+  throw new Error('未获取到 IP');
+}
+
 // ============ Run single test ============
 async function runTest(index) {
   const test = tests[index];
@@ -664,6 +700,12 @@ async function runTest(index) {
       case 'bytedance': {
         const result = await detectBytedance(test.url);
         ip = result.ip;
+        break;
+      }
+      case 'google': {
+        const result = await detectGoogle();
+        ip = result.ip;
+        if (result.loc) countryCode = result.loc;
         break;
       }
     }
