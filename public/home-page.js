@@ -626,36 +626,26 @@ async function detectBytedance(url) {
   throw new Error('未获取到 IP');
 }
 
-// 5. Google Gemini — Google DoH with o-o.myaddr.l.google.com & backend fallback
+// 5. Google Gemini — actual proxy exit IP detection
 async function detectGoogle() {
-  // Strategy 1: Google official DoH (supports CORS, directly resolves client resolver/proxy exit IP)
-  try {
-    const resp = await fetch('https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT', {
-      cache: 'no-store',
-      signal: AbortSignal.timeout(4000),
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      if (Array.isArray(data.Answer)) {
-        for (const ans of data.Answer) {
-          const raw = String(ans.data || '').replace(/"/g, '').trim();
-          const m = raw.match(/\b([0-9]{1,3}(?:\.[0-9]{1,3}){3})\b/);
-          if (m && !m[1].startsWith('0.') && !m[1].startsWith('127.')) {
-            return { ip: m[1] };
-          }
-          const m6 = raw.match(/([a-f0-9:]{5,})/i);
-          if (m6) return { ip: m6[1] };
-        }
-      }
-    }
-  } catch {}
-
-  // Strategy 2: Fallback to /api/google-check (backend check)
+  // Strategy 1: Server-side check
   try {
     const resp = await fetch('/api/google-check', { signal: AbortSignal.timeout(4000) });
     if (resp.ok) {
       const data = await resp.json();
       if (data.ip) return { ip: data.ip, loc: data.country_code || null };
+    }
+  } catch {}
+
+  // Strategy 2: api.ipify.org through proxy
+  try {
+    const resp = await fetch('https://api.ipify.org?format=json', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(3000)
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.ip) return { ip: data.ip };
     }
   } catch {}
 

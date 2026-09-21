@@ -358,20 +358,7 @@ async function fetchGoogleIP() {
     return { ip: qIp.trim(), source: 'query' };
   }
 
-  // 1. Google DoH
-  try {
-    const r = await fetch('https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT', {
-      cache: 'no-store',
-      signal: AbortSignal.timeout(3500)
-    });
-    if (r.ok) {
-      const data = await r.json();
-      const ip = extractIpFromGoogleDns(data);
-      if (ip && !ip.endsWith('.0')) return { ip, source: 'google_doh' };
-    }
-  } catch {}
-
-  // 2. api.ipify.org (full host IP through proxy)
+  // 1. api.ipify.org (full host IP through proxy)
   try {
     const r = await fetch('https://api.ipify.org?format=json', {
       cache: 'no-store',
