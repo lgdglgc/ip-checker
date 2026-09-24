@@ -140,7 +140,8 @@ function flagImg(cc) {
 // ===== Fetch Cloudflare IP via trace =====
 async function fetchCfIP() {
   try {
-    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
+    const ts = Date.now();
+    const r = await fetch(`https://1.1.1.1/cdn-cgi/trace?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     const txt = await r.text();
     const m = txt.match(/ip=([^\n]+)/);
     if (m) state.ip = m[1].trim();
@@ -313,7 +314,8 @@ function render() {
 // ===== Fetch ChatGPT IP (via chatgpt.com /cdn-cgi/trace, same as main page split tunnel) =====
 async function fetchChatGPTIP() {
   try {
-    const r = await fetch('https://chatgpt.com/cdn-cgi/trace', {
+    const ts = Date.now();
+    const r = await fetch(`https://chatgpt.com/cdn-cgi/trace?_=${ts}`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(8000),
     });
@@ -327,16 +329,17 @@ async function fetchChatGPTIP() {
 
 // ===== Fetch CN IP (same sources as main page: ip138 + ip.cn) =====
 async function fetchCNIP() {
+  const ts = Date.now();
   // Try ip138
   try {
-    const r = await fetch('https://2026.ip138.com/', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch(`https://2026.ip138.com/?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     const html = await r.text();
     const m = html.match(/(\d+\.\d+\.\d+\.\d+)/);
     if (m) return { ip: m[1], source: 'iP138.com' };
   } catch {}
   // Try ip.cn
   try {
-    const r = await fetch('https://my.ip.cn/', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch(`https://my.ip.cn/?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     const html = await r.text();
     const m = html.match(/(\d+\.\d+\.\d+\.\d+)/);
     if (m) return { ip: m[1], source: 'IP.cn' };
@@ -356,7 +359,8 @@ async function renderIPCard(elId, geoElId, ip, locHint) {
   document.getElementById(elId).innerHTML = `${locHint ? flagImg(locHint) : ''} ${linkIP(ip)}`;
   // Fetch geo in background
   try {
-    const r = await fetch(`/api/geoip/${ip}`, { signal: AbortSignal.timeout(5000) });
+    const ts = Date.now();
+    const r = await fetch(`/api/geoip/${ip}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const g = await r.json();
       const geo = [g.country, g.region, g.city, g.isp].filter(Boolean).join(' ');
@@ -827,7 +831,8 @@ async function main() {
     if (isIPv6(state.ip)) showIPv6Warning();
     document.getElementById('ipAddr').innerHTML = linkIP(state.ip);
     try {
-      const r = await fetch(`/api/geoip/${state.ip}`, { signal: AbortSignal.timeout(5000) });
+      const ts = Date.now();
+      const r = await fetch(`/api/geoip/${state.ip}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
       if (r.ok) {
         const g = await r.json();
         const cc = (g.country_code || '').toLowerCase();
@@ -855,9 +860,10 @@ async function main() {
     document.getElementById('ipAddrChatGPT').innerHTML = `${flagImg(chatgpt.loc||'')} ${linkIP(chatgptIp)}`;
 
     // Fetch risk + geo in parallel
+    const ts = Date.now();
     const [riskResp, geoResp] = await Promise.allSettled([
-      fetch(`/api/iprisk/${chatgptIp}`, { signal: AbortSignal.timeout(10000) }),
-      fetch(`/api/geoip/${chatgptIp}`, { signal: AbortSignal.timeout(5000) }),
+      fetch(`/api/iprisk/${chatgptIp}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(10000) }),
+      fetch(`/api/geoip/${chatgptIp}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) }),
     ]);
 
     // Process geo (with IPv6 fallback using loc from trace)

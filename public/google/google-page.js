@@ -299,7 +299,11 @@ function render() {
 // ===== Fetch Cloudflare IP =====
 async function fetchCfIP() {
   try {
-    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
+    const ts = Date.now();
+    const r = await fetch(`https://1.1.1.1/cdn-cgi/trace?_=${ts}`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
     const txt = await r.text();
     const m = txt.match(/ip=([^\n]+)/);
     if (m) state.ip = m[1].trim();
@@ -308,14 +312,21 @@ async function fetchCfIP() {
 
 // ===== Fetch CN IP =====
 async function fetchCNIP() {
+  const ts = Date.now();
   try {
-    const r = await fetch('https://2026.ip138.com/', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch(`https://2026.ip138.com/?_=${ts}`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
     const html = await r.text();
     const m = html.match(/(\d+\.\d+\.\d+\.\d+)/);
     if (m) return { ip: m[1], source: 'iP138.com' };
   } catch {}
   try {
-    const r = await fetch('https://my.ip.cn/', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch(`https://my.ip.cn/?_=${ts}`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
     const html = await r.text();
     const m = html.match(/(\d+\.\d+\.\d+\.\d+)/);
     if (m) return { ip: m[1], source: 'IP.cn' };
@@ -343,23 +354,28 @@ function extractIpFromGoogleDns(data) {
 }
 
 // ===== Fetch Google AI IP =====
-// Strategy:
-// 1. Check URL query ?ip=
-// 2. Query Google DoH (https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT)
-// 3. Query api.ipify.org through proxy for full host IP
-// 4. Fallback to Cloudflare exit IP (state.ip)
-// NOTE: WebRTC STUN UDP is intentionally NOT used here because most proxies bypass UDP,
-// which would mistakenly expose the user's direct Chinese ISP IP instead of their proxy exit.
+// 优先请求 Google 官方端点以精准命中客户端对 Google 的分流规则
+// 全流程添加 cache: 'no-store' 与动态时间戳，杜绝浏览器与代理复用旧结果
 async function fetchGoogleIP() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const qIp = urlParams.get('ip');
-  if (qIp && qIp.trim()) {
-    return { ip: qIp.trim(), source: 'query' };
-  }
+  const ts = Date.now();
 
-  // 1. api.ipify.org (full host IP through proxy)
+  // 1. 优先通过 Google 官方 DoH 解析本机访问 Google 服务的真实出口 IP
   try {
-    const r = await fetch('https://api.ipify.org?format=json', {
+    const r = await fetch(`https://dns.google/resolve?name=o-o.myaddr.l.google.com&type=TXT&_=${ts}`, {
+      cache: 'no-store',
+      headers: { 'Accept': 'application/dns-json' },
+      signal: AbortSignal.timeout(3500)
+    });
+    if (r.ok) {
+      const data = await r.json();
+      const ip = extractIpFromGoogleDns(data);
+      if (ip) return { ip, source: 'google_doh' };
+    }
+  } catch {}
+
+  // 2. 回退：api.ipify.org
+  try {
+    const r = await fetch(`https://api.ipify.org?format=json&_=${ts}`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(3000)
     });
@@ -369,9 +385,9 @@ async function fetchGoogleIP() {
     }
   } catch {}
 
-  // 3. api.ip.sb
+  // 3. 回退：api.ip.sb
   try {
-    const r = await fetch('https://api.ip.sb/geoip', {
+    const r = await fetch(`https://api.ip.sb/geoip?_=${ts}`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(3000)
     });
@@ -381,14 +397,17 @@ async function fetchGoogleIP() {
     }
   } catch {}
 
-  // 4. Cloudflare exit IP (state.ip)
+  // 4. 回退：Cloudflare exit IP (state.ip)
   if (state.ip) {
     return { ip: state.ip, source: 'cf' };
   }
 
-  // 5. Direct Cloudflare trace
+  // 5. 回退：Direct Cloudflare trace
   try {
-    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) });
+    const r = await fetch(`https://1.1.1.1/cdn-cgi/trace?_=${ts}`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(4000)
+    });
     const txt = await r.text();
     const m = txt.match(/ip=([^\n]+)/);
     if (m) return { ip: m[1].trim(), source: 'cf_trace' };
@@ -407,7 +426,8 @@ async function renderIPCard(elId, geoElId, ip, locHint) {
   if (isIPv6(ip)) showIPv6Warning();
   document.getElementById(elId).innerHTML = `${locHint ? flagImg(locHint) : ''} ${linkIP(ip)}`;
   try {
-    const r = await fetch(`/api/geoip/${ip}`, { signal: AbortSignal.timeout(5000) });
+    const ts = Date.now();
+    const r = await fetch(`/api/geoip/${ip}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const g = await r.json();
       const geo = [g.country, g.region, g.city, g.isp].filter(Boolean).join(' ');
@@ -800,7 +820,8 @@ async function main() {
     if (isIPv6(state.ip)) showIPv6Warning();
     document.getElementById('ipAddr').innerHTML = linkIP(state.ip);
     try {
-      const r = await fetch(`/api/geoip/${state.ip}`, { signal: AbortSignal.timeout(5000) });
+      const ts = Date.now();
+      const r = await fetch(`/api/geoip/${state.ip}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
       if (r.ok) {
         const g = await r.json();
         const cc = (g.country_code || '').toLowerCase();
@@ -826,10 +847,11 @@ async function main() {
     if (isIPv6(googleIp)) showIPv6Warning();
     document.getElementById('ipAddrGoogle').innerHTML = linkIP(googleIp);
 
+    const ts = Date.now();
     const [checkResp, geoResp, riskResp] = await Promise.allSettled([
-      fetch(`/api/google-check?ip=${googleIp}`, { signal: AbortSignal.timeout(8000) }),
-      fetch(`/api/geoip/${googleIp}`, { signal: AbortSignal.timeout(5000) }),
-      fetch(`/api/iprisk/${googleIp}`, { signal: AbortSignal.timeout(6000) })
+      fetch(`/api/google-check?ip=${googleIp}&_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(8000) }),
+      fetch(`/api/geoip/${googleIp}&_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) }),
+      fetch(`/api/iprisk/${googleIp}&_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(6000) })
     ]);
 
     let googleGeoOk = false;
