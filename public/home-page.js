@@ -88,7 +88,8 @@ async function runPings() {
 // Fetch IP from ip138
 async function fetchIP138() {
   try {
-    const resp = await fetch('https://2026.ip138.com/', { signal: AbortSignal.timeout(8000) });
+    const ts = Date.now();
+    const resp = await fetch(`https://2026.ip138.com/?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
     const html = await resp.text();
     const ipMatch = html.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/);
     const geoMatch = html.match(/来自：([^<\n]+)/);
@@ -100,7 +101,8 @@ async function fetchIP138() {
 // Fetch IP from ip.cn
 async function fetchIPCN() {
   try {
-    const resp = await fetch('https://my.ip.cn/', { signal: AbortSignal.timeout(8000) });
+    const ts = Date.now();
+    const resp = await fetch(`https://my.ip.cn/?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
     const text = await resp.text();
     // Format: "ip：x.x.x.x 归属地：xxx"
     const ipMatch = text.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/);
@@ -479,7 +481,8 @@ function normalizeIp(ip) {
 // Primary: our own server-side cache API (/24 subnet, 30-day TTL, SQLite-backed)
 // Fallback: direct third-party APIs if our server is down
 async function fetchGeoFromServer(ip) {
-  const r = await fetch(`/api/geoip/${ip}`, { signal: AbortSignal.timeout(5000) });
+  const ts = Date.now();
+  const r = await fetch(`/api/geoip/${ip}?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
   if (!r.ok) return null;
   const d = await r.json();
   const parts = [d.country, d.region, d.city, d.isp].filter(Boolean);
@@ -553,7 +556,8 @@ async function lookupGeo(ip) {
 
 // 1. Cloudflare cdn-cgi/trace — the primary method for most sites
 async function detectCftrace(domain) {
-  const resp = await fetch(`https://${domain}/cdn-cgi/trace`, {
+  const ts = Date.now();
+  const resp = await fetch(`https://${domain}/cdn-cgi/trace?_=${ts}`, {
     cache: 'no-store',
     signal: AbortSignal.timeout(5000),
   });
@@ -628,9 +632,10 @@ async function detectBytedance(url) {
 
 // 5. Google Gemini — actual proxy exit IP detection
 async function detectGoogle() {
+  const ts = Date.now();
   // Strategy 1: Server-side check
   try {
-    const resp = await fetch('/api/google-check', { signal: AbortSignal.timeout(4000) });
+    const resp = await fetch(`/api/google-check?_=${ts}`, { cache: 'no-store', signal: AbortSignal.timeout(4000) });
     if (resp.ok) {
       const data = await resp.json();
       if (data.ip) return { ip: data.ip, loc: data.country_code || null };
@@ -639,7 +644,7 @@ async function detectGoogle() {
 
   // Strategy 2: api.ipify.org through proxy
   try {
-    const resp = await fetch('https://api.ipify.org?format=json', {
+    const resp = await fetch(`https://api.ipify.org?format=json&_=${ts}`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(3000)
     });
