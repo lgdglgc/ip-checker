@@ -1,4 +1,5 @@
 const { lookupGeo } = require('./geo-service');
+const { proxyWithFallback, generateFallbackLookup } = require('./net-coffee-proxy');
 
 // Google Gemini 与 Google Antigravity 官方受限地区
 const RESTRICTED_REGIONS = {
@@ -44,12 +45,52 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const geo = await lookupGeo(ip);
-    const cc = (geo.countryCode || geo.country_code || '').toLowerCase();
+    const cleanIp = ip.trim();
+
+    // 并行获取基础地理定位与权威 IP 风控/ASN 数据库，保持与 Claude/GPT 页面一致标准
+    const [geoResult, riskResult] = await Promise.allSettled([
+      lookupGeo(cleanIp),
+      proxyWithFallback(
+        `/api/iprisk/${encodeURIComponent(cleanIp)}`,
+        `iprisk:${cleanIp}`,
+        () => generateFallbackLookup(cleanIp)
+      )
+    ]);
+
+    const geo = (geoResult.status === 'fulfilled' && geoResult.value) ? geoResult.value : {};
+    const risk = (riskResult.status === 'fulfilled' && riskResult.value && !riskResult.value.error) ? riskResult.value : null;
+
+    // 综合判定国家代码
+    const cc = (risk?.countryCode || risk?.country_code || geo.countryCode || geo.country_code || '').toLowerCase();
 
     const isRestricted = Boolean(RESTRICTED_REGIONS[cc]);
     const restrictedInfo = RESTRICTED_REGIONS[cc];
     const isSupported = !isRestricted && (FULLY_SUPPORTED_REGIONS.has(cc) || Boolean(cc));
+
+    // 优先采用权威风控库判定机房与住宅属性，避免把 Cogent 等骨干/商业网段误判为家庭宽带
+    const isDatacenter = risk
+      ? Boolean(risk.is_datacenter || risk.company_type === 'hosting' || risk.datacenter_name)
+      : Boolean(geo.isHosting);
+
+    const isResidential = risk
+      ? Boolean(risk.isResidential && !isDatacenter)
+      : Boolean(!geo.isHosting && geo.isResidential);
+
+    const isProxy = Boolean((risk && risk.is_proxy) || geo.isProxy);
+    const isVpn = Boolean(risk && risk.is_vpn);
+    const isTor = Boolean(risk && risk.is_tor);
+
+    // 准确规范的 ASN 与 运营商识别
+    let asn = '';
+    if (risk && risk.asn) {
+      asn = typeof risk.asn === 'number' ? `AS${risk.asn}` : String(risk.asn);
+      if (!asn.startsWith('AS')) asn = 'AS' + asn;
+    } else if (geo.asn) {
+      asn = geo.asn.startsWith('AS') ? geo.asn : `AS${geo.asn}`;
+    }
+
+    const isp = risk?.asOrganization || risk?.company_name || geo.isp || geo.org || '';
+    const companyType = risk?.company_type || (isDatacenter ? 'hosting' : 'isp');
 
     // 计算 Google AI & Antigravity 信任度与可用性得分
     let trustScore = 95;
@@ -68,17 +109,17 @@ module.exports = async (req, res) => {
       }
     }
 
-    if (geo.isHosting) {
+    if (isDatacenter) {
       trustScore -= 20;
       reasons.push('机房/数据中心 IP，可能遭遇 Google reCAPTCHA 频繁验证码或临时并发频率限制');
-    } else {
+    } else if (isResidential) {
       trustScore += 5;
       reasons.push('原生家庭宽带/住宅 ISP，通过率高');
     }
 
-    if (geo.isProxy || geo.is_proxy) {
+    if (isProxy || isVpn) {
       trustScore -= 15;
-      reasons.push('检测到公共代理特征');
+      reasons.push('检测到公共代理或 VPN 特征');
     }
 
     trustScore = Math.max(10, Math.min(100, trustScore));
@@ -101,21 +142,23 @@ module.exports = async (req, res) => {
     }
 
     const payload = {
-      ip,
-      country: geo.country || '',
+      ip: cleanIp,
+      country: risk?.country || geo.country || '',
       country_code: cc,
-      region: geo.regionName || geo.region || '',
-      city: geo.city || '',
-      timezone: geo.timezone || '',
-      isp: geo.isp || '',
-      asn: geo.asn || '',
-      is_residential: !geo.isHosting,
-      is_hosting: Boolean(geo.isHosting),
-      is_proxy: Boolean(geo.isProxy),
-      is_vpn: false,
-      is_tor: false,
-      is_crawler: false,
-      is_abuser: false,
+      region: risk?.region || geo.regionName || geo.region || '',
+      city: risk?.city || geo.city || '',
+      timezone: risk?.timezone || geo.timezone || '',
+      isp,
+      asOrganization: risk?.asOrganization || isp,
+      asn,
+      is_residential: isResidential,
+      is_hosting: isDatacenter,
+      company_type: companyType,
+      is_proxy: isProxy,
+      is_vpn: isVpn,
+      is_tor: isTor,
+      is_crawler: Boolean(risk && risk.is_crawler),
+      is_abuser: Boolean(risk && risk.is_abuser),
       gemini_supported: !isRestricted,
       antigravity_supported: !isRestricted,
       region_status: isRestricted ? 'restricted' : 'supported',

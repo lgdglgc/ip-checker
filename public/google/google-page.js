@@ -167,8 +167,9 @@ function render() {
   const gg = state.googleGeo;
   const a = state.ipapis;
 
-  const asn = gr?.asn || '';
-  const asnOrg = gr?.asOrganization || gr?.isp || a?.company?.name || '';
+  const asn = (a?.asn ? (String(a.asn).startsWith('AS') ? String(a.asn) : 'AS' + a.asn) : '')
+    || (gr?.asn ? (gr.asn.startsWith('AS') ? gr.asn : 'AS' + gr.asn) : '');
+  const asnOrg = a?.asOrganization || a?.company?.name || gr?.asOrganization || gr?.isp || '';
   const restrictedInfo = getRestrictedInfo();
   const hasGoogleIp = !!(gr && gr.ip);
 
@@ -255,21 +256,25 @@ function render() {
     }
   })();
 
-  // IP Properties
-  const isResidential = gr?.isResidential ?? gr?.is_residential ?? (a ? !a.is_datacenter : null);
-  const companyType = a?.company?.type || '';
+  // IP Properties - 优先权威风控识别结果，保持与 Claude/GPT 判定逻辑统一
+  const isResidential = (a && typeof a.is_datacenter === 'boolean')
+    ? (!a.is_datacenter && (a.is_residential ?? true))
+    : (gr?.isResidential ?? gr?.is_residential ?? null);
+  const companyType = a?.company?.type || gr?.company_type || '';
   const regionStr = gg?.country || gr?.country || '';
   const cityStr = gg?.city || gr?.city || regionStr;
 
   let propTag = '';
   if (isResidential === true) {
-    propTag = '<span class="tag tag-safe">家庭住宅宽带 (ISP)</span>';
+    propTag = '<span class="tag tag-safe">家庭住宅IP</span>';
   } else if (isResidential === false) {
-    const typeMap = { 'hosting': 'Hosting', 'isp': 'ISP', 'business': 'Business', 'education': 'Education' };
-    const sub = companyType ? ` (${typeMap[companyType] || companyType})` : '';
-    propTag = `<span class="tag tag-warn">机房/数据中心 IP${sub}</span>`;
+    propTag = '<span class="tag tag-warn">机房IP</span>';
   } else {
     propTag = '<span class="tag tag-neutral">未知</span>';
+  }
+  if (companyType) {
+    const typeMap = { 'hosting': 'Hosting', 'isp': 'ISP', 'business': 'Business', 'education': 'Education' };
+    propTag += ` <span style="color: var(--text-muted);font-size:0.82em">(${typeMap[companyType] || companyType})</span>`;
   }
 
   document.getElementById('propsContent').innerHTML = `
@@ -847,6 +852,9 @@ async function main() {
         state.ipapis = {
           is_datacenter: d.is_datacenter, is_vpn: d.is_vpn, is_proxy: d.is_proxy,
           is_tor: d.is_tor, is_crawler: d.is_crawler, is_abuser: d.is_abuser,
+          is_residential: d.isResidential,
+          asn: d.asn,
+          asOrganization: d.asOrganization,
           company: { type: d.company_type, name: d.company_name }
         };
       } catch {}
@@ -864,8 +872,11 @@ async function main() {
           city: d.city,
           timezone: d.timezone,
           isp: d.isp,
+          asOrganization: d.asOrganization || d.isp,
           asn: d.asn,
           isResidential: d.is_residential,
+          is_residential: d.is_residential,
+          company_type: d.company_type,
           trust_score: d.trust_score,
           gemini_supported: d.gemini_supported,
           antigravity_supported: d.antigravity_supported,
