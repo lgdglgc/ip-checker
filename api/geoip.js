@@ -32,7 +32,12 @@ module.exports = async (req, res) => {
 
   try {
     const result = await lookupGeo(ip);
-    res.status(200).json(result);
+    const cc = (result.countryCode || result.country_code || '').toLowerCase();
+    res.status(200).json({
+      ...result,
+      countryCode: cc,
+      country_code: cc
+    });
   } catch (err) {
     res.status(500).json({ error: err.message || 'Lookup error' });
   }

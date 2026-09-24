@@ -486,7 +486,8 @@ async function fetchGeoFromServer(ip) {
   if (!r.ok) return null;
   const d = await r.json();
   const parts = [d.country, d.region, d.city, d.isp].filter(Boolean);
-  return { geoString: parts.join(' '), countryCode: d.country_code || null, isp: d.isp || '', country: d.country || '', region: d.region || '', city: d.city || '' };
+  const cc = (d.countryCode || d.country_code || '').toLowerCase() || null;
+  return { geoString: parts.join(' '), countryCode: cc, isp: d.isp || '', country: d.country || '', region: d.region || '', city: d.city || '' };
 }
 
 async function fetchGeoFallback(ip) {
@@ -498,7 +499,7 @@ async function fetchGeoFallback(ip) {
       const parts = [d.country, d.region, d.city, d.connection && d.connection.isp].filter(Boolean);
       return {
         geoString: parts.join(' '),
-        countryCode: d.country_code ? d.country_code.toLowerCase() : null,
+        countryCode: (d.countryCode || d.country_code || '').toLowerCase() || null,
         country: d.country || '',
         region: d.region || '',
         city: d.city || '',
@@ -515,7 +516,7 @@ async function fetchGeoFallback(ip) {
         const parts = [d.country, d.region, d.city, d.isp || d.organization].filter(Boolean);
         return {
           geoString: parts.join(' '),
-          countryCode: d.country_code ? d.country_code.toLowerCase() : null,
+          countryCode: (d.countryCode || d.country_code || '').toLowerCase() || null,
           country: d.country || '',
           region: d.region || '',
           city: d.city || '',
@@ -690,11 +691,13 @@ async function runTest(index) {
       case 'netease': {
         const result = await detectNetease();
         ip = result.ip;
+        if (test.type === 'domestic') countryCode = 'cn';
         break;
       }
       case 'bytedance': {
         const result = await detectBytedance(test.url);
         ip = result.ip;
+        if (test.type === 'domestic') countryCode = 'cn';
         break;
       }
       case 'google': {
@@ -717,8 +720,9 @@ async function runTest(index) {
       const geoResult = await lookupGeo(ip);
       if (geoResult) {
         if (!geo) state[index].geo = geoResult.geoString;
-        if (!state[index].countryCode) {
-          state[index].countryCode = geoResult.countryCode;
+        const resCC = (geoResult.countryCode || geoResult.country_code || '').toLowerCase();
+        if (resCC) {
+          state[index].countryCode = resCC;
         }
       }
     }
